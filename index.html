@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Leeds Rowing Club Athlete Management</title>
 
 <style>
-
 * {
     box-sizing: border-box;
     margin: 0;
@@ -19,28 +16,19 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
     background: #f4f6f8;
-    color: #17212b;
+    color: #222;
 }
 
-button,
-input,
-select,
-textarea {
-    font-family: inherit;
-}
+/* =========================
+   LOGIN
+========================= */
 
-button {
-    cursor: pointer;
-}
-
-/* LOGIN */
-
-.login-screen {
+#loginScreen {
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, #111827, #243447);
+    background: #111827;
     padding: 20px;
 }
 
@@ -48,131 +36,153 @@ button {
     width: 100%;
     max-width: 430px;
     background: white;
-    padding: 40px;
-    border-radius: 18px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    border-radius: 14px;
+    padding: 35px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
 }
 
 .login-box h1 {
     text-align: center;
     margin-bottom: 8px;
+    color: #111827;
 }
 
 .login-box p {
     text-align: center;
-    color: #68717b;
-    margin-bottom: 30px;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.login-box label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: bold;
 }
 
 .login-box input {
     width: 100%;
     padding: 13px;
-    border: 1px solid #d5dbe1;
+    border: 1px solid #ccc;
     border-radius: 8px;
-    margin-bottom: 15px;
-    font-size: 15px;
+    margin-bottom: 17px;
+    font-size: 16px;
 }
 
-.login-button {
+.login-box button {
     width: 100%;
     padding: 14px;
     border: none;
     border-radius: 8px;
-    background: #17212b;
+    background: #111827;
     color: white;
+    font-size: 16px;
     font-weight: bold;
-    font-size: 15px;
+    cursor: pointer;
 }
 
-.login-button:hover {
-    background: #273746;
+.login-box button:hover {
+    background: #1f2937;
 }
 
-.login-error {
-    color: #c0392b;
-    text-align: center;
-    margin-top: 15px;
+#loginError {
     display: none;
+    margin-top: 15px;
+    padding: 12px;
+    background: #fee2e2;
+    color: #991b1b;
+    border-radius: 8px;
 }
 
-/* APP */
+/* =========================
+   APP
+========================= */
 
-.app {
+#app {
     display: none;
     min-height: 100vh;
 }
 
-/* HEADER */
-
-.header {
-    background: #17212b;
+header {
+    background: #111827;
     color: white;
-    padding: 15px 25px;
+    padding: 18px 25px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 20px;
+    gap: 15px;
+    flex-wrap: wrap;
 }
 
-.header-left {
+.header-title {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.header-user {
     display: flex;
     align-items: center;
-    gap: 15px;
-}
-
-.header h1 {
-    font-size: 21px;
+    gap: 12px;
 }
 
 .role-badge {
-    background: #34495e;
-    padding: 5px 10px;
+    background: #374151;
+    padding: 7px 12px;
     border-radius: 20px;
-    font-size: 12px;
+    font-size: 13px;
 }
 
-.logout-button {
-    background: #c0392b;
+.logout-btn {
+    background: #ef4444;
     border: none;
     color: white;
-    padding: 9px 15px;
+    padding: 9px 14px;
     border-radius: 7px;
+    cursor: pointer;
     font-weight: bold;
 }
 
-.logout-button:hover {
-    background: #a93226;
+.logout-btn:hover {
+    background: #dc2626;
 }
 
-/* NAVIGATION */
+/* =========================
+   NAV
+========================= */
 
-.nav {
+nav {
     background: white;
     border-bottom: 1px solid #ddd;
     display: flex;
-    gap: 5px;
-    padding: 8px 20px;
+    padding: 0 20px;
+    overflow-x: auto;
 }
 
-.nav button {
+.nav-btn {
+    background: none;
     border: none;
-    background: transparent;
-    padding: 11px 15px;
-    border-radius: 7px;
-    color: #56616b;
+    padding: 16px 20px;
+    cursor: pointer;
+    font-size: 15px;
+    color: #555;
+    white-space: nowrap;
+}
+
+.nav-btn:hover {
+    background: #f3f4f6;
+}
+
+.nav-btn.active {
+    color: #111827;
     font-weight: bold;
+    border-bottom: 3px solid #111827;
 }
 
-.nav button:hover,
-.nav button.active {
-    background: #eef1f4;
-    color: #17212b;
-}
+/* =========================
+   MAIN
+========================= */
 
-/* CONTENT */
-
-.content {
-    max-width: 1400px;
+main {
+    max-width: 1500px;
     margin: auto;
     padding: 25px;
 }
@@ -186,19 +196,18 @@ button {
 }
 
 .page-title {
-    margin-bottom: 20px;
+    font-size: 28px;
+    margin-bottom: 7px;
 }
 
-.page-title h2 {
-    font-size: 27px;
+.page-subtitle {
+    color: #666;
+    margin-bottom: 25px;
 }
 
-.page-title p {
-    color: #68717b;
-    margin-top: 5px;
-}
-
-/* DASHBOARD */
+/* =========================
+   CARDS
+========================= */
 
 .stats-grid {
     display: grid;
@@ -209,344 +218,313 @@ button {
 
 .stat-card {
     background: white;
-    border-radius: 13px;
     padding: 22px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
 }
 
 .stat-card h3 {
-    color: #68717b;
     font-size: 14px;
-    margin-bottom: 8px;
+    color: #6b7280;
+    margin-bottom: 10px;
 }
 
 .stat-number {
-    font-size: 31px;
+    font-size: 30px;
     font-weight: bold;
 }
 
-.stat-green {
-    border-left: 5px solid #27ae60;
-}
+/* =========================
+   TABLE
+========================= */
 
-.stat-amber {
-    border-left: 5px solid #f39c12;
-}
-
-.stat-red {
-    border-left: 5px solid #e74c3c;
-}
-
-.stat-total {
-    border-left: 5px solid #34495e;
-}
-
-/* CARDS */
-
-.card {
+.table-container {
     background: white;
-    border-radius: 13px;
-    padding: 22px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    margin-bottom: 20px;
-}
-
-/* BOYS FOLDER */
-
-.folder {
-    background: white;
-    border-radius: 13px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    margin-bottom: 20px;
-}
-
-.folder-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 19px;
-    font-weight: bold;
-    margin-bottom: 18px;
-}
-
-.folder-icon {
-    font-size: 25px;
-}
-
-/* SEARCH */
-
-.search-box {
-    margin-bottom: 18px;
-}
-
-.search-box input {
-    width: 100%;
-    max-width: 500px;
-    padding: 12px 14px;
-    border: 1px solid #d5dbe1;
-    border-radius: 8px;
-    font-size: 15px;
-}
-
-/* TABLE */
-
-.table-wrapper {
+    border-radius: 12px;
     overflow-x: auto;
+    border: 1px solid #e5e7eb;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
+    min-width: 850px;
 }
 
 th {
-    background: #f0f3f5;
+    background: #f9fafb;
     text-align: left;
-    padding: 12px;
+    padding: 14px;
     font-size: 13px;
-    white-space: nowrap;
+    color: #4b5563;
+    border-bottom: 1px solid #e5e7eb;
 }
 
 td {
-    padding: 11px 12px;
-    border-bottom: 1px solid #edf0f2;
-    font-size: 14px;
+    padding: 13px 14px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+tr:last-child td {
+    border-bottom: none;
 }
 
 tr:hover td {
-    background: #fafbfc;
+    background: #fafafa;
 }
 
-.athlete-name {
-    font-weight: bold;
-    color: #17212b;
+/* =========================
+   BUTTONS
+========================= */
+
+.primary-btn {
+    background: #111827;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 7px;
     cursor: pointer;
+    font-weight: bold;
 }
 
-.athlete-name:hover {
-    text-decoration: underline;
+.primary-btn:hover {
+    background: #1f2937;
 }
 
-/* RAG */
+.secondary-btn {
+    background: #e5e7eb;
+    color: #111827;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.secondary-btn:hover {
+    background: #d1d5db;
+}
+
+/* =========================
+   RAG
+========================= */
 
 .rag-select {
     border: none;
-    border-radius: 7px;
-    padding: 7px 10px;
+    border-radius: 6px;
+    padding: 7px 8px;
     font-weight: bold;
-    min-width: 95px;
+    cursor: pointer;
+    min-width: 105px;
 }
 
-.rag-select.green {
-    background: #d5f5e3;
-    color: #196f3d;
+.rag-red {
+    background: #fecaca;
+    color: #991b1b;
 }
 
-.rag-select.amber {
-    background: #fdebd0;
-    color: #9a6200;
+.rag-amber {
+    background: #fde68a;
+    color: #92400e;
 }
 
-.rag-select.red {
-    background: #fadbd8;
-    color: #922b21;
+.rag-green {
+    background: #bbf7d0;
+    color: #166534;
 }
 
-.rag-select.none {
-    background: #ecf0f1;
-    color: #56616b;
+.rag-none {
+    background: #e5e7eb;
+    color: #4b5563;
 }
 
-.rag-display {
+.rag-badge {
     display: inline-block;
-    min-width: 95px;
-    padding: 9px 13px;
-    border-radius: 8px;
-    text-align: center;
+    padding: 7px 11px;
+    border-radius: 7px;
     font-weight: bold;
+    font-size: 13px;
 }
 
-.rag-display.green {
-    background: #d5f5e3;
-    color: #196f3d;
+/* =========================
+   SEARCH
+========================= */
+
+.search-box {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    margin-bottom: 18px;
+    font-size: 15px;
 }
 
-.rag-display.amber {
-    background: #fdebd0;
-    color: #9a6200;
+/* =========================
+   FOLDER
+========================= */
+
+.folder {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    overflow: hidden;
 }
 
-.rag-display.red {
-    background: #fadbd8;
-    color: #922b21;
+.folder-header {
+    padding: 17px 20px;
+    background: #f9fafb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
 }
 
-.rag-display.none {
-    background: #ecf0f1;
-    color: #56616b;
+.folder-header h2 {
+    font-size: 18px;
 }
 
-/* PROFILE */
+.folder-content {
+    padding: 18px;
+}
+
+/* =========================
+   PROFILE
+========================= */
 
 .profile-header {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 20px;
+    border: 1px solid #e5e7eb;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 20px;
-    margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
-.profile-header h2 {
-    font-size: 28px;
+.profile-name {
+    font-size: 30px;
+    font-weight: bold;
 }
 
-.back-button {
-    border: none;
-    background: #34495e;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 7px;
+.profile-id {
+    color: #6b7280;
+    margin-top: 5px;
 }
 
 .rag-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
-    margin-top: 15px;
+    margin-bottom: 20px;
 }
 
 .rag-card {
-    border: 1px solid #e1e5e8;
-    border-radius: 10px;
-    padding: 16px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
 }
 
-.rag-card h4 {
-    margin-bottom: 10px;
+.rag-card h3 {
+    margin-bottom: 14px;
+    font-size: 16px;
 }
 
-.notes-box {
+.rag-card select {
+    width: 100%;
+}
+
+.notes-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 20px;
+}
+
+.notes-card h2 {
+    margin-bottom: 15px;
+}
+
+.notes-textarea {
     width: 100%;
     min-height: 150px;
-    border: 1px solid #d5dbe1;
+    resize: vertical;
+    border: 1px solid #d1d5db;
     border-radius: 8px;
     padding: 13px;
-    resize: vertical;
-    font-size: 14px;
+    font-family: inherit;
+    font-size: 15px;
 }
 
-.save-notes-button {
-    margin-top: 10px;
-    border: none;
-    background: #17212b;
-    color: white;
-    padding: 10px 17px;
-    border-radius: 7px;
-    font-weight: bold;
-}
+/* =========================
+   HISTORY
+========================= */
 
-.coach-notes-display {
-    background: #f8f9fa;
-    border: 1px solid #e2e6e9;
-    border-radius: 9px;
-    padding: 16px;
-    min-height: 80px;
-    white-space: pre-wrap;
-}
-
-/* NEXT IMPROVEMENT */
-
-.next-improve-card {
-    margin-top: 18px;
-    background: #f8f9fa;
-    border: 1px solid #dfe4e8;
-    border-radius: 11px;
+.history-item {
+    background: white;
     padding: 18px;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 12px;
 }
 
-.next-improve-title {
-    font-size: 13px;
-    font-weight: bold;
-    color: #68717b;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-}
-
-.next-improve-category {
-    font-size: 22px;
-    font-weight: bold;
-    margin-bottom: 8px;
-}
-
-.next-improve-rag {
-    display: inline-block;
-}
-
-/* HISTORY */
-
-.history-category {
-    margin-bottom: 22px;
-}
-
-.history-category h3 {
-    margin-bottom: 10px;
-}
-
-.history-entry {
-    background: #f8f9fa;
-    border-left: 4px solid #34495e;
-    padding: 12px 15px;
-    margin-bottom: 8px;
-    border-radius: 5px;
+.history-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .history-date {
-    color: #68717b;
-    font-size: 12px;
-    margin-bottom: 5px;
+    color: #6b7280;
+    font-size: 13px;
 }
 
 .history-change {
+    margin-top: 8px;
     font-weight: bold;
 }
 
 .history-user {
-    font-size: 12px;
-    color: #68717b;
-    margin-top: 4px;
+    color: #6b7280;
+    font-size: 13px;
+    margin-top: 6px;
 }
 
-/* STATUS */
+/* =========================
+   STATUS
+========================= */
 
 .loading {
-    padding: 30px;
     text-align: center;
-    color: #68717b;
+    padding: 40px;
+    color: #666;
 }
 
-.firebase-status {
-    position: fixed;
-    bottom: 15px;
-    right: 15px;
-    background: #17212b;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 7px;
-    font-size: 12px;
+.empty {
+    padding: 35px;
+    text-align: center;
+    color: #777;
+}
+
+.save-message {
+    margin-top: 10px;
+    color: #166534;
+    font-weight: bold;
     display: none;
-    z-index: 9999;
 }
 
-.firebase-status.show {
-    display: block;
-}
-
-/* RESPONSIVE */
+/* =========================
+   MOBILE
+========================= */
 
 @media (max-width: 900px) {
-
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -554,21 +532,10 @@ tr:hover td {
     .rag-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-
 }
 
 @media (max-width: 600px) {
-
-    .header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .nav {
-        overflow-x: auto;
-    }
-
-    .content {
+    main {
         padding: 15px;
     }
 
@@ -580,22 +547,28 @@ tr:hover td {
         grid-template-columns: 1fr;
     }
 
-    .profile-header {
-        flex-direction: column;
-        align-items: flex-start;
+    .login-box {
+        padding: 25px;
     }
 
+    .page-title {
+        font-size: 24px;
+    }
+
+    .profile-name {
+        font-size: 25px;
+    }
 }
-
 </style>
-
 </head>
 
 <body>
 
-<!-- LOGIN -->
+<!-- =========================
+     LOGIN SCREEN
+========================= -->
 
-<div id="loginScreen" class="login-screen">
+<div id="loginScreen">
 
     <div class="login-box">
 
@@ -603,225 +576,253 @@ tr:hover td {
 
         <p>Athlete Management System</p>
 
+        <label for="username">Username</label>
+
         <input
+            id="username"
             type="text"
-            id="usernameInput"
-            placeholder="Username"
+            placeholder="Enter username"
             autocomplete="username"
         >
 
+        <label for="password">Password</label>
+
         <input
+            id="password"
             type="password"
-            id="passwordInput"
-            placeholder="Password"
+            placeholder="Enter password"
             autocomplete="current-password"
         >
 
-        <button
-            class="login-button"
-            onclick="login()"
-        >
-            Log In
+        <button id="loginButton">
+            Login
         </button>
 
-        <div
-            id="loginError"
-            class="login-error"
-        >
-            Incorrect username or password.
-        </div>
+        <div id="loginError"></div>
 
     </div>
 
 </div>
 
-<!-- MAIN APP -->
 
-<div id="app" class="app">
+<!-- =========================
+     APP
+========================= -->
 
-    <header class="header">
+<div id="app">
 
-        <div class="header-left">
+    <header>
 
-            <h1>Leeds Rowing Club</h1>
+        <div class="header-title">
+            Leeds Rowing Club Athlete Management
+        </div>
 
-            <span
-                id="roleBadge"
-                class="role-badge"
-            ></span>
+        <div class="header-user">
+
+            <span id="loggedInUser"></span>
+
+            <span id="roleBadge" class="role-badge"></span>
+
+            <button class="logout-btn" id="logoutButton">
+                Logout
+            </button>
 
         </div>
 
-        <button
-            class="logout-button"
-            onclick="logout()"
-        >
-            Log Out
-        </button>
-
     </header>
 
-    <nav class="nav">
+
+    <nav>
 
         <button
-            id="navDashboard"
-            onclick="showPage('dashboard')"
+            class="nav-btn active"
+            data-page="dashboardPage"
+            id="dashboardNav"
         >
             Dashboard
         </button>
 
         <button
-            id="navAthletes"
-            onclick="showPage('athletes')"
+            class="nav-btn"
+            data-page="athletesPage"
+            id="athletesNav"
         >
             Athletes
         </button>
 
         <button
-            id="navProfile"
-            onclick="showPage('profile')"
+            class="nav-btn"
+            data-page="profilePage"
+            id="profileNav"
         >
-            My Profile
+            Profile
         </button>
 
         <button
-            id="navHistory"
-            onclick="showPage('history')"
+            class="nav-btn"
+            data-page="historyPage"
+            id="historyNav"
         >
             History
         </button>
 
     </nav>
 
-    <main class="content">
 
-        <!-- DASHBOARD -->
+    <main>
 
-        <section id="pageDashboard" class="page">
+        <!-- =========================
+             DASHBOARD
+        ========================= -->
 
-            <div class="page-title">
+        <section id="dashboardPage" class="page active">
 
-                <h2>Dashboard</h2>
+            <h1 class="page-title">
+                Dashboard
+            </h1>
 
-                <p>
-                    Overview of the junior athlete group.
-                </p>
+            <p class="page-subtitle">
+                Leeds Rowing Club junior athlete overview.
+            </p>
 
-            </div>
 
             <div class="stats-grid">
 
-                <div class="stat-card stat-total">
-
+                <div class="stat-card">
                     <h3>Total Athletes</h3>
-
-                    <div
-                        id="totalAthletes"
-                        class="stat-number"
-                    >
+                    <div class="stat-number" id="totalAthletes">
                         0
                     </div>
-
                 </div>
 
-                <div class="stat-card stat-green">
-
+                <div class="stat-card">
                     <h3>Green Ratings</h3>
-
-                    <div
-                        id="greenCount"
-                        class="stat-number"
-                    >
+                    <div class="stat-number" id="greenRatings">
                         0
                     </div>
-
                 </div>
 
-                <div class="stat-card stat-amber">
-
+                <div class="stat-card">
                     <h3>Amber Ratings</h3>
-
-                    <div
-                        id="amberCount"
-                        class="stat-number"
-                    >
+                    <div class="stat-number" id="amberRatings">
                         0
                     </div>
-
                 </div>
 
-                <div class="stat-card stat-red">
-
+                <div class="stat-card">
                     <h3>Red Ratings</h3>
-
-                    <div
-                        id="redCount"
-                        class="stat-number"
-                    >
+                    <div class="stat-number" id="redRatings">
                         0
                     </div>
-
                 </div>
 
             </div>
 
-            <div class="card">
 
-                <h3>Quick Athlete Access</h3>
+            <h2 style="margin-bottom:15px;">
+                Quick Athlete Access
+            </h2>
 
-                <br>
+            <div class="table-container">
 
-                <div
-                    id="quickAthletes"
-                    class="table-wrapper"
-                ></div>
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Athlete</th>
+                            <th>Technical</th>
+                            <th>Fitness</th>
+                            <th>Performance</th>
+                            <th>Attitude</th>
+                            <th>Communication</th>
+                            <th>Consistency</th>
+                            <th>Profile</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="dashboardAthletesBody">
+
+                    </tbody>
+
+                </table>
 
             </div>
 
         </section>
 
-        <!-- ATHLETES -->
 
-        <section id="pageAthletes" class="page">
+        <!-- =========================
+             ATHLETES
+        ========================= -->
 
-            <div class="page-title">
+        <section id="athletesPage" class="page">
 
-                <h2>Athletes</h2>
+            <h1 class="page-title">
+                Athletes
+            </h1>
 
-                <p>
-                    Manage the junior athlete group.
-                </p>
+            <p class="page-subtitle">
+                Manage the Leeds Rowing Club junior squad.
+            </p>
 
-            </div>
+
+            <input
+                type="text"
+                id="athleteSearch"
+                class="search-box"
+                placeholder="Search athletes..."
+            >
+
 
             <div class="folder">
 
-                <div class="folder-header">
+                <div class="folder-header" id="boysFolderHeader">
 
-                    <span class="folder-icon">📁</span>
+                    <h2>
+                        📁 Boys
+                    </h2>
 
-                    <span>Boys</span>
-
-                </div>
-
-                <div class="search-box">
-
-                    <input
-                        type="text"
-                        id="athleteSearch"
-                        placeholder="Search athletes..."
-                        oninput="renderAthletes()"
-                    >
+                    <span id="boysFolderArrow">
+                        ▼
+                    </span>
 
                 </div>
+
 
                 <div
-                    id="athletesTable"
-                    class="table-wrapper"
+                    class="folder-content"
+                    id="boysFolderContent"
                 >
 
-                    <div class="loading">
-                        Loading athletes...
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Athlete</th>
+                                    <th>Technical</th>
+                                    <th>Fitness</th>
+                                    <th>Coxing / Performance</th>
+                                    <th>Attitude</th>
+                                    <th>Communication</th>
+                                    <th>Consistency</th>
+                                    <th>Open</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="athletesTableBody">
+
+                            </tbody>
+
+                        </table>
+
                     </div>
 
                 </div>
@@ -830,32 +831,45 @@ tr:hover td {
 
         </section>
 
-        <!-- PROFILE -->
 
-        <section id="pageProfile" class="page">
+        <!-- =========================
+             PROFILE
+        ========================= -->
 
-            <div id="profileContent"></div>
+        <section id="profilePage" class="page">
 
-        </section>
+            <div id="profileContent">
 
-        <!-- HISTORY -->
-
-        <section id="pageHistory" class="page">
-
-            <div class="page-title">
-
-                <h2>History</h2>
-
-                <p>
-                    RAG progression and changes.
-                </p>
+                <div class="loading">
+                    Select an athlete to view their profile.
+                </div>
 
             </div>
 
-            <div
-                id="historyContent"
-                class="card"
-            ></div>
+        </section>
+
+
+        <!-- =========================
+             HISTORY
+        ========================= -->
+
+        <section id="historyPage" class="page">
+
+            <h1 class="page-title">
+                RAG History
+            </h1>
+
+            <p class="page-subtitle">
+                Record of rating changes.
+            </p>
+
+            <div id="historyContent">
+
+                <div class="loading">
+                    Loading history...
+                </div>
+
+            </div>
 
         </section>
 
@@ -863,11 +877,10 @@ tr:hover td {
 
 </div>
 
-<div id="firebaseStatus" class="firebase-status">
-    Connected
-</div>
 
-<!-- FIREBASE + APPLICATION -->
+<!-- =========================
+     FIREBASE
+========================= -->
 
 <script type="module">
 
@@ -888,206 +901,10 @@ import {
     doc,
     getDoc,
     setDoc,
+    updateDoc,
     onSnapshot,
     runTransaction
 } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
-
-
-/* =====================================================
-   GOOGLE SHEETS SYNC
-===================================================== */
-
-const GOOGLE_SHEETS_SYNC_URL =
-    "https://script.google.com/macros/s/AKfycbwQkRpIdUJfk48pVqdASqXsiFWsmv13yBNA5kjYA7yP0vIrZET2xAOtdfEiLMj7B0Yh/exec";
-
-
-/* =====================================================
-   GOOGLE SHEETS SYNC HELPERS
-===================================================== */
-
-async function sendToGoogleSheets(payload) {
-
-    if (
-        !GOOGLE_SHEETS_SYNC_URL ||
-        GOOGLE_SHEETS_SYNC_URL.includes("PASTE_YOUR_")
-    ) {
-        return;
-    }
-
-    try {
-
-        await fetch(
-            GOOGLE_SHEETS_SYNC_URL,
-            {
-                method: "POST",
-                mode: "no-cors",
-                headers: {
-                    "Content-Type": "text/plain;charset=utf-8"
-                },
-                body: JSON.stringify(payload)
-            }
-        );
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Google Sheets sync failed:",
-            error
-        );
-
-    }
-
-}
-
-
-async function syncAthleteToGoogleSheets(
-    athleteId,
-    data
-) {
-
-    const athlete = athleteById[athleteId];
-
-    if (!athlete || !data) {
-        return;
-    }
-
-    await sendToGoogleSheets({
-
-        action: "upsertAthlete",
-
-        athlete: {
-
-            id: athleteId,
-
-            name: athlete.name,
-
-            technical:
-                data.ratings?.["Technical"] || "",
-
-            fitness:
-                data.ratings?.["Fitness"] || "",
-
-            performance:
-                data.ratings?.["Coxing / Performance"] || "",
-
-            attitude:
-                data.ratings?.["Attitude"] || "",
-
-            communication:
-                data.ratings?.["Communication"] || "",
-
-            consistency:
-                data.ratings?.["Consistency"] || "",
-
-            notes:
-                data.notes || ""
-
-        }
-
-    });
-
-}
-
-
-async function syncHistoryToGoogleSheets(
-    athleteId,
-    historyItem
-) {
-
-    const athlete = athleteById[athleteId];
-
-    if (!athlete || !historyItem) {
-        return;
-    }
-
-    await sendToGoogleSheets({
-
-        action: "addHistory",
-
-        history: {
-
-            date:
-                historyItem.date ||
-                new Date().toISOString(),
-
-            athleteId:
-                athleteId,
-
-            athlete:
-                athlete.name,
-
-            category:
-                historyItem.category || "",
-
-            oldRAG:
-                historyItem.oldValue ||
-                "Not Set",
-
-            newRAG:
-                historyItem.newValue ||
-                "Not Set",
-
-            changedBy:
-                historyItem.changedBy ||
-                "Unknown"
-
-        }
-
-    });
-
-}
-
-
-async function syncAllAthletesToGoogleSheets() {
-
-    if (
-        !GOOGLE_SHEETS_SYNC_URL ||
-        GOOGLE_SHEETS_SYNC_URL.includes("PASTE_YOUR_")
-    ) {
-        return;
-    }
-
-    for (const athlete of athletes) {
-
-        try {
-
-            const snapshot =
-                await getDoc(
-                    doc(
-                        db,
-                        "athletes",
-                        athlete.id
-                    )
-                );
-
-            const data =
-                snapshot.exists()
-                    ? snapshot.data()
-                    : defaultAthleteData(athlete);
-
-            await syncAthleteToGoogleSheets(
-                athlete.id,
-                data
-            );
-
-        }
-
-        catch (error) {
-
-            console.error(
-                "Could not sync " +
-                athlete.name +
-                " to Google Sheets:",
-                error
-            );
-
-        }
-
-    }
-
-}
 
 
 /* =====================================================
@@ -1116,22 +933,43 @@ const firebaseConfig = {
 
     measurementId:
         "G-GTGZZ20XJ9"
-
 };
+
+
+/* =====================================================
+   GOOGLE SHEETS
+===================================================== */
+
+const GOOGLE_SHEETS_SYNC_URL =
+    "https://script.google.com/macros/s/AKfycbwQkRpIdUJfk48pVqdASqXsiFWsmv13yBNA5kjYA7yP0vIrZET2xAOtdfEiLMj7B0Yh/exec";
 
 
 /* =====================================================
    INITIALISE FIREBASE
 ===================================================== */
 
-const firebaseApp =
-    initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
-const auth =
-    getAuth(firebaseApp);
+const auth = getAuth(app);
 
-const db =
-    getFirestore(firebaseApp);
+const db = getFirestore(app);
+
+
+/* =====================================================
+   STAFF ACCOUNTS
+===================================================== */
+
+const staffAccounts = {
+
+    admin: {
+        role: "Admin"
+    },
+
+    coach: {
+        role: "Coach"
+    }
+
+};
 
 
 /* =====================================================
@@ -1172,39 +1010,7 @@ const athletes = [
 
 
 /* =====================================================
-   STAFF ACCOUNTS
-===================================================== */
-
-const staffAccounts = {
-
-    admin: {
-        role: "Admin",
-        email: "admin@leedsrowingclub.firebaseapp.com"
-    },
-
-    coach: {
-        role: "Coach",
-        email: "coach@leedsrowingclub.firebaseapp.com"
-    }
-
-};
-
-
-/* =====================================================
-   ATHLETE LOOKUP
-===================================================== */
-
-const athleteById = {};
-
-athletes.forEach(
-    athlete => {
-        athleteById[athlete.id] = athlete;
-    }
-);
-
-
-/* =====================================================
-   CATEGORIES
+   RAG CATEGORIES
 ===================================================== */
 
 const categories = [
@@ -1224,157 +1030,73 @@ const categories = [
 ===================================================== */
 
 let currentUser = null;
-let currentUsername = "";
-let currentRole = "";
+
+let currentRole = null;
+
 let currentAthleteId = null;
+
 let athleteData = {};
 
 let unsubscribeAthletes = null;
+
 let unsubscribeOwnAthlete = null;
 
 
 /* =====================================================
-   RAG HELPERS
+   DOM
 ===================================================== */
 
-function ragScore(value) {
+const loginScreen =
+    document.getElementById("loginScreen");
 
-    if (value === "Green") return 3;
-    if (value === "Amber") return 2;
-    if (value === "Red") return 1;
+const appScreen =
+    document.getElementById("app");
 
-    return 0;
+const loginButton =
+    document.getElementById("loginButton");
 
-}
+const logoutButton =
+    document.getElementById("logoutButton");
 
+const loginError =
+    document.getElementById("loginError");
 
-function ragClass(value) {
+const usernameInput =
+    document.getElementById("username");
 
-    if (value === "Green") return "green";
-    if (value === "Amber") return "amber";
-    if (value === "Red") return "red";
-
-    return "none";
-
-}
-
-
-/* =====================================================
-   USERNAME → FIREBASE EMAIL
-===================================================== */
-
-function usernameToEmail(username) {
-
-    return (
-        username
-            .trim()
-            .toLowerCase() +
-        "@leedsrowingclub.firebaseapp.com"
-    );
-
-}
-
-
-/* =====================================================
-   DEFAULT DATA
-===================================================== */
-
-function defaultAthleteData(athlete) {
-
-    return {
-
-        name: athlete.name,
-
-        ratings: {},
-
-        notes: "",
-
-        history: []
-
-    };
-
-}
-
-
-/* =====================================================
-   ENSURE ATHLETE DOCUMENTS
-===================================================== */
-
-async function ensureAthleteDocuments() {
-
-    for (const athlete of athletes) {
-
-        const ref =
-            doc(
-                db,
-                "athletes",
-                athlete.id
-            );
-
-        const snapshot =
-            await getDoc(ref);
-
-        if (!snapshot.exists()) {
-
-            await setDoc(
-                ref,
-                defaultAthleteData(athlete)
-            );
-
-        }
-
-    }
-
-}
+const passwordInput =
+    document.getElementById("password");
 
 
 /* =====================================================
    LOGIN
 ===================================================== */
 
-window.login = async function() {
+loginButton.addEventListener("click", login);
+
+passwordInput.addEventListener("keydown", function(e) {
+
+    if (e.key === "Enter") {
+        login();
+    }
+
+});
+
+
+async function login() {
 
     const username =
-        document
-            .getElementById("usernameInput")
-            .value
-            .trim()
-            .toLowerCase();
+        usernameInput.value.trim().toLowerCase();
 
     const password =
-        document
-            .getElementById("passwordInput")
-            .value;
-
-    const error =
-        document.getElementById("loginError");
-
-    error.style.display = "none";
+        passwordInput.value;
 
 
     if (!username || !password) {
 
-        error.textContent =
-            "Please enter your username and password.";
-
-        error.style.display = "block";
-
-        return;
-
-    }
-
-
-    const knownAccount =
-        staffAccounts[username] ||
-        athleteById[username];
-
-
-    if (!knownAccount) {
-
-        error.textContent =
-            "Incorrect username or password.";
-
-        error.style.display = "block";
+        showLoginError(
+            "Please enter your username and password."
+        );
 
         return;
 
@@ -1383,311 +1105,329 @@ window.login = async function() {
 
     try {
 
+        const email =
+            username + "@leedsrowingclub.firebaseapp.com";
+
+
         await signInWithEmailAndPassword(
-
             auth,
-
-            usernameToEmail(username),
-
+            email,
             password
+        );
 
+
+        loginError.style.display = "none";
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        showLoginError(
+            "Incorrect username or password."
         );
 
     }
 
-    catch (err) {
+}
 
-        console.error(
-            "Login error:",
-            err
-        );
 
-        error.textContent =
-            "Incorrect username or password.";
+function showLoginError(message) {
 
-        error.style.display = "block";
+    loginError.textContent = message;
 
-    }
+    loginError.style.display = "block";
 
-};
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+logoutButton.addEventListener("click", async function() {
+
+    await signOut(auth);
+
+});
 
 
 /* =====================================================
    AUTH STATE
 ===================================================== */
 
-onAuthStateChanged(
+onAuthStateChanged(auth, async function(user) {
 
-    auth,
+    if (!user) {
 
-    async user => {
+        currentUser = null;
+        currentRole = null;
 
-        if (!user) {
-
-            currentUser = null;
-
-            return;
-
+        if (unsubscribeAthletes) {
+            unsubscribeAthletes();
+            unsubscribeAthletes = null;
         }
 
-
-        currentUser = user;
-
-
-        const email =
-            (user.email || "").toLowerCase();
-
-
-        currentUsername =
-            email
-                .replace(
-                    "@leedsrowingclub.firebaseapp.com",
-                    ""
-                )
-                .toLowerCase();
-
-
-        if (staffAccounts[currentUsername]) {
-
-            currentRole =
-                staffAccounts[currentUsername].role;
-
+        if (unsubscribeOwnAthlete) {
+            unsubscribeOwnAthlete();
+            unsubscribeOwnAthlete = null;
         }
 
-        else if (athleteById[currentUsername]) {
+        appScreen.style.display = "none";
 
-            currentRole =
-                "Athlete";
+        loginScreen.style.display = "flex";
 
-        }
-
-        else {
-
-            await signOut(auth);
-
-            return;
-
-        }
-
-
-        document
-            .getElementById("loginScreen")
-            .style.display =
-            "none";
-
-        document
-            .getElementById("app")
-            .style.display =
-            "block";
-
-        document
-            .getElementById("roleBadge")
-            .textContent =
-            currentRole;
-
-
-        configureNavigation();
-
-        showFirebaseStatus();
-
-
-        if (
-            currentRole === "Admin" ||
-            currentRole === "Coach"
-        ) {
-
-            try {
-
-                await ensureAthleteDocuments();
-
-                syncAllAthletesToGoogleSheets();
-
-            }
-
-            catch (error) {
-
-                console.error(
-                    "Could not create athlete documents:",
-                    error
-                );
-
-            }
-
-
-            startStaffListener();
-
-            showPage("dashboard");
-
-        }
-
-        else {
-
-            currentAthleteId =
-                currentUsername;
-
-            startAthleteListener();
-
-            showPage("profile");
-
-        }
+        return;
 
     }
 
-);
+
+    currentUser = user;
+
+
+    const username =
+        user.email
+            .split("@")[0]
+            .toLowerCase();
+
+
+    if (staffAccounts[username]) {
+
+        currentRole =
+            staffAccounts[username].role;
+
+        startStaffMode(username);
+
+    } else {
+
+        currentRole = "Athlete";
+
+        startAthleteMode(username);
+
+    }
+
+});
 
 
 /* =====================================================
-   FIREBASE STATUS
+   STAFF MODE
 ===================================================== */
 
-function showFirebaseStatus() {
+async function startStaffMode(username) {
 
-    const status =
-        document.getElementById(
-            "firebaseStatus"
-        );
+    loginScreen.style.display = "none";
 
-    status.classList.add("show");
-
-    setTimeout(
-        () => {
-            status.classList.remove("show");
-        },
-        2000
-    );
-
-}
+    appScreen.style.display = "block";
 
 
-/* =====================================================
-   STAFF FIRESTORE LISTENER
-===================================================== */
+    document.getElementById("loggedInUser").textContent =
+        username.charAt(0).toUpperCase() +
+        username.slice(1);
 
-function startStaffListener() {
+
+    document.getElementById("roleBadge").textContent =
+        currentRole;
+
+
+    document.getElementById("dashboardNav").style.display =
+        "block";
+
+    document.getElementById("athletesNav").style.display =
+        "block";
+
+    document.getElementById("historyNav").style.display =
+        "block";
+
+    document.getElementById("profileNav").style.display =
+        "block";
+
+
+    showPage("dashboardPage");
+
+
+    await ensureAthleteDocuments();
+
 
     if (unsubscribeAthletes) {
         unsubscribeAthletes();
     }
 
 
-    unsubscribeAthletes =
-        onSnapshot(
+    unsubscribeAthletes = onSnapshot(
 
-            collection(
-                db,
-                "athletes"
-            ),
+        collection(db, "athletes"),
 
-            snapshot => {
+        function(snapshot) {
 
-                athleteData = {};
+            athleteData = {};
 
+            snapshot.forEach(function(documentSnapshot) {
 
-                snapshot.forEach(
-                    documentSnapshot => {
+                athleteData[documentSnapshot.id] =
+                    documentSnapshot.data();
 
-                        athleteData[
-                            documentSnapshot.id
-                        ] =
-                            documentSnapshot.data();
-
-                    }
-                );
+            });
 
 
-                renderDashboard();
+            renderEverything();
 
-                renderAthletes();
+        },
 
+        function(error) {
 
-                if (
-                    currentAthleteId &&
-                    athleteData[currentAthleteId]
-                ) {
+            console.error(
+                "Firestore listener error:",
+                error
+            );
 
-                    renderProfile(
-                        currentAthleteId
-                    );
+        }
 
-                    renderHistory(
-                        currentAthleteId
-                    );
-
-                }
-
-            },
-
-            error => {
-
-                console.error(
-                    "Firestore listener error:",
-                    error
-                );
-
-            }
-
-        );
+    );
 
 }
 
 
 /* =====================================================
-   ATHLETE FIRESTORE LISTENER
+   ATHLETE MODE
 ===================================================== */
 
-function startAthleteListener() {
+async function startAthleteMode(username) {
+
+    const athlete =
+        athletes.find(
+            a => a.id.toLowerCase() === username.toLowerCase()
+        );
+
+
+    if (!athlete) {
+
+        await signOut(auth);
+
+        showLoginError(
+            "This account is not linked to an athlete."
+        );
+
+        return;
+
+    }
+
+
+    currentAthleteId =
+        athlete.id;
+
+
+    loginScreen.style.display = "none";
+
+    appScreen.style.display = "block";
+
+
+    document.getElementById("loggedInUser").textContent =
+        athlete.name;
+
+
+    document.getElementById("roleBadge").textContent =
+        "Athlete";
+
+
+    document.getElementById("dashboardNav").style.display =
+        "none";
+
+    document.getElementById("athletesNav").style.display =
+        "none";
+
+    document.getElementById("historyNav").style.display =
+        "block";
+
+    document.getElementById("profileNav").style.display =
+        "block";
+
+
+    showPage("profilePage");
+
 
     if (unsubscribeOwnAthlete) {
         unsubscribeOwnAthlete();
     }
 
 
-    const athleteRef =
-        doc(
-            db,
-            "athletes",
-            currentAthleteId
-        );
+    unsubscribeOwnAthlete = onSnapshot(
 
+        doc(db, "athletes", currentAthleteId),
 
-    unsubscribeOwnAthlete =
-        onSnapshot(
+        function(snapshot) {
 
-            athleteRef,
+            if (!snapshot.exists()) {
 
-            snapshot => {
-
-                if (!snapshot.exists()) {
-                    return;
-                }
-
-
-                athleteData[
-                    currentAthleteId
-                ] =
-                    snapshot.data();
-
-
-                renderProfile(
-                    currentAthleteId
+                showProfileMessage(
+                    "Athlete profile has not been created yet."
                 );
 
-                renderHistory(
-                    currentAthleteId
-                );
-
-            },
-
-            error => {
-
-                console.error(
-                    "Athlete listener error:",
-                    error
-                );
+                return;
 
             }
 
-        );
+
+            athleteData = {
+
+                [currentAthleteId]:
+                    snapshot.data()
+
+            };
+
+
+            renderOwnProfile();
+
+            renderOwnHistory();
+
+        },
+
+        function(error) {
+
+            console.error(error);
+
+            showProfileMessage(
+                "Unable to load your profile."
+            );
+
+        }
+
+    );
+
+}
+
+
+/* =====================================================
+   ENSURE DOCUMENTS
+===================================================== */
+
+async function ensureAthleteDocuments() {
+
+    for (const athlete of athletes) {
+
+        const reference =
+            doc(db, "athletes", athlete.id);
+
+        const snapshot =
+            await getDoc(reference);
+
+
+        if (!snapshot.exists()) {
+
+            await setDoc(reference, {
+
+                name: athlete.name,
+
+                ratings: {},
+
+                notes: "",
+
+                history: []
+
+            });
+
+        }
+
+    }
 
 }
 
@@ -1696,150 +1436,109 @@ function startAthleteListener() {
    NAVIGATION
 ===================================================== */
 
-function configureNavigation() {
+document.querySelectorAll(".nav-btn")
+    .forEach(function(button) {
 
-    const staff =
-        currentRole === "Admin" ||
-        currentRole === "Coach";
+        button.addEventListener(
+            "click",
+            function() {
 
+                showPage(
+                    button.dataset.page
+                );
 
-    document
-        .getElementById("navDashboard")
-        .style.display =
-        staff ? "block" : "none";
+            }
+        );
 
-
-    document
-        .getElementById("navAthletes")
-        .style.display =
-        staff ? "block" : "none";
+    });
 
 
-    document
-        .getElementById("navProfile")
-        .style.display =
-        "block";
+function showPage(pageId) {
+
+    document.querySelectorAll(".page")
+        .forEach(function(page) {
+
+            page.classList.remove("active");
+
+        });
 
 
-    document
-        .getElementById("navHistory")
-        .style.display =
-        "block";
+    document.querySelectorAll(".nav-btn")
+        .forEach(function(button) {
+
+            button.classList.remove("active");
+
+        });
+
+
+    const page =
+        document.getElementById(pageId);
+
+    if (page) {
+
+        page.classList.add("active");
+
+    }
+
+
+    const matchingNav =
+        document.querySelector(
+            `[data-page="${pageId}"]`
+        );
+
+
+    if (matchingNav) {
+
+        matchingNav.classList.add("active");
+
+    }
+
+
+    if (pageId === "historyPage") {
+
+        if (currentRole === "Athlete") {
+            renderOwnHistory();
+        } else {
+            renderStaffHistory();
+        }
+
+    }
+
+
+    if (pageId === "profilePage") {
+
+        if (currentRole === "Athlete") {
+            renderOwnProfile();
+        }
+
+    }
 
 }
 
 
-window.showPage = function(page) {
+/* =====================================================
+   RENDER EVERYTHING
+===================================================== */
 
-    document
-        .querySelectorAll(".page")
-        .forEach(
-            element =>
-                element.classList.remove("active")
-        );
+function renderEverything() {
 
+    renderDashboard();
 
-    document
-        .querySelectorAll(".nav button")
-        .forEach(
-            button =>
-                button.classList.remove("active")
-        );
+    renderAthletesTable();
 
-
-    if (page === "dashboard") {
-
-        if (
-            currentRole !== "Admin" &&
-            currentRole !== "Coach"
-        ) {
-            return;
-        }
-
-
-        document
-            .getElementById("pageDashboard")
-            .classList.add("active");
-
-
-        document
-            .getElementById("navDashboard")
-            .classList.add("active");
-
-
-        renderDashboard();
-
-    }
-
-    else if (page === "athletes") {
-
-        if (
-            currentRole !== "Admin" &&
-            currentRole !== "Coach"
-        ) {
-            return;
-        }
-
-
-        document
-            .getElementById("pageAthletes")
-            .classList.add("active");
-
-
-        document
-            .getElementById("navAthletes")
-            .classList.add("active");
-
-
-        renderAthletes();
-
-    }
-
-    else if (page === "profile") {
-
-        document
-            .getElementById("pageProfile")
-            .classList.add("active");
-
-
-        document
-            .getElementById("navProfile")
-            .classList.add("active");
-
+    if (
+        currentRole === "Staff" ||
+        currentRole === "Coach" ||
+        currentRole === "Admin"
+    ) {
 
         if (currentAthleteId) {
-
-            renderProfile(
-                currentAthleteId
-            );
-
+            renderProfile();
         }
 
     }
 
-    else if (page === "history") {
-
-        document
-            .getElementById("pageHistory")
-            .classList.add("active");
-
-
-        document
-            .getElementById("navHistory")
-            .classList.add("active");
-
-
-        if (currentAthleteId) {
-
-            renderHistory(
-                currentAthleteId
-            );
-
-        }
-
-    }
-
-};
+}
 
 
 /* =====================================================
@@ -1848,17 +1547,7 @@ window.showPage = function(page) {
 
 function renderDashboard() {
 
-    if (
-        currentRole !== "Admin" &&
-        currentRole !== "Coach"
-    ) {
-        return;
-    }
-
-
-    document
-        .getElementById("totalAthletes")
-        .textContent =
+    const total =
         athletes.length;
 
 
@@ -1867,334 +1556,353 @@ function renderDashboard() {
     let red = 0;
 
 
-    athletes.forEach(
-        athlete => {
+    Object.values(athleteData)
+        .forEach(function(data) {
 
-            const data =
-                athleteData[athlete.id];
+            Object.values(
+                data.ratings || {}
+            ).forEach(function(value) {
 
-            if (!data) return;
-
-
-            categories.forEach(
-                category => {
-
-                    const value =
-                        data.ratings?.[category];
-
-
-                    if (value === "Green") green++;
-                    if (value === "Amber") amber++;
-                    if (value === "Red") red++;
-
+                if (value === "Green") {
+                    green++;
                 }
-            );
 
-        }
-    );
+                if (value === "Amber") {
+                    amber++;
+                }
 
+                if (value === "Red") {
+                    red++;
+                }
 
-    document
-        .getElementById("greenCount")
-        .textContent =
-        green;
+            });
 
-    document
-        .getElementById("amberCount")
-        .textContent =
-        amber;
-
-    document
-        .getElementById("redCount")
-        .textContent =
-        red;
+        });
 
 
-    const quick =
+    document.getElementById(
+        "totalAthletes"
+    ).textContent = total;
+
+
+    document.getElementById(
+        "greenRatings"
+    ).textContent = green;
+
+
+    document.getElementById(
+        "amberRatings"
+    ).textContent = amber;
+
+
+    document.getElementById(
+        "redRatings"
+    ).textContent = red;
+
+
+    const body =
         document.getElementById(
-            "quickAthletes"
+            "dashboardAthletesBody"
         );
 
 
-    let html = `
-
-        <table>
-
-            <thead>
-
-                <tr>
-
-                    <th>Athlete</th>
-                    <th>Technical</th>
-                    <th>Fitness</th>
-                    <th>Coxing / Performance</th>
-                    <th>Attitude</th>
-                    <th>Communication</th>
-                    <th>Consistency</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-    `;
+    body.innerHTML = "";
 
 
-    athletes.forEach(
-        athlete => {
+    athletes.forEach(function(athlete) {
 
-            const data =
-                athleteData[athlete.id] ||
-                defaultAthleteData(athlete);
+        const data =
+            athleteData[athlete.id] || {};
 
 
-            html += `
-
-                <tr>
-
-                    <td>
-
-                        <span
-                            class="athlete-name"
-                            onclick="openProfile('${athlete.id}')"
-                        >
-                            ${escapeHtml(athlete.name)}
-                        </span>
-
-                    </td>
-
-            `;
+        const row =
+            document.createElement("tr");
 
 
-            categories.forEach(
-                category => {
+        row.innerHTML = `
 
-                    const value =
-                        data.ratings?.[category] ||
-                        "Not Set";
+            <td>
+                <strong>${escapeHtml(athlete.name)}</strong>
+            </td>
+
+            <td>
+                ${ragBadge(
+                    data.ratings?.["Technical"]
+                )}
+            </td>
+
+            <td>
+                ${ragBadge(
+                    data.ratings?.["Fitness"]
+                )}
+            </td>
+
+            <td>
+                ${ragBadge(
+                    data.ratings?.["Coxing / Performance"]
+                )}
+            </td>
+
+            <td>
+                ${ragBadge(
+                    data.ratings?.["Attitude"]
+                )}
+            </td>
+
+            <td>
+                ${ragBadge(
+                    data.ratings?.["Communication"]
+                )}
+            </td>
+
+            <td>
+                ${ragBadge(
+                    data.ratings?.["Consistency"]
+                )}
+            </td>
+
+            <td>
+                <button
+                    class="primary-btn"
+                    onclick="openProfile('${athlete.id}')"
+                >
+                    Open
+                </button>
+            </td>
+
+        `;
 
 
-                    html += `
+        body.appendChild(row);
 
-                        <td>
-
-                            <span
-                                class="rag-display ${ragClass(value)}"
-                            >
-                                ${escapeHtml(value)}
-                            </span>
-
-                        </td>
-
-                    `;
-
-                }
-            );
-
-
-            html += `
-
-                </tr>
-
-            `;
-
-        }
-    );
-
-
-    html += `
-
-            </tbody>
-
-        </table>
-
-    `;
-
-
-    quick.innerHTML =
-        html;
+    });
 
 }
 
 
 /* =====================================================
-   ATHLETE TABLE
+   ATHLETES TABLE
 ===================================================== */
 
-window.renderAthletes = function() {
+function renderAthletesTable(
+    searchTerm = ""
+) {
 
-    if (
-        currentRole !== "Admin" &&
-        currentRole !== "Coach"
-    ) {
-        return;
-    }
+    const body =
+        document.getElementById(
+            "athletesTableBody"
+        );
+
+
+    body.innerHTML = "";
 
 
     const search =
-        document
-            .getElementById("athleteSearch")
-            .value
+        searchTerm
             .trim()
             .toLowerCase();
 
 
-    const filtered =
-        athletes.filter(
-            athlete =>
-                athlete.name
-                    .toLowerCase()
-                    .includes(search)
-        );
+    athletes
+        .filter(function(athlete) {
 
+            return athlete.name
+                .toLowerCase()
+                .includes(search);
 
-    let html = `
-
-        <table>
-
-            <thead>
-
-                <tr>
-
-                    <th>Athlete</th>
-
-    `;
-
-
-    categories.forEach(
-        category => {
-
-            html +=
-                `<th>${escapeHtml(category)}</th>`;
-
-        }
-    );
-
-
-    html += `
-
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-    `;
-
-
-    filtered.forEach(
-        athlete => {
+        })
+        .forEach(function(athlete) {
 
             const data =
-                athleteData[athlete.id] ||
-                defaultAthleteData(athlete);
+                athleteData[athlete.id] || {};
 
 
-            html += `
+            const row =
+                document.createElement("tr");
 
-                <tr>
 
-                    <td>
+            row.innerHTML = `
 
-                        <span
-                            class="athlete-name"
-                            onclick="openProfile('${athlete.id}')"
-                        >
-                            ${escapeHtml(athlete.name)}
-                        </span>
+                <td>
+                    <strong>
+                        ${escapeHtml(athlete.name)}
+                    </strong>
+                </td>
 
-                    </td>
+                <td>
+                    ${staffRagSelect(
+                        athlete.id,
+                        "Technical",
+                        data.ratings?.["Technical"]
+                    )}
+                </td>
+
+                <td>
+                    ${staffRagSelect(
+                        athlete.id,
+                        "Fitness",
+                        data.ratings?.["Fitness"]
+                    )}
+                </td>
+
+                <td>
+                    ${staffRagSelect(
+                        athlete.id,
+                        "Coxing / Performance",
+                        data.ratings?.["Coxing / Performance"]
+                    )}
+                </td>
+
+                <td>
+                    ${staffRagSelect(
+                        athlete.id,
+                        "Attitude",
+                        data.ratings?.["Attitude"]
+                    )}
+                </td>
+
+                <td>
+                    ${staffRagSelect(
+                        athlete.id,
+                        "Communication",
+                        data.ratings?.["Communication"]
+                    )}
+                </td>
+
+                <td>
+                    ${staffRagSelect(
+                        athlete.id,
+                        "Consistency",
+                        data.ratings?.["Consistency"]
+                    )}
+                </td>
+
+                <td>
+                    <button
+                        class="primary-btn"
+                        onclick="openProfile('${athlete.id}')"
+                    >
+                        Open
+                    </button>
+                </td>
 
             `;
 
 
-            categories.forEach(
-                category => {
+            body.appendChild(row);
 
-                    const value =
-                        data.ratings?.[category] ||
-                        "Not Set";
+        });
+
+}
 
 
-                    html += `
+/* =====================================================
+   SEARCH
+===================================================== */
 
-                        <td>
+document.getElementById(
+    "athleteSearch"
+).addEventListener(
+    "input",
+    function() {
 
-                            <select
-                                class="rag-select ${ragClass(value)}"
-                                onchange="changeRAG(
-                                    '${athlete.id}',
-                                    '${escapeJs(category)}',
-                                    this.value
-                                )"
-                            >
+        renderAthletesTable(
+            this.value
+        );
 
-                                <option
-                                    value=""
-                                    ${value === "Not Set" ? "selected" : ""}
-                                >
-                                    Not Set
-                                </option>
+    }
+);
 
-                                <option
-                                    value="Green"
-                                    ${value === "Green" ? "selected" : ""}
-                                >
-                                    Green
-                                </option>
 
-                                <option
-                                    value="Amber"
-                                    ${value === "Amber" ? "selected" : ""}
-                                >
-                                    Amber
-                                </option>
+/* =====================================================
+   BOYS FOLDER
+===================================================== */
 
-                                <option
-                                    value="Red"
-                                    ${value === "Red" ? "selected" : ""}
-                                >
-                                    Red
-                                </option>
+document.getElementById(
+    "boysFolderHeader"
+).addEventListener(
+    "click",
+    function() {
 
-                            </select>
+        const content =
+            document.getElementById(
+                "boysFolderContent"
+            );
 
-                        </td>
-
-                    `;
-
-                }
+        const arrow =
+            document.getElementById(
+                "boysFolderArrow"
             );
 
 
-            html += `
+        if (content.style.display === "none") {
 
-                </tr>
+            content.style.display = "block";
 
-            `;
+            arrow.textContent = "▼";
+
+        } else {
+
+            content.style.display = "none";
+
+            arrow.textContent = "▶";
 
         }
-    );
+
+    }
+);
 
 
-    html += `
+/* =====================================================
+   RAG SELECT
+===================================================== */
 
-            </tbody>
+function staffRagSelect(
+    athleteId,
+    category,
+    currentValue
+) {
 
-        </table>
+    const value =
+        currentValue || "";
+
+
+    const css =
+        ragClass(value);
+
+
+    return `
+
+        <select
+            class="rag-select ${css}"
+            onchange="changeRAG(
+                '${escapeJs(athleteId)}',
+                '${escapeJs(category)}',
+                this.value
+            )"
+        >
+
+            <option value="" ${value === "" ? "selected" : ""}>
+                Not Set
+            </option>
+
+            <option value="Green" ${value === "Green" ? "selected" : ""}>
+                Green
+            </option>
+
+            <option value="Amber" ${value === "Amber" ? "selected" : ""}>
+                Amber
+            </option>
+
+            <option value="Red" ${value === "Red" ? "selected" : ""}>
+                Red
+            </option>
+
+        </select>
 
     `;
 
-
-    document
-        .getElementById("athletesTable")
-        .innerHTML =
-        filtered.length
-            ? html
-            : `<div class="loading">No athletes found.</div>`;
-
-};
+}
 
 
 /* =====================================================
@@ -2204,60 +1912,85 @@ window.renderAthletes = function() {
 window.changeRAG = async function(
     athleteId,
     category,
-    value
+    newValue
 ) {
 
     if (
         currentRole !== "Admin" &&
         currentRole !== "Coach"
     ) {
+
         return;
+
     }
 
 
-    const athleteRef =
-        doc(
-            db,
-            "athletes",
-            athleteId
-        );
-
-
-    let historyEvent = null;
+    const reference =
+        doc(db, "athletes", athleteId);
 
 
     try {
 
+        let historyItem = null;
+
+
         await runTransaction(
-
             db,
-
-            async transaction => {
+            async function(transaction) {
 
                 const snapshot =
-                    await transaction.get(
-                        athleteRef
-                    );
+                    await transaction.get(reference);
 
 
                 const existing =
                     snapshot.exists()
                         ? snapshot.data()
-                        : defaultAthleteData(
-                            athleteById[athleteId]
-                        );
+                        : {};
+
+
+                const ratings =
+                    {
+                        ...(existing.ratings || {})
+                    };
 
 
                 const oldValue =
-                    existing.ratings?.[category] ||
-                    "";
+                    ratings[category] || "";
 
 
-                const newRatings = {
+                if (oldValue === newValue) {
+                    return;
+                }
 
-                    ...(existing.ratings || {}),
 
-                    [category]: value
+                if (newValue) {
+
+                    ratings[category] =
+                        newValue;
+
+                } else {
+
+                    delete ratings[category];
+
+                }
+
+
+                historyItem = {
+
+                    date:
+                        new Date().toISOString(),
+
+                    category:
+                        category,
+
+                    oldValue:
+                        oldValue,
+
+                    newValue:
+                        newValue,
+
+                    changedBy:
+                        currentUser?.email || "Unknown"
 
                 };
 
@@ -2268,161 +2001,61 @@ window.changeRAG = async function(
                         : [];
 
 
-                if (oldValue !== value) {
-
-                    historyEvent = {
-
-                        date:
-                            new Date()
-                                .toISOString(),
-
-                        category:
-                            category,
-
-                        oldValue:
-                            oldValue ||
-                            "Not Set",
-
-                        newValue:
-                            value ||
-                            "Not Set",
-
-                        changedBy:
-                            currentRole +
-                            ": " +
-                            currentUsername
-
-                    };
-
-
-                    history.push(
-                        historyEvent
-                    );
-
-                }
+                history.unshift(historyItem);
 
 
                 transaction.set(
-
-                    athleteRef,
-
+                    reference,
                     {
 
                         name:
                             existing.name ||
-                            athleteById[athleteId].name,
+                            getAthleteName(athleteId),
 
                         ratings:
-                            newRatings,
+                            ratings,
 
                         notes:
-                            existing.notes ||
-                            "",
+                            existing.notes || "",
 
                         history:
                             history
 
                     },
-
                     {
                         merge: true
                     }
-
                 );
 
             }
-
         );
 
 
-        const latestSnapshot =
-            await getDoc(
-                athleteRef
-            );
-
-
-        if (latestSnapshot.exists()) {
-
-            const latestData =
-                latestSnapshot.data();
-
+        if (historyItem) {
 
             await syncAthleteToGoogleSheets(
-                athleteId,
-                latestData
+                athleteId
             );
 
 
-            if (historyEvent) {
-
-                await syncHistoryToGoogleSheets(
-                    athleteId,
-                    historyEvent
-                );
-
-            }
+            await syncHistoryToGoogleSheets(
+                athleteId,
+                historyItem
+            );
 
         }
 
 
-        showFirebaseStatus();
-
-    }
-
-    catch (error) {
+    } catch (error) {
 
         console.error(
-            "Could not save RAG:",
+            "Unable to change RAG:",
             error
         );
 
-
         alert(
-            "The RAG could not be saved. Please check your Firebase setup."
+            "There was a problem updating the RAG rating."
         );
-
-    }
-
-};
-
-
-/* =====================================================
-   OPEN PROFILE
-===================================================== */
-
-window.openProfile = function(
-    athleteId
-) {
-
-    if (
-        currentRole === "Athlete" &&
-        athleteId !== currentAthleteId
-    ) {
-        return;
-    }
-
-
-    currentAthleteId =
-        athleteId;
-
-
-    showPage("profile");
-
-};
-
-
-/* =====================================================
-   BACK TO ATHLETES
-===================================================== */
-
-window.backToAthletes = function() {
-
-    if (
-        currentRole === "Admin" ||
-        currentRole === "Coach"
-    ) {
-
-        showPage("athletes");
 
     }
 
@@ -2433,26 +2066,67 @@ window.backToAthletes = function() {
    PROFILE
 ===================================================== */
 
-function renderProfile(
+window.openProfile = function(
     athleteId
 ) {
 
+    if (
+        currentRole === "Athlete" &&
+        athleteId !== currentAthleteId
+    ) {
+
+        return;
+
+    }
+
+
+    currentAthleteId =
+        athleteId;
+
+
+    showPage("profilePage");
+
+
+    renderProfile();
+
+};
+
+
+function renderProfile() {
+
+    if (!currentAthleteId) {
+
+        return;
+
+    }
+
+
     const athlete =
-        athleteById[athleteId];
+        athletes.find(
+            a => a.id === currentAthleteId
+        );
 
 
     if (!athlete) {
+
         return;
+
     }
 
 
     const data =
-        athleteData[athleteId] ||
-        defaultAthleteData(athlete);
+        athleteData[currentAthleteId] || {};
 
 
-    const readOnly =
-        currentRole === "Athlete";
+    const container =
+        document.getElementById(
+            "profileContent"
+        );
+
+
+    const isStaff =
+        currentRole === "Admin" ||
+        currentRole === "Coach";
 
 
     let html = `
@@ -2461,344 +2135,203 @@ function renderProfile(
 
             <div>
 
-                <h2>
+                <div class="profile-name">
                     ${escapeHtml(athlete.name)}
-                </h2>
+                </div>
 
-                <p>
-                    ${
-                        readOnly
-                            ? "Your athlete profile"
-                            : "Athlete profile"
-                    }
-                </p>
+                <div class="profile-id">
+                    Athlete ID: ${escapeHtml(athlete.id)}
+                </div>
 
             </div>
 
-    `;
+            <div>
 
+                <button
+                    class="secondary-btn"
+                    onclick="showPage('athletesPage')"
+                    ${isStaff ? "" : "style='display:none;'"}
+                >
+                    ← Back to Athletes
+                </button>
 
-    if (!readOnly) {
-
-        html += `
-
-            <button
-                class="back-button"
-                onclick="backToAthletes()"
-            >
-                ← Back to Athletes
-            </button>
-
-        `;
-
-    }
-
-
-    html += `
+            </div>
 
         </div>
 
-        <div class="card">
 
-            <h3>RAG Ratings</h3>
-
-            <div class="rag-grid">
-
+        <div class="rag-grid">
     `;
 
 
-    categories.forEach(
-        category => {
+    categories.forEach(function(category) {
 
-            const value =
-                data.ratings?.[category] ||
-                "Not Set";
+        const value =
+            data.ratings?.[category] || "";
 
+
+        if (isStaff) {
 
             html += `
 
                 <div class="rag-card">
 
-                    <h4>
+                    <h3>
                         ${escapeHtml(category)}
-                    </h4>
+                    </h3>
+
+                    ${staffRagSelect(
+                        athlete.id,
+                        category,
+                        value
+                    )}
+
+                </div>
 
             `;
 
-
-            if (readOnly) {
-
-                html += `
-
-                    <div
-                        class="rag-display ${ragClass(value)}"
-                    >
-                        ${escapeHtml(value)}
-                    </div>
-
-                `;
-
-            }
-
-            else {
-
-                html += `
-
-                    <select
-                        class="rag-select ${ragClass(value)}"
-                        onchange="changeRAG(
-                            '${athleteId}',
-                            '${escapeJs(category)}',
-                            this.value
-                        )"
-                    >
-
-                        <option
-                            value=""
-                            ${value === "Not Set" ? "selected" : ""}
-                        >
-                            Not Set
-                        </option>
-
-                        <option
-                            value="Green"
-                            ${value === "Green" ? "selected" : ""}
-                        >
-                            Green
-                        </option>
-
-                        <option
-                            value="Amber"
-                            ${value === "Amber" ? "selected" : ""}
-                        >
-                            Amber
-                        </option>
-
-                        <option
-                            value="Red"
-                            ${value === "Red" ? "selected" : ""}
-                        >
-                            Red
-                        </option>
-
-                    </select>
-
-                `;
-
-            }
-
+        } else {
 
             html += `
+
+                <div class="rag-card">
+
+                    <h3>
+                        ${escapeHtml(category)}
+                    </h3>
+
+                    ${ragBadge(value)}
 
                 </div>
 
             `;
 
         }
-    );
+
+    });
 
 
     html += `
 
-            </div>
-
         </div>
 
-        <div class="card">
 
-            <h3>Coach Notes</h3>
+        <div class="notes-card">
 
-    `;
-
-
-    if (readOnly) {
-
-        html += `
-
-            <div class="coach-notes-display">
-
-                ${
-                    data.notes
-                        ? escapeHtml(data.notes)
-                        : "No coach notes have been added yet."
-                }
-
-            </div>
-
-        `;
-
-    }
-
-    else {
-
-        html += `
+            <h2>
+                Coach Notes
+            </h2>
 
             <textarea
-                id="coachNotes"
-                class="notes-box"
-                placeholder="Enter coach notes..."
-            >${escapeHtml(data.notes || "")}</textarea>
+                id="profileNotes"
+                class="notes-textarea"
+                ${isStaff ? "" : "readonly"}
+            >${escapeHtml(
+                data.notes || ""
+            )}</textarea>
 
-            <br>
+            ${
+                isStaff
+                ?
+                `
+                    <br><br>
 
-            <button
-                class="save-notes-button"
-                onclick="saveNotes('${athleteId}')"
-            >
-                Save Coach Notes
-            </button>
+                    <button
+                        class="primary-btn"
+                        onclick="saveNotes()"
+                    >
+                        Save Notes
+                    </button>
 
-        `;
-
-    }
-
-
-    const lowest =
-        getLowestRanking(data);
-
-
-    html += `
-
-        <div class="next-improve-card">
-
-            <div class="next-improve-title">
-                Next I Need To Improve On...
-            </div>
-
-    `;
-
-
-    if (lowest) {
-
-        html += `
-
-            <div class="next-improve-category">
-                ${escapeHtml(lowest.categories)}
-            </div>
-
-            <span
-                class="rag-display ${ragClass(lowest.value)} next-improve-rag"
-            >
-                ${escapeHtml(lowest.value)}
-            </span>
-
-        `;
-
-    }
-
-    else {
-
-        html += `
-
-            <div class="next-improve-category">
-                No RAG ratings set yet
-            </div>
-
-        `;
-
-    }
-
-
-    html += `
+                    <div
+                        id="notesSavedMessage"
+                        class="save-message"
+                    >
+                        Notes saved.
+                    </div>
+                `
+                :
+                ""
+            }
 
         </div>
 
-    </div>
 
-    <div class="card">
+        <div class="notes-card">
 
-        <h3>RAG History</h3>
+            <h2>
+                RAG History
+            </h2>
 
-        <br>
+            <div id="profileHistory">
+    `;
 
-        <div id="profileHistory"></div>
 
-    </div>
+    const history =
+        Array.isArray(data.history)
+            ? data.history
+            : [];
+
+
+    if (history.length === 0) {
+
+        html += `
+            <div class="empty">
+                No rating changes recorded yet.
+            </div>
+        `;
+
+    } else {
+
+        history
+            .slice(0, 20)
+            .forEach(function(item) {
+
+                html += historyHtml(item);
+
+            });
+
+    }
+
+
+    html += `
+
+            </div>
+
+        </div>
 
     `;
 
 
-    document
-        .getElementById("profileContent")
-        .innerHTML =
+    container.innerHTML =
         html;
-
-
-    renderProfileHistory(
-        athleteId
-    );
 
 }
 
 
-/* =====================================================
-   LOWEST RANKING
-===================================================== */
+function renderOwnProfile() {
 
-function getLowestRanking(
-    data
-) {
-
-    const rated =
-        categories
-
-            .map(
-                category => ({
-
-                    category:
-                        category,
-
-                    value:
-                        data.ratings?.[category] ||
-                        ""
-
-                })
-            )
-
-            .filter(
-                item =>
-                    item.value === "Green" ||
-                    item.value === "Amber" ||
-                    item.value === "Red"
-            );
-
-
-    if (!rated.length) {
-        return null;
+    if (!currentAthleteId) {
+        return;
     }
 
 
-    const lowestScore =
-        Math.min(
-            ...rated.map(
-                item =>
-                    ragScore(item.value)
-            )
-        );
+    renderProfile();
+
+}
 
 
-    const lowest =
-        rated.filter(
-            item =>
-                ragScore(item.value) ===
-                lowestScore
-        );
+function showProfileMessage(message) {
 
+    document.getElementById(
+        "profileContent"
+    ).innerHTML = `
 
-    return {
+        <div class="empty">
+            ${escapeHtml(message)}
+        </div>
 
-        categories:
-            lowest
-                .map(
-                    item =>
-                        item.category
-                )
-                .join(" & "),
-
-        value:
-            lowest[0].value
-
-    };
+    `;
 
 }
 
@@ -2807,31 +2340,32 @@ function getLowestRanking(
    SAVE NOTES
 ===================================================== */
 
-window.saveNotes = async function(
-    athleteId
-) {
+window.saveNotes = async function() {
 
     if (
         currentRole !== "Admin" &&
         currentRole !== "Coach"
     ) {
+
+        return;
+
+    }
+
+
+    if (!currentAthleteId) {
         return;
     }
 
 
-    const notesElement =
+    const textarea =
         document.getElementById(
-            "coachNotes"
+            "profileNotes"
         );
 
 
-    if (!notesElement) {
+    if (!textarea) {
         return;
     }
-
-
-    const notes =
-        notesElement.value;
 
 
     try {
@@ -2841,12 +2375,13 @@ window.saveNotes = async function(
             doc(
                 db,
                 "athletes",
-                athleteId
+                currentAthleteId
             ),
 
             {
                 notes:
-                    notes
+                    textarea.value
+
             },
 
             {
@@ -2856,45 +2391,41 @@ window.saveNotes = async function(
         );
 
 
-        const latestSnapshot =
-            await getDoc(
-                doc(
-                    db,
-                    "athletes",
-                    athleteId
-                )
+        await syncAthleteToGoogleSheets(
+            currentAthleteId
+        );
+
+
+        const message =
+            document.getElementById(
+                "notesSavedMessage"
             );
 
 
-        if (latestSnapshot.exists()) {
+        if (message) {
 
-            await syncAthleteToGoogleSheets(
-                athleteId,
-                latestSnapshot.data()
+            message.style.display =
+                "block";
+
+
+            setTimeout(
+                function() {
+
+                    message.style.display =
+                        "none";
+
+                },
+                2000
             );
 
         }
 
+    } catch (error) {
 
-        showFirebaseStatus();
-
-
-        alert(
-            "Coach notes saved."
-        );
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Could not save notes:",
-            error
-        );
-
+        console.error(error);
 
         alert(
-            "The notes could not be saved."
+            "Unable to save notes."
         );
 
     }
@@ -2903,180 +2434,10 @@ window.saveNotes = async function(
 
 
 /* =====================================================
-   PROFILE HISTORY
+   HISTORY
 ===================================================== */
 
-function renderProfileHistory(
-    athleteId
-) {
-
-    const container =
-        document.getElementById(
-            "profileHistory"
-        );
-
-
-    if (!container) {
-        return;
-    }
-
-
-    const data =
-        athleteData[athleteId];
-
-
-    if (!data) {
-
-        container.innerHTML =
-            `<div class="loading">No history yet.</div>`;
-
-        return;
-
-    }
-
-
-    const history =
-        Array.isArray(data.history)
-            ? [...data.history]
-            : [];
-
-
-    if (!history.length) {
-
-        container.innerHTML =
-            `<div class="loading">No RAG changes have been recorded yet.</div>`;
-
-        return;
-
-    }
-
-
-    let html = "";
-
-
-    categories.forEach(
-        category => {
-
-            const categoryHistory =
-                history
-
-                    .filter(
-                        item =>
-                            item.category ===
-                            category
-                    )
-
-                    .sort(
-                        (a, b) =>
-                            getHistoryTime(b) -
-                            getHistoryTime(a)
-                    );
-
-
-            html += `
-
-                <div class="history-category">
-
-                    <h3>
-                        ${escapeHtml(category)}
-                    </h3>
-
-            `;
-
-
-            if (!categoryHistory.length) {
-
-                html += `
-
-                    <div class="history-entry">
-
-                        No previous changes recorded.
-
-                    </div>
-
-                `;
-
-            }
-
-            else {
-
-                categoryHistory.forEach(
-                    item => {
-
-                        const oldValue =
-                            item.oldValue ||
-                            "Not Set";
-
-
-                        const newValue =
-                            item.newValue ||
-                            "Not Set";
-
-
-                        html += `
-
-                            <div class="history-entry">
-
-                                <div class="history-date">
-
-                                    ${formatHistoryDate(item.date)}
-
-                                </div>
-
-                                <div class="history-change">
-
-                                    ${escapeHtml(oldValue)}
-
-                                    →
-
-                                    ${escapeHtml(newValue)}
-
-                                </div>
-
-                                <div class="history-user">
-
-                                    Changed by:
-
-                                    ${escapeHtml(
-                                        item.changedBy ||
-                                        "Unknown"
-                                    )}
-
-                                </div>
-
-                            </div>
-
-                        `;
-
-                    }
-                );
-
-            }
-
-
-            html += `
-
-                </div>
-
-            `;
-
-        }
-    );
-
-
-    container.innerHTML =
-        html;
-
-}
-
-
-/* =====================================================
-   GENERAL HISTORY
-===================================================== */
-
-function renderHistory(
-    athleteId
-) {
+function renderStaffHistory() {
 
     const container =
         document.getElementById(
@@ -3084,353 +2445,604 @@ function renderHistory(
         );
 
 
-    if (!container) {
-        return;
-    }
+    let allHistory = [];
 
 
-    const data =
-        athleteData[athleteId];
+    athletes.forEach(function(athlete) {
 
+        const data =
+            athleteData[athlete.id];
 
-    if (!data) {
 
-        container.innerHTML =
-            `<div class="loading">No history available.</div>`;
-
-        return;
-
-    }
-
-
-    const history =
-        Array.isArray(data.history)
-            ? [...data.history]
-            : [];
-
-
-    if (!history.length) {
-
-        container.innerHTML =
-            `<div class="loading">No history available.</div>`;
-
-        return;
-
-    }
-
-
-    history.sort(
-        (a, b) =>
-            getHistoryTime(b) -
-            getHistoryTime(a)
-    );
-
-
-    let html = "";
-
-
-    history.forEach(
-        item => {
-
-            html += `
-
-                <div class="history-entry">
-
-                    <div class="history-date">
-
-                        ${formatHistoryDate(item.date)}
-
-                    </div>
-
-                    <div>
-
-                        <strong>
-
-                            ${escapeHtml(
-                                item.category
-                            )}
-
-                        </strong>
-
-                    </div>
-
-                    <div class="history-change">
-
-                        ${escapeHtml(
-                            item.oldValue ||
-                            "Not Set"
-                        )}
-
-                        →
-
-                        ${escapeHtml(
-                            item.newValue ||
-                            "Not Set"
-                        )}
-
-                    </div>
-
-                    <div class="history-user">
-
-                        Changed by:
-
-                        ${escapeHtml(
-                            item.changedBy ||
-                            "Unknown"
-                        )}
-
-                    </div>
-
-                </div>
-
-            `;
-
-        }
-    );
-
-
-    container.innerHTML =
-        html;
-
-}
-
-
-/* =====================================================
-   HISTORY DATE
-===================================================== */
-
-function getHistoryTime(
-    item
-) {
-
-    if (!item || !item.date) {
-        return 0;
-    }
-
-
-    const time =
-        new Date(
-            item.date
-        ).getTime();
-
-
-    if (!isNaN(time)) {
-        return time;
-    }
-
-
-    return 0;
-
-}
-
-
-function formatHistoryDate(
-    value
-) {
-
-    if (!value) {
-        return "Unknown date";
-    }
-
-
-    const date =
-        new Date(value);
-
-
-    if (isNaN(date.getTime())) {
-        return String(value);
-    }
-
-
-    return date.toLocaleString(
-        "en-GB"
-    );
-
-}
-
-
-/* =====================================================
-   MANUAL GOOGLE SHEETS SYNC
-===================================================== */
-
-window.syncNowToGoogleSheets =
-    async function() {
-
-        if (
-            currentRole !== "Admin" &&
-            currentRole !== "Coach"
-        ) {
+        if (!data) {
             return;
         }
 
 
-        await syncAllAthletesToGoogleSheets();
+        const history =
+            Array.isArray(data.history)
+                ? data.history
+                : [];
 
 
-        alert(
-            "Firebase data has been sent to Google Sheets."
-        );
+        history.forEach(function(item) {
 
-    };
+            allHistory.push({
+
+                ...item,
+
+                athlete:
+                    athlete.name,
+
+                athleteId:
+                    athlete.id
+
+            });
+
+        });
+
+    });
 
 
-/* =====================================================
-   LOGOUT
-===================================================== */
+    allHistory.sort(
+        function(a, b) {
 
-window.logout = async function() {
+            return new Date(b.date) -
+                new Date(a.date);
 
-    if (unsubscribeAthletes) {
+        }
+    );
 
-        unsubscribeAthletes();
 
-        unsubscribeAthletes = null;
+    if (allHistory.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="empty">
+                No RAG changes recorded yet.
+            </div>
+
+        `;
+
+        return;
 
     }
 
 
-    if (unsubscribeOwnAthlete) {
+    container.innerHTML =
+        allHistory
+            .map(historyHtmlStaff)
+            .join("");
 
-        unsubscribeOwnAthlete();
+}
 
-        unsubscribeOwnAthlete = null;
+
+function renderOwnHistory() {
+
+    const container =
+        document.getElementById(
+            "historyContent"
+        );
+
+
+    const data =
+        athleteData[currentAthleteId] || {};
+
+
+    const history =
+        Array.isArray(data.history)
+            ? data.history
+            : [];
+
+
+    if (history.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="empty">
+                No RAG changes recorded yet.
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        history
+            .map(historyHtml)
+            .join("");
+
+}
+
+
+function historyHtml(item) {
+
+    return `
+
+        <div class="history-item">
+
+            <div class="history-top">
+
+                <strong>
+                    ${escapeHtml(
+                        item.category || ""
+                    )}
+                </strong>
+
+                <span class="history-date">
+                    ${formatDate(item.date)}
+                </span>
+
+            </div>
+
+            <div class="history-change">
+
+                ${ragBadge(
+                    item.oldValue || ""
+                )}
+
+                →
+                
+                ${ragBadge(
+                    item.newValue || ""
+                )}
+
+            </div>
+
+            <div class="history-user">
+
+                Changed by:
+                ${escapeHtml(
+                    item.changedBy || "Unknown"
+                )}
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+function historyHtmlStaff(item) {
+
+    return `
+
+        <div class="history-item">
+
+            <div class="history-top">
+
+                <strong>
+                    ${escapeHtml(
+                        item.athlete || ""
+                    )}
+                </strong>
+
+                <span class="history-date">
+                    ${formatDate(item.date)}
+                </span>
+
+            </div>
+
+            <div style="margin-top:8px;">
+
+                <strong>
+                    ${escapeHtml(
+                        item.category || ""
+                    )}
+                </strong>
+
+            </div>
+
+            <div class="history-change">
+
+                ${ragBadge(
+                    item.oldValue || ""
+                )}
+
+                →
+
+                ${ragBadge(
+                    item.newValue || ""
+                )}
+
+            </div>
+
+            <div class="history-user">
+
+                Changed by:
+                ${escapeHtml(
+                    item.changedBy || "Unknown"
+                )}
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+   RAG HELPERS
+===================================================== */
+
+function ragClass(value) {
+
+    if (value === "Green") {
+        return "rag-green";
+    }
+
+    if (value === "Amber") {
+        return "rag-amber";
+    }
+
+    if (value === "Red") {
+        return "rag-red";
+    }
+
+    return "rag-none";
+
+}
+
+
+function ragBadge(value) {
+
+    if (!value) {
+
+        return `
+            <span class="rag-badge rag-none">
+                Not Set
+            </span>
+        `;
+
+    }
+
+
+    return `
+
+        <span class="rag-badge ${ragClass(value)}">
+            ${escapeHtml(value)}
+        </span>
+
+    `;
+
+}
+
+
+/* =====================================================
+   GOOGLE SHEETS SYNC
+===================================================== */
+
+async function sendToGoogleSheets(payload) {
+
+    if (
+        !GOOGLE_SHEETS_SYNC_URL ||
+        GOOGLE_SHEETS_SYNC_URL.includes("PASTE_")
+    ) {
+
+        return;
 
     }
 
 
     try {
 
-        await signOut(auth);
+        await fetch(
+            GOOGLE_SHEETS_SYNC_URL,
+            {
 
-    }
+                method: "POST",
 
-    catch (error) {
+                mode: "no-cors",
+
+                headers: {
+                    "Content-Type":
+                        "text/plain;charset=utf-8"
+                },
+
+                body:
+                    JSON.stringify(payload)
+
+            }
+        );
+
+    } catch (error) {
 
         console.error(
-            "Logout error:",
+            "Google Sheets sync error:",
             error
         );
 
     }
 
-
-    currentUser = null;
-    currentUsername = "";
-    currentRole = "";
-    currentAthleteId = null;
-    athleteData = {};
-
-
-    document
-        .getElementById("app")
-        .style.display =
-        "none";
-
-
-    document
-        .getElementById("loginScreen")
-        .style.display =
-        "flex";
-
-
-    document
-        .getElementById("usernameInput")
-        .value = "";
-
-
-    document
-        .getElementById("passwordInput")
-        .value = "";
-
-};
+}
 
 
 /* =====================================================
-   ENTER KEY LOGIN
+   SYNC ATHLETE TO SHEETS
 ===================================================== */
 
-document
-    .getElementById("passwordInput")
-    .addEventListener(
-        "keydown",
-        event => {
+async function syncAthleteToGoogleSheets(
+    athleteId
+) {
 
-            if (event.key === "Enter") {
-                login();
-            }
+    const athlete =
+        athletes.find(
+            a => a.id === athleteId
+        );
+
+
+    if (!athlete) {
+        return;
+    }
+
+
+    const snapshot =
+        await getDoc(
+            doc(
+                db,
+                "athletes",
+                athleteId
+            )
+        );
+
+
+    if (!snapshot.exists()) {
+        return;
+    }
+
+
+    const data =
+        snapshot.data();
+
+
+    await sendToGoogleSheets({
+
+        action:
+            "upsertAthlete",
+
+        athlete: {
+
+            id:
+                athleteId,
+
+            name:
+                athlete.name,
+
+            technical:
+                data.ratings?.["Technical"] || "",
+
+            fitness:
+                data.ratings?.["Fitness"] || "",
+
+            performance:
+                data.ratings?.["Coxing / Performance"] || "",
+
+            attitude:
+                data.ratings?.["Attitude"] || "",
+
+            communication:
+                data.ratings?.["Communication"] || "",
+
+            consistency:
+                data.ratings?.["Consistency"] || "",
+
+            notes:
+                data.notes || ""
 
         }
-    );
 
+    });
 
-document
-    .getElementById("usernameInput")
-    .addEventListener(
-        "keydown",
-        event => {
-
-            if (event.key === "Enter") {
-                login();
-            }
-
-        }
-    );
+}
 
 
 /* =====================================================
-   ESCAPE HTML
+   SYNC HISTORY TO SHEETS
 ===================================================== */
+
+async function syncHistoryToGoogleSheets(
+    athleteId,
+    historyItem
+) {
+
+    const athlete =
+        athletes.find(
+            a => a.id === athleteId
+        );
+
+
+    if (!athlete) {
+        return;
+    }
+
+
+    await sendToGoogleSheets({
+
+        action:
+            "addHistory",
+
+        history: {
+
+            date:
+                historyItem.date ||
+                new Date().toISOString(),
+
+            athleteId:
+                athleteId,
+
+            athlete:
+                athlete.name,
+
+            category:
+                historyItem.category || "",
+
+            oldRAG:
+                historyItem.oldValue ||
+                "Not Set",
+
+            newRAG:
+                historyItem.newValue ||
+                "Not Set",
+
+            changedBy:
+                historyItem.changedBy ||
+                "Unknown"
+
+        }
+
+    });
+
+}
+
+
+/* =====================================================
+   SYNC ALL ATHLETES TO SHEETS
+===================================================== */
+
+window.syncAllAthletesToGoogleSheets =
+    async function() {
+
+        if (
+            currentRole !== "Admin" &&
+            currentRole !== "Coach"
+        ) {
+
+            return;
+
+        }
+
+
+        for (const athlete of athletes) {
+
+            try {
+
+                await syncAthleteToGoogleSheets(
+                    athlete.id
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "Could not sync",
+                    athlete.name,
+                    error
+                );
+
+            }
+
+        }
+
+    };
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function getAthleteName(id) {
+
+    const athlete =
+        athletes.find(
+            a => a.id === id
+        );
+
+
+    return athlete
+        ? athlete.name
+        : id;
+
+}
+
+
+function formatDate(date) {
+
+    if (!date) {
+        return "Unknown date";
+    }
+
+
+    try {
+
+        return new Date(date)
+            .toLocaleString(
+                "en-GB",
+                {
+                    dateStyle: "medium",
+                    timeStyle: "short"
+                }
+            );
+
+    } catch {
+
+        return date;
+
+    }
+
+}
+
 
 function escapeHtml(value) {
 
-    return String(value ?? "")
-
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-
-        .replace(
-            /</g,
-            "&lt;"
-        )
-
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 
 }
 
 
 function escapeJs(value) {
 
-    return String(value ?? "")
-
-        .replace(
-            /\\/g,
-            "\\\\"
-        )
-
-        .replace(
-            /'/g,
-            "\\'"
-        );
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /\\/g,
+        "\\\\"
+    )
+    .replace(
+        /'/g,
+        "\\'"
+    );
 
 }
+
+
+/* =====================================================
+   START
+===================================================== */
+
+console.log(
+    "Leeds Rowing Club Athlete Management loaded."
+);
 
 </script>
 
 </body>
-
 </html>
