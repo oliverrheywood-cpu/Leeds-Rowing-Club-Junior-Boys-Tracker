@@ -1908,7 +1908,6 @@ function staffRagSelect(
 /* =====================================================
    CHANGE RAG
 ===================================================== */
-
 window.changeRAG = async function(
     athleteId,
     category,
@@ -1919,20 +1918,14 @@ window.changeRAG = async function(
         currentRole !== "Admin" &&
         currentRole !== "Coach"
     ) {
-
         return;
-
     }
 
-
-    const reference =
-        doc(db, "athletes", athleteId);
-
+    const reference = doc(db, "athletes", athleteId);
 
     try {
 
         let historyItem = null;
-
 
         await runTransaction(
             db,
@@ -1941,37 +1934,38 @@ window.changeRAG = async function(
                 const snapshot =
                     await transaction.get(reference);
 
-
                 const existing =
                     snapshot.exists()
                         ? snapshot.data()
                         : {};
 
-
-                const ratings =
-                    {
-                        ...(existing.ratings || {})
-                    };
-
+                const ratings = {
+                    ...(existing.ratings || {})
+                };
 
                 const oldValue =
                     ratings[category] || "";
 
+                /*
+                 * If Not Set is selected,
+                 * completely remove this category
+                 * from the ratings object.
+                 */
+                if (newValue === "") {
 
-                if (oldValue === newValue) {
-                    return;
-                }
-
-
-                if (newValue) {
-
-                    ratings[category] =
-                        newValue;
-
-                } else {
+                    if (oldValue === "") {
+                        return;
+                    }
 
                     delete ratings[category];
 
+                } else {
+
+                    if (oldValue === newValue) {
+                        return;
+                    }
+
+                    ratings[category] = newValue;
                 }
 
 
@@ -1990,7 +1984,8 @@ window.changeRAG = async function(
                         newValue,
 
                     changedBy:
-                        currentUser?.email || "Unknown"
+                        currentUser?.email ||
+                        "Unknown"
 
                 };
 
@@ -2031,12 +2026,15 @@ window.changeRAG = async function(
         );
 
 
+        /*
+         * Update Google Sheets after
+         * Firebase has successfully changed.
+         */
         if (historyItem) {
 
             await syncAthleteToGoogleSheets(
                 athleteId
             );
-
 
             await syncHistoryToGoogleSheets(
                 athleteId,
