@@ -1908,133 +1908,107 @@ function staffRagSelect(
 /* =====================================================
    CHANGE RAG
 ===================================================== */
-window.changeRAG = async function(
-    athleteId,
-    category,
-    newValue
-) {
+window.changeRAG = async function(athleteId, category, newValue) {
 
-    if (
-        currentRole !== "Admin" &&
-        currentRole !== "Coach"
-    ) {
+    if (currentRole !== "Admin" && currentRole !== "Coach") {
         return;
     }
 
-    const reference = doc(db, "athletes", athleteId);
-
     try {
+
+        const athleteRef = doc(db, "athletes", athleteId);
 
         let historyItem = null;
 
-        await runTransaction(
-            db,
-            async function(transaction) {
+        await runTransaction(db, async (transaction) => {
 
-                const snapshot =
-                    await transaction.get(reference);
+            const snapshot = await transaction.get(athleteRef);
 
-                const existing =
-                    snapshot.exists()
-                        ? snapshot.data()
-                        : {};
+            const existing = snapshot.exists()
+                ? snapshot.data()
+                : {};
 
-                const ratings = {
-                    ...(existing.ratings || {})
-                };
+            const ratings = {
+                ...(existing.ratings || {})
+            };
 
-                const oldValue =
-                    ratings[category] || "";
+            const oldValue = ratings[category] || "";
 
-                /*
-                 * If Not Set is selected,
-                 * completely remove this category
-                 * from the ratings object.
-                 */
-                if (newValue === "") {
+            // Nothing actually changed
+            if (oldValue === newValue) {
+                return;
+            }
 
-                    if (oldValue === "") {
-                        return;
-                    }
+            // ================================
+            // NOT SET
+            // ================================
 
-                    delete ratings[category];
+            if (newValue === "") {
 
-                } else {
-
-                    if (oldValue === newValue) {
-                        return;
-                    }
-
-                    ratings[category] = newValue;
-                }
-
-
-                historyItem = {
-
-                    date:
-                        new Date().toISOString(),
-
-                    category:
-                        category,
-
-                    oldValue:
-                        oldValue,
-
-                    newValue:
-                        newValue,
-
-                    changedBy:
-                        currentUser?.email ||
-                        "Unknown"
-
-                };
-
-
-                const history =
-                    Array.isArray(existing.history)
-                        ? [...existing.history]
-                        : [];
-
-
-                history.unshift(historyItem);
-
-
-                transaction.set(
-                    reference,
-                    {
-
-                        name:
-                            existing.name ||
-                            getAthleteName(athleteId),
-
-                        ratings:
-                            ratings,
-
-                        notes:
-                            existing.notes || "",
-
-                        history:
-                            history
-
-                    },
-                    {
-                        merge: true
-                    }
-                );
+                delete ratings[category];
 
             }
-        );
+
+            // ================================
+            // GREEN / AMBER / RED
+            // ================================
+
+            else {
+
+                ratings[category] = newValue;
+
+            }
+
+            historyItem = {
+
+                date: new Date().toISOString(),
+
+                category: category,
+
+                oldValue: oldValue,
+
+                newValue: newValue,
+
+                changedBy:
+                    currentUser?.email || "Unknown"
+
+            };
+
+            const history = Array.isArray(existing.history)
+                ? [...existing.history]
+                : [];
+
+            history.unshift(historyItem);
+
+            transaction.set(
+                athleteRef,
+                {
+                    name:
+                        existing.name ||
+                        getAthleteName(athleteId),
+
+                    ratings: ratings,
+
+                    notes:
+                        existing.notes || "",
+
+                    history: history
+                },
+                {
+                    merge: true
+                }
+            );
+
+        });
 
 
-        /*
-         * Update Google Sheets after
-         * Firebase has successfully changed.
-         */
+        // ==========================================
+        // SYNC TO GOOGLE SHEETS
+        // ==========================================
+
         if (historyItem) {
 
-            await syncAthleteToGoogleSheets(
-                athleteId
-            );
+            await syncAthleteToGoogleSheets(athleteId);
 
             await syncHistoryToGoogleSheets(
                 athleteId,
@@ -2047,12 +2021,12 @@ window.changeRAG = async function(
     } catch (error) {
 
         console.error(
-            "Unable to change RAG:",
+            "RAG update failed:",
             error
         );
 
         alert(
-            "There was a problem updating the RAG rating."
+            "The RAG rating could not be changed. Please try again."
         );
 
     }
