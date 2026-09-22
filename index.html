@@ -1,0 +1,2978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Leeds Rowing Club Athlete Management</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f6f8;
+    color: #222;
+}
+
+/* =========================
+   LOGIN
+========================= */
+
+#loginScreen {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #111827;
+    padding: 20px;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 430px;
+    background: white;
+    border-radius: 14px;
+    padding: 35px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+}
+
+.login-box h1 {
+    text-align: center;
+    margin-bottom: 8px;
+    color: #111827;
+}
+
+.login-box p {
+    text-align: center;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.login-box label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: bold;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 17px;
+    font-size: 16px;
+}
+
+.login-box button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    background: #111827;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.login-box button:hover {
+    background: #1f2937;
+}
+
+#loginError {
+    display: none;
+    margin-top: 15px;
+    padding: 12px;
+    background: #fee2e2;
+    color: #991b1b;
+    border-radius: 8px;
+}
+
+/* =========================
+   APP
+========================= */
+
+#app {
+    display: none;
+    min-height: 100vh;
+}
+
+header {
+    background: #111827;
+    color: white;
+    padding: 18px 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.header-title {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.header-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.role-badge {
+    background: #374151;
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+.logout-btn {
+    background: #ef4444;
+    border: none;
+    color: white;
+    padding: 9px 14px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.logout-btn:hover {
+    background: #dc2626;
+}
+
+/* =========================
+   NAV
+========================= */
+
+nav {
+    background: white;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    padding: 0 20px;
+    overflow-x: auto;
+}
+
+.nav-btn {
+    background: none;
+    border: none;
+    padding: 16px 20px;
+    cursor: pointer;
+    font-size: 15px;
+    color: #555;
+    white-space: nowrap;
+}
+
+.nav-btn:hover {
+    background: #f3f4f6;
+}
+
+.nav-btn.active {
+    color: #111827;
+    font-weight: bold;
+    border-bottom: 3px solid #111827;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+main {
+    max-width: 1500px;
+    margin: auto;
+    padding: 25px;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.page-title {
+    font-size: 28px;
+    margin-bottom: 7px;
+}
+
+.page-subtitle {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+.stat-card h3 {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 10px;
+}
+
+.stat-number {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+/* =========================
+   TABLE
+========================= */
+
+.table-container {
+    background: white;
+    border-radius: 12px;
+    overflow-x: auto;
+    border: 1px solid #e5e7eb;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 850px;
+}
+
+th {
+    background: #f9fafb;
+    text-align: left;
+    padding: 14px;
+    font-size: 13px;
+    color: #4b5563;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+td {
+    padding: 13px 14px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover td {
+    background: #fafafa;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.primary-btn {
+    background: #111827;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.primary-btn:hover {
+    background: #1f2937;
+}
+
+.secondary-btn {
+    background: #e5e7eb;
+    color: #111827;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.secondary-btn:hover {
+    background: #d1d5db;
+}
+
+/* =========================
+   RAG
+========================= */
+
+.rag-select {
+    border: none;
+    border-radius: 6px;
+    padding: 7px 8px;
+    font-weight: bold;
+    cursor: pointer;
+    min-width: 105px;
+}
+
+.rag-red {
+    background: #fecaca;
+    color: #991b1b;
+}
+
+.rag-amber {
+    background: #fde68a;
+    color: #92400e;
+}
+
+.rag-green {
+    background: #bbf7d0;
+    color: #166534;
+}
+
+.rag-none {
+    background: #e5e7eb;
+    color: #4b5563;
+}
+
+.rag-badge {
+    display: inline-block;
+    padding: 7px 11px;
+    border-radius: 7px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+/* =========================
+   SEARCH
+========================= */
+
+.search-box {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    margin-bottom: 18px;
+    font-size: 15px;
+}
+
+/* =========================
+   FOLDER
+========================= */
+
+.folder {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    overflow: hidden;
+}
+
+.folder-header {
+    padding: 17px 20px;
+    background: #f9fafb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.folder-header h2 {
+    font-size: 18px;
+}
+
+.folder-content {
+    padding: 18px;
+}
+
+/* =========================
+   PROFILE
+========================= */
+
+.profile-header {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 20px;
+    border: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.profile-name {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.profile-id {
+    color: #6b7280;
+    margin-top: 5px;
+}
+
+.rag-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.rag-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+.rag-card h3 {
+    margin-bottom: 14px;
+    font-size: 16px;
+}
+
+.rag-card select {
+    width: 100%;
+}
+
+.notes-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 20px;
+}
+
+.notes-card h2 {
+    margin-bottom: 15px;
+}
+
+.notes-textarea {
+    width: 100%;
+    min-height: 150px;
+    resize: vertical;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 13px;
+    font-family: inherit;
+    font-size: 15px;
+}
+
+/* =========================
+   HISTORY
+========================= */
+
+.history-item {
+    background: white;
+    padding: 18px;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 12px;
+}
+
+.history-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.history-date {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.history-change {
+    margin-top: 8px;
+    font-weight: bold;
+}
+
+.history-user {
+    color: #6b7280;
+    font-size: 13px;
+    margin-top: 6px;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.empty {
+    padding: 35px;
+    text-align: center;
+    color: #777;
+}
+
+.save-message {
+    margin-top: 10px;
+    color: #166534;
+    font-weight: bold;
+    display: none;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 900px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .rag-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    main {
+        padding: 15px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rag-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .login-box {
+        padding: 25px;
+    }
+
+    .page-title {
+        font-size: 24px;
+    }
+
+    .profile-name {
+        font-size: 25px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     LOGIN SCREEN
+========================= -->
+
+<div id="loginScreen">
+
+    <div class="login-box">
+
+        <h1>Leeds Rowing Club</h1>
+
+        <p>Athlete Management System</p>
+
+        <label for="username">Username</label>
+
+        <input
+            id="username"
+            type="text"
+            placeholder="Enter username"
+            autocomplete="username"
+        >
+
+        <label for="password">Password</label>
+
+        <input
+            id="password"
+            type="password"
+            placeholder="Enter password"
+            autocomplete="current-password"
+        >
+
+        <button id="loginButton">
+            Login
+        </button>
+
+        <div id="loginError"></div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     APP
+========================= -->
+
+<div id="app">
+
+    <header>
+
+        <div class="header-title">
+            Leeds Rowing Club Athlete Management
+        </div>
+
+        <div class="header-user">
+
+            <span id="loggedInUser"></span>
+
+            <span id="roleBadge" class="role-badge"></span>
+
+            <button class="logout-btn" id="logoutButton">
+                Logout
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <nav>
+
+        <button
+            class="nav-btn active"
+            data-page="dashboardPage"
+            id="dashboardNav"
+        >
+            Dashboard
+        </button>
+
+        <button
+            class="nav-btn"
+            data-page="athletesPage"
+            id="athletesNav"
+        >
+            Athletes
+        </button>
+
+        <button
+            class="nav-btn"
+            data-page="profilePage"
+            id="profileNav"
+        >
+            Profile
+        </button>
+
+        <button
+            class="nav-btn"
+            data-page="historyPage"
+            id="historyNav"
+        >
+            History
+        </button>
+
+    </nav>
+
+
+    <main>
+
+        <!-- =========================
+             DASHBOARD
+        ========================= -->
+
+        <section id="dashboardPage" class="page active">
+
+            <h1 class="page-title">
+                Dashboard
+            </h1>
+
+            <p class="page-subtitle">
+                Leeds Rowing Club junior athlete overview.
+            </p>
+
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <h3>Total Athletes</h3>
+                    <div class="stat-number" id="totalAthletes">
+                        0
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Green Ratings</h3>
+                    <div class="stat-number" id="greenRatings">
+                        0
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Amber Ratings</h3>
+                    <div class="stat-number" id="amberRatings">
+                        0
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Red Ratings</h3>
+                    <div class="stat-number" id="redRatings">
+                        0
+                    </div>
+                </div>
+
+            </div>
+
+
+            <h2 style="margin-bottom:15px;">
+                Quick Athlete Access
+            </h2>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Athlete</th>
+                            <th>Technical</th>
+                            <th>Fitness</th>
+                            <th>Performance</th>
+                            <th>Attitude</th>
+                            <th>Communication</th>
+                            <th>Consistency</th>
+                            <th>Profile</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="dashboardAthletesBody">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             ATHLETES
+        ========================= -->
+
+        <section id="athletesPage" class="page">
+
+            <h1 class="page-title">
+                Athletes
+            </h1>
+
+            <p class="page-subtitle">
+                Manage the Leeds Rowing Club junior squad.
+            </p>
+
+
+            <input
+                type="text"
+                id="athleteSearch"
+                class="search-box"
+                placeholder="Search athletes..."
+            >
+
+
+            <div class="folder">
+
+                <div class="folder-header" id="boysFolderHeader">
+
+                    <h2>
+                        📁 Boys
+                    </h2>
+
+                    <span id="boysFolderArrow">
+                        ▼
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="folder-content"
+                    id="boysFolderContent"
+                >
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Athlete</th>
+                                    <th>Technical</th>
+                                    <th>Fitness</th>
+                                    <th>Coxing / Performance</th>
+                                    <th>Attitude</th>
+                                    <th>Communication</th>
+                                    <th>Consistency</th>
+                                    <th>Open</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="athletesTableBody">
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             PROFILE
+        ========================= -->
+
+        <section id="profilePage" class="page">
+
+            <div id="profileContent">
+
+                <div class="loading">
+                    Select an athlete to view their profile.
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             HISTORY
+        ========================= -->
+
+        <section id="historyPage" class="page">
+
+            <h1 class="page-title">
+                RAG History
+            </h1>
+
+            <p class="page-subtitle">
+                Record of rating changes.
+            </p>
+
+            <div id="historyContent">
+
+                <div class="loading">
+                    Loading history...
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- =========================
+     FIREBASE
+========================= -->
+
+<script type="module">
+
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+import {
+    getFirestore,
+    collection,
+    doc,
+    getDoc,
+    setDoc,
+    updateDoc,
+    onSnapshot,
+    runTransaction
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+
+/* =====================================================
+   FIREBASE CONFIG
+===================================================== */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyAnrekNh1egIKrU1kkHoFOutpX06scTdzw",
+
+    authDomain:
+        "leeds-rowing-club-athlete-rag.firebaseapp.com",
+
+    projectId:
+        "leeds-rowing-club-athlete-rag",
+
+    storageBucket:
+        "leeds-rowing-club-athlete-rag.firebasestorage.app",
+
+    messagingSenderId:
+        "299471845483",
+
+    appId:
+        "1:299471845483:web:6c3e9b26fa87bd5b8b992e",
+
+    measurementId:
+        "G-GTGZZ20XJ9"
+};
+
+
+/* =====================================================
+   GOOGLE SHEETS
+===================================================== */
+
+const GOOGLE_SHEETS_SYNC_URL =
+    "https://script.google.com/macros/s/AKfycbwQkRpIdUJfk48pVqdASqXsiFWsmv13yBNA5kjYA7yP0vIrZET2xAOtdfEiLMj7B0Yh/exec";
+
+
+/* =====================================================
+   INITIALISE FIREBASE
+===================================================== */
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+
+/* =====================================================
+   STAFF ACCOUNTS
+===================================================== */
+
+const staffAccounts = {
+
+    admin: {
+        role: "Admin"
+    },
+
+    coach: {
+        role: "Coach"
+    }
+
+};
+
+
+/* =====================================================
+   ATHLETES
+===================================================== */
+
+const athletes = [
+
+    { id: "alexg", name: "Alex Green" },
+    { id: "baileym", name: "Bailey Marshall" },
+    { id: "bertieb", name: "Bertie Beanland" },
+    { id: "gabrielm", name: "Gabriel Maida" },
+    { id: "hectorj", name: "Hector Jones" },
+    { id: "jackb", name: "Jack Bailey" },
+    { id: "jacke", name: "Jack East" },
+    { id: "jacobh", name: "Jacob Hallman" },
+    { id: "jacobs", name: "Jacob Smith" },
+    { id: "jamief", name: "Jamie Ford" },
+    { id: "joet", name: "Joe Tennant" },
+    { id: "lucasb", name: "Lucas Brook" },
+    { id: "mattyl", name: "Matty Lincoln" },
+    { id: "maxw", name: "Max Welsh" },
+    { id: "neop", name: "Neo Patel" },
+    { id: "saml", name: "Sam Lucione" },
+    { id: "sethj", name: "Seth Jones" },
+    { id: "sethl", name: "Seth Langdon" },
+    { id: "zacl", name: "Zac Lodge" },
+    { id: "benw", name: "Ben Whittaker" },
+    { id: "charliew", name: "Charlie Watts" },
+    { id: "edwards", name: "Edward Steele" },
+    { id: "fredt", name: "Fred Tattersall" },
+    { id: "matthewk", name: "Matthew Kerry" },
+    { id: "ryana", name: "Ryan Atkins" },
+    { id: "elijaha", name: "Elijah Alam" },
+    { id: "louisr", name: "Louis Rich" }
+
+];
+
+
+/* =====================================================
+   RAG CATEGORIES
+===================================================== */
+
+const categories = [
+
+    "Technical",
+    "Fitness",
+    "Coxing / Performance",
+    "Attitude",
+    "Communication",
+    "Consistency"
+
+];
+
+
+/* =====================================================
+   GLOBAL STATE
+===================================================== */
+
+let currentUser = null;
+
+let currentRole = null;
+
+let currentAthleteId = null;
+
+let athleteData = {};
+
+let unsubscribeAthletes = null;
+
+let unsubscribeOwnAthlete = null;
+
+
+/* =====================================================
+   DOM
+===================================================== */
+
+const loginScreen =
+    document.getElementById("loginScreen");
+
+const appScreen =
+    document.getElementById("app");
+
+const loginButton =
+    document.getElementById("loginButton");
+
+const logoutButton =
+    document.getElementById("logoutButton");
+
+const loginError =
+    document.getElementById("loginError");
+
+const usernameInput =
+    document.getElementById("username");
+
+const passwordInput =
+    document.getElementById("password");
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+loginButton.addEventListener("click", login);
+
+passwordInput.addEventListener("keydown", function(e) {
+
+    if (e.key === "Enter") {
+        login();
+    }
+
+});
+
+
+async function login() {
+
+    const username =
+        usernameInput.value.trim().toLowerCase();
+
+    const password =
+        passwordInput.value;
+
+
+    if (!username || !password) {
+
+        showLoginError(
+            "Please enter your username and password."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const email =
+            username + "@leedsrowingclub.firebaseapp.com";
+
+
+        await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
+
+
+        loginError.style.display = "none";
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        showLoginError(
+            "Incorrect username or password."
+        );
+
+    }
+
+}
+
+
+function showLoginError(message) {
+
+    loginError.textContent = message;
+
+    loginError.style.display = "block";
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+logoutButton.addEventListener("click", async function() {
+
+    await signOut(auth);
+
+});
+
+
+/* =====================================================
+   AUTH STATE
+===================================================== */
+
+onAuthStateChanged(auth, async function(user) {
+
+    if (!user) {
+
+        currentUser = null;
+        currentRole = null;
+
+        if (unsubscribeAthletes) {
+            unsubscribeAthletes();
+            unsubscribeAthletes = null;
+        }
+
+        if (unsubscribeOwnAthlete) {
+            unsubscribeOwnAthlete();
+            unsubscribeOwnAthlete = null;
+        }
+
+        appScreen.style.display = "none";
+
+        loginScreen.style.display = "flex";
+
+        return;
+
+    }
+
+
+    currentUser = user;
+
+
+    const username =
+        user.email
+            .split("@")[0]
+            .toLowerCase();
+
+
+    if (staffAccounts[username]) {
+
+        currentRole =
+            staffAccounts[username].role;
+
+        startStaffMode(username);
+
+    } else {
+
+        currentRole = "Athlete";
+
+        startAthleteMode(username);
+
+    }
+
+});
+
+
+/* =====================================================
+   STAFF MODE
+===================================================== */
+
+async function startStaffMode(username) {
+
+    loginScreen.style.display = "none";
+
+    appScreen.style.display = "block";
+
+
+    document.getElementById("loggedInUser").textContent =
+        username.charAt(0).toUpperCase() +
+        username.slice(1);
+
+
+    document.getElementById("roleBadge").textContent =
+        currentRole;
+
+
+    document.getElementById("dashboardNav").style.display =
+        "block";
+
+    document.getElementById("athletesNav").style.display =
+        "block";
+
+    document.getElementById("historyNav").style.display =
+        "block";
+
+    document.getElementById("profileNav").style.display =
+        "block";
+
+
+    showPage("dashboardPage");
+
+
+    await ensureAthleteDocuments();
+
+
+    if (unsubscribeAthletes) {
+        unsubscribeAthletes();
+    }
+
+
+    unsubscribeAthletes = onSnapshot(
+
+        collection(db, "athletes"),
+
+        function(snapshot) {
+
+            athleteData = {};
+
+            snapshot.forEach(function(documentSnapshot) {
+
+                athleteData[documentSnapshot.id] =
+                    documentSnapshot.data();
+
+            });
+
+
+            renderEverything();
+
+        },
+
+        function(error) {
+
+            console.error(
+                "Firestore listener error:",
+                error
+            );
+
+        }
+
+    );
+
+}
+
+
+/* =====================================================
+   ATHLETE MODE
+===================================================== */
+
+async function startAthleteMode(username) {
+
+    const athlete =
+        athletes.find(
+            a => a.id.toLowerCase() === username.toLowerCase()
+        );
+
+
+    if (!athlete) {
+
+        await signOut(auth);
+
+        showLoginError(
+            "This account is not linked to an athlete."
+        );
+
+        return;
+
+    }
+
+
+    currentAthleteId =
+        athlete.id;
+
+
+    loginScreen.style.display = "none";
+
+    appScreen.style.display = "block";
+
+
+    document.getElementById("loggedInUser").textContent =
+        athlete.name;
+
+
+    document.getElementById("roleBadge").textContent =
+        "Athlete";
+
+
+    document.getElementById("dashboardNav").style.display =
+        "none";
+
+    document.getElementById("athletesNav").style.display =
+        "none";
+
+    document.getElementById("historyNav").style.display =
+        "block";
+
+    document.getElementById("profileNav").style.display =
+        "block";
+
+
+    showPage("profilePage");
+
+
+    if (unsubscribeOwnAthlete) {
+        unsubscribeOwnAthlete();
+    }
+
+
+    unsubscribeOwnAthlete = onSnapshot(
+
+        doc(db, "athletes", currentAthleteId),
+
+        function(snapshot) {
+
+            if (!snapshot.exists()) {
+
+                showProfileMessage(
+                    "Athlete profile has not been created yet."
+                );
+
+                return;
+
+            }
+
+
+            athleteData = {
+
+                [currentAthleteId]:
+                    snapshot.data()
+
+            };
+
+
+            renderOwnProfile();
+
+            renderOwnHistory();
+
+        },
+
+        function(error) {
+
+            console.error(error);
+
+            showProfileMessage(
+                "Unable to load your profile."
+            );
+
+        }
+
+    );
+
+}
+
+
+/* =====================================================
+   ENSURE DOCUMENTS
+===================================================== */
+
+async function ensureAthleteDocuments() {
+
+    for (const athlete of athletes) {
+
+        const reference =
+            doc(db, "athletes", athlete.id);
+
+        const snapshot =
+            await getDoc(reference);
+
+
+        if (!snapshot.exists()) {
+
+            await setDoc(reference, {
+
+                name: athlete.name,
+
+                ratings: {},
+
+                notes: "",
+
+                history: []
+
+            });
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+document.querySelectorAll(".nav-btn")
+    .forEach(function(button) {
+
+        button.addEventListener(
+            "click",
+            function() {
+
+                showPage(
+                    button.dataset.page
+                );
+
+            }
+        );
+
+    });
+
+
+function showPage(pageId) {
+
+    document.querySelectorAll(".page")
+        .forEach(function(page) {
+
+            page.classList.remove("active");
+
+        });
+
+
+    document.querySelectorAll(".nav-btn")
+        .forEach(function(button) {
+
+            button.classList.remove("active");
+
+        });
+
+
+    const page =
+        document.getElementById(pageId);
+
+    if (page) {
+
+        page.classList.add("active");
+
+    }
+
+
+    const matchingNav =
+        document.querySelector(
+            `[data-page="${pageId}"]`
+        );
+
+
+    if (matchingNav) {
+
+        matchingNav.classList.add("active");
+
+    }
+
+
+    if (pageId === "historyPage") {
+
+        if (currentRole === "Athlete") {
+            renderOwnHistory();
+        } else {
+            renderStaffHistory();
+        }
+
+    }
+
+
+    if (pageId === "profilePage") {
+
+        if (currentRole === "Athlete") {
+            renderOwnProfile();
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   RENDER EVERYTHING
+===================================================== */
+
+function renderEverything() {
+
+    renderDashboard();
+
+    renderAthletesTable();
+
+    if (
+        currentRole === "Staff" ||
+        currentRole === "Coach" ||
+        currentRole === "Admin"
+    ) {
+
+        if (currentAthleteId) {
+            renderProfile();
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+function renderDashboard() {
+
+    const total =
+        athletes.length;
+
+
+    let green = 0;
+    let amber = 0;
+    let red = 0;
+
+
+    Object.values(athleteData)
+        .forEach(function(data) {
+
+            Object.values(
+                data.ratings || {}
+            ).forEach(function(value) {
+
+                if (value === "Green") {
+                    green++;
+                }
+
+                if (value === "Amber") {
+                    amber++;
+                }
+
+                if (value === "Red") {
+                    red++;
+                }
+
+            });
+
+        });
+
+
+    document.getElementById(
+        "totalAthletes"
+    ).textContent = total;
+
+
+    document.getElementById(
+        "greenRatings"
+    ).textContent = green;
+
+
+    document.getElementById(
+        "amberRatings"
+    ).textContent = amber;
+
+
+    document.getElementById(
+        "redRatings"
+    ).textContent = red;
+
+
+    const body =
+        document.getElementById(
+            "dashboardAthletesBody"
+        );
+
+
+    body.innerHTML = "";
+
+
+    athletes.forEach(function(athlete) {
+
+        const data =
+            athleteData[athlete.id] || {};
+
+
+        const row =
+            document.createElement("tr");
+
+
+        row.innerHTML = `
+
+            <td>
+                <strong>${escapeHtml(athlete.name)}</strong>
+            </td>
+
+            <td>
+                ${ragBadge(
+                    data.ratings?.["Technical"]
+                )}
+            </td>
+
+            <td>
+                ${ragBadge(
+                    data.ratings?.["Fitness"]
+                )}
+            </td>
+
+            <td>
+                ${ragBadge(
+                    data.ratings?.["Coxing / Performance"]
+                )}
+            </td>
+
+            <td>
+                ${ragBadge(
+                    data.ratings?.["Attitude"]
+                )}
+            </td>
+
+            <td>
+                ${ragBadge(
+                    data.ratings?.["Communication"]
+                )}
+            </td>
+
+            <td>
+                ${ragBadge(
+                    data.ratings?.["Consistency"]
+                )}
+            </td>
+
+            <td>
+                <button
+                    class="primary-btn"
+                    onclick="openProfile('${athlete.id}')"
+                >
+                    Open
+                </button>
+            </td>
+
+        `;
+
+
+        body.appendChild(row);
+
+    });
+
+}
+
+
+/* =====================================================
+   ATHLETES TABLE
+===================================================== */
+
+function renderAthletesTable(
+    searchTerm = ""
+) {
+
+    const body =
+        document.getElementById(
+            "athletesTableBody"
+        );
+
+
+    body.innerHTML = "";
+
+
+    const search =
+        searchTerm
+            .trim()
+            .toLowerCase();
+
+
+    athletes
+        .filter(function(athlete) {
+
+            return athlete.name
+                .toLowerCase()
+                .includes(search);
+
+        })
+        .forEach(function(athlete) {
+
+            const data =
+                athleteData[athlete.id] || {};
+
+
+            const row =
+                document.createElement("tr");
+
+
+            row.innerHTML = `
+
+                <td>
+                    <strong>
+                        ${escapeHtml(athlete.name)}
+                    </strong>
+                </td>
+
+                <td>
+                    ${staffRagSelect(
+                        athlete.id,
+                        "Technical",
+                        data.ratings?.["Technical"]
+                    )}
+                </td>
+
+                <td>
+                    ${staffRagSelect(
+                        athlete.id,
+                        "Fitness",
+                        data.ratings?.["Fitness"]
+                    )}
+                </td>
+
+                <td>
+                    ${staffRagSelect(
+                        athlete.id,
+                        "Coxing / Performance",
+                        data.ratings?.["Coxing / Performance"]
+                    )}
+                </td>
+
+                <td>
+                    ${staffRagSelect(
+                        athlete.id,
+                        "Attitude",
+                        data.ratings?.["Attitude"]
+                    )}
+                </td>
+
+                <td>
+                    ${staffRagSelect(
+                        athlete.id,
+                        "Communication",
+                        data.ratings?.["Communication"]
+                    )}
+                </td>
+
+                <td>
+                    ${staffRagSelect(
+                        athlete.id,
+                        "Consistency",
+                        data.ratings?.["Consistency"]
+                    )}
+                </td>
+
+                <td>
+                    <button
+                        class="primary-btn"
+                        onclick="openProfile('${athlete.id}')"
+                    >
+                        Open
+                    </button>
+                </td>
+
+            `;
+
+
+            body.appendChild(row);
+
+        });
+
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+document.getElementById(
+    "athleteSearch"
+).addEventListener(
+    "input",
+    function() {
+
+        renderAthletesTable(
+            this.value
+        );
+
+    }
+);
+
+
+/* =====================================================
+   BOYS FOLDER
+===================================================== */
+
+document.getElementById(
+    "boysFolderHeader"
+).addEventListener(
+    "click",
+    function() {
+
+        const content =
+            document.getElementById(
+                "boysFolderContent"
+            );
+
+        const arrow =
+            document.getElementById(
+                "boysFolderArrow"
+            );
+
+
+        if (content.style.display === "none") {
+
+            content.style.display = "block";
+
+            arrow.textContent = "▼";
+
+        } else {
+
+            content.style.display = "none";
+
+            arrow.textContent = "▶";
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   RAG SELECT
+===================================================== */
+
+function staffRagSelect(
+    athleteId,
+    category,
+    currentValue
+) {
+
+    const value =
+        currentValue || "";
+
+
+    const css =
+        ragClass(value);
+
+
+    return `
+
+        <select
+            class="rag-select ${css}"
+            onchange="changeRAG(
+                '${escapeJs(athleteId)}',
+                '${escapeJs(category)}',
+                this.value
+            )"
+        >
+
+            <option value="" ${value === "" ? "selected" : ""}>
+                Not Set
+            </option>
+
+            <option value="Green" ${value === "Green" ? "selected" : ""}>
+                Green
+            </option>
+
+            <option value="Amber" ${value === "Amber" ? "selected" : ""}>
+                Amber
+            </option>
+
+            <option value="Red" ${value === "Red" ? "selected" : ""}>
+                Red
+            </option>
+
+        </select>
+
+    `;
+
+}
+
+
+/* =====================================================
+   CHANGE RAG
+===================================================== */
+window.changeRAG = async function(athleteId, category, newValue) {
+
+    if (currentRole !== "Admin" && currentRole !== "Coach") {
+        return;
+    }
+
+    try {
+
+        const athleteRef = doc(db, "athletes", athleteId);
+        let historyItem = null;
+
+        await runTransaction(db, async (transaction) => {
+
+            const snapshot = await transaction.get(athleteRef);
+
+            if (!snapshot.exists()) {
+                throw new Error("Athlete document does not exist.");
+            }
+
+            const existing = snapshot.data();
+            const ratings = { ...(existing.ratings || {}) };
+            const oldValue = ratings[category] || "";
+
+            if (oldValue === newValue) {
+                return;
+            }
+
+            // "Not Set" means the rating must be removed completely.
+            // Do this on the ratings object itself rather than using a
+            // Firestore field path, because some category names contain
+            // characters such as "/" (for example "Coxing / Performance").
+            if (newValue === "") {
+                delete ratings[category];
+            } else {
+                ratings[category] = newValue;
+            }
+
+            historyItem = {
+                date: new Date().toISOString(),
+                category: category,
+                oldValue: oldValue,
+                newValue: newValue,
+                changedBy: currentUser?.email || "Unknown"
+            };
+
+            const history = Array.isArray(existing.history)
+                ? [...existing.history]
+                : [];
+
+            history.unshift(historyItem);
+
+            // Save the ratings map as a whole. This deliberately avoids
+            // constructing a dot-separated Firestore field path from the
+            // category name because some categories contain characters such
+            // as "/" (for example "Coxing / Performance"), which are not
+            // valid in a simple Firestore field path.
+            //
+            // When Not Set is selected, the category is removed from the
+            // ratings object above, so it is stored without that rating.
+            transaction.update(athleteRef, {
+                ratings: ratings,
+                history: history
+            });
+
+        });
+
+        if (historyItem) {
+            await syncAthleteToGoogleSheets(athleteId);
+            await syncHistoryToGoogleSheets(athleteId, historyItem);
+        }
+
+    } catch (error) {
+
+        console.error("RAG update failed:", error);
+
+        alert(
+            "The RAG rating could not be changed. Please try again. " +
+            (error?.message || "")
+        );
+
+    }
+
+};
+
+/* =====================================================
+   PROFILE
+===================================================== */
+
+window.openProfile = function(
+    athleteId
+) {
+
+    if (
+        currentRole === "Athlete" &&
+        athleteId !== currentAthleteId
+    ) {
+
+        return;
+
+    }
+
+
+    currentAthleteId =
+        athleteId;
+
+
+    showPage("profilePage");
+
+
+    renderProfile();
+
+};
+
+
+function renderProfile() {
+
+    if (!currentAthleteId) {
+
+        return;
+
+    }
+
+
+    const athlete =
+        athletes.find(
+            a => a.id === currentAthleteId
+        );
+
+
+    if (!athlete) {
+
+        return;
+
+    }
+
+
+    const data =
+        athleteData[currentAthleteId] || {};
+
+
+    const container =
+        document.getElementById(
+            "profileContent"
+        );
+
+
+    const isStaff =
+        currentRole === "Admin" ||
+        currentRole === "Coach";
+
+
+    let html = `
+
+        <div class="profile-header">
+
+            <div>
+
+                <div class="profile-name">
+                    ${escapeHtml(athlete.name)}
+                </div>
+
+                <div class="profile-id">
+                    Athlete ID: ${escapeHtml(athlete.id)}
+                </div>
+
+            </div>
+
+            <div>
+
+                <button
+                    class="secondary-btn"
+                    onclick="showPage('athletesPage')"
+                    ${isStaff ? "" : "style='display:none;'"}
+                >
+                    ← Back to Athletes
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="rag-grid">
+    `;
+
+
+    categories.forEach(function(category) {
+
+        const value =
+            data.ratings?.[category] || "";
+
+
+        if (isStaff) {
+
+            html += `
+
+                <div class="rag-card">
+
+                    <h3>
+                        ${escapeHtml(category)}
+                    </h3>
+
+                    ${staffRagSelect(
+                        athlete.id,
+                        category,
+                        value
+                    )}
+
+                </div>
+
+            `;
+
+        } else {
+
+            html += `
+
+                <div class="rag-card">
+
+                    <h3>
+                        ${escapeHtml(category)}
+                    </h3>
+
+                    ${ragBadge(value)}
+
+                </div>
+
+            `;
+
+        }
+
+    });
+
+
+    html += `
+
+        </div>
+
+
+        <div class="notes-card">
+
+            <h2>
+                Coach Notes
+            </h2>
+
+            <textarea
+                id="profileNotes"
+                class="notes-textarea"
+                ${isStaff ? "" : "readonly"}
+            >${escapeHtml(
+                data.notes || ""
+            )}</textarea>
+
+            ${
+                isStaff
+                ?
+                `
+                    <br><br>
+
+                    <button
+                        class="primary-btn"
+                        onclick="saveNotes()"
+                    >
+                        Save Notes
+                    </button>
+
+                    <div
+                        id="notesSavedMessage"
+                        class="save-message"
+                    >
+                        Notes saved.
+                    </div>
+                `
+                :
+                ""
+            }
+
+        </div>
+
+
+        <div class="notes-card">
+
+            <h2>
+                RAG History
+            </h2>
+
+            <div id="profileHistory">
+    `;
+
+
+    const history =
+        Array.isArray(data.history)
+            ? data.history
+            : [];
+
+
+    if (history.length === 0) {
+
+        html += `
+            <div class="empty">
+                No rating changes recorded yet.
+            </div>
+        `;
+
+    } else {
+
+        history
+            .slice(0, 20)
+            .forEach(function(item) {
+
+                html += historyHtml(item);
+
+            });
+
+    }
+
+
+    html += `
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    container.innerHTML =
+        html;
+
+}
+
+
+function renderOwnProfile() {
+
+    if (!currentAthleteId) {
+        return;
+    }
+
+
+    renderProfile();
+
+}
+
+
+function showProfileMessage(message) {
+
+    document.getElementById(
+        "profileContent"
+    ).innerHTML = `
+
+        <div class="empty">
+            ${escapeHtml(message)}
+        </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+   SAVE NOTES
+===================================================== */
+
+window.saveNotes = async function() {
+
+    if (
+        currentRole !== "Admin" &&
+        currentRole !== "Coach"
+    ) {
+
+        return;
+
+    }
+
+
+    if (!currentAthleteId) {
+        return;
+    }
+
+
+    const textarea =
+        document.getElementById(
+            "profileNotes"
+        );
+
+
+    if (!textarea) {
+        return;
+    }
+
+
+    try {
+
+        await setDoc(
+
+            doc(
+                db,
+                "athletes",
+                currentAthleteId
+            ),
+
+            {
+                notes:
+                    textarea.value
+
+            },
+
+            {
+                merge: true
+            }
+
+        );
+
+
+        await syncAthleteToGoogleSheets(
+            currentAthleteId
+        );
+
+
+        const message =
+            document.getElementById(
+                "notesSavedMessage"
+            );
+
+
+        if (message) {
+
+            message.style.display =
+                "block";
+
+
+            setTimeout(
+                function() {
+
+                    message.style.display =
+                        "none";
+
+                },
+                2000
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to save notes."
+        );
+
+    }
+
+};
+
+
+/* =====================================================
+   HISTORY
+===================================================== */
+
+function renderStaffHistory() {
+
+    const container =
+        document.getElementById(
+            "historyContent"
+        );
+
+
+    let allHistory = [];
+
+
+    athletes.forEach(function(athlete) {
+
+        const data =
+            athleteData[athlete.id];
+
+
+        if (!data) {
+            return;
+        }
+
+
+        const history =
+            Array.isArray(data.history)
+                ? data.history
+                : [];
+
+
+        history.forEach(function(item) {
+
+            allHistory.push({
+
+                ...item,
+
+                athlete:
+                    athlete.name,
+
+                athleteId:
+                    athlete.id
+
+            });
+
+        });
+
+    });
+
+
+    allHistory.sort(
+        function(a, b) {
+
+            return new Date(b.date) -
+                new Date(a.date);
+
+        }
+    );
+
+
+    if (allHistory.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="empty">
+                No RAG changes recorded yet.
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        allHistory
+            .map(historyHtmlStaff)
+            .join("");
+
+}
+
+
+function renderOwnHistory() {
+
+    const container =
+        document.getElementById(
+            "historyContent"
+        );
+
+
+    const data =
+        athleteData[currentAthleteId] || {};
+
+
+    const history =
+        Array.isArray(data.history)
+            ? data.history
+            : [];
+
+
+    if (history.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="empty">
+                No RAG changes recorded yet.
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        history
+            .map(historyHtml)
+            .join("");
+
+}
+
+
+function historyHtml(item) {
+
+    return `
+
+        <div class="history-item">
+
+            <div class="history-top">
+
+                <strong>
+                    ${escapeHtml(
+                        item.category || ""
+                    )}
+                </strong>
+
+                <span class="history-date">
+                    ${formatDate(item.date)}
+                </span>
+
+            </div>
+
+            <div class="history-change">
+
+                ${ragBadge(
+                    item.oldValue || ""
+                )}
+
+                →
+                
+                ${ragBadge(
+                    item.newValue || ""
+                )}
+
+            </div>
+
+            <div class="history-user">
+
+                Changed by:
+                ${escapeHtml(
+                    item.changedBy || "Unknown"
+                )}
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+function historyHtmlStaff(item) {
+
+    return `
+
+        <div class="history-item">
+
+            <div class="history-top">
+
+                <strong>
+                    ${escapeHtml(
+                        item.athlete || ""
+                    )}
+                </strong>
+
+                <span class="history-date">
+                    ${formatDate(item.date)}
+                </span>
+
+            </div>
+
+            <div style="margin-top:8px;">
+
+                <strong>
+                    ${escapeHtml(
+                        item.category || ""
+                    )}
+                </strong>
+
+            </div>
+
+            <div class="history-change">
+
+                ${ragBadge(
+                    item.oldValue || ""
+                )}
+
+                →
+
+                ${ragBadge(
+                    item.newValue || ""
+                )}
+
+            </div>
+
+            <div class="history-user">
+
+                Changed by:
+                ${escapeHtml(
+                    item.changedBy || "Unknown"
+                )}
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+   RAG HELPERS
+===================================================== */
+
+function ragClass(value) {
+
+    if (value === "Green") {
+        return "rag-green";
+    }
+
+    if (value === "Amber") {
+        return "rag-amber";
+    }
+
+    if (value === "Red") {
+        return "rag-red";
+    }
+
+    return "rag-none";
+
+}
+
+
+function ragBadge(value) {
+
+    if (!value) {
+
+        return `
+            <span class="rag-badge rag-none">
+                Not Set
+            </span>
+        `;
+
+    }
+
+
+    return `
+
+        <span class="rag-badge ${ragClass(value)}">
+            ${escapeHtml(value)}
+        </span>
+
+    `;
+
+}
+
+
+/* =====================================================
+   GOOGLE SHEETS SYNC
+===================================================== */
+
+async function sendToGoogleSheets(payload) {
+
+    if (
+        !GOOGLE_SHEETS_SYNC_URL ||
+        GOOGLE_SHEETS_SYNC_URL.includes("PASTE_")
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        await fetch(
+            GOOGLE_SHEETS_SYNC_URL,
+            {
+
+                method: "POST",
+
+                mode: "no-cors",
+
+                headers: {
+                    "Content-Type":
+                        "text/plain;charset=utf-8"
+                },
+
+                body:
+                    JSON.stringify(payload)
+
+            }
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Google Sheets sync error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   SYNC ATHLETE TO SHEETS
+===================================================== */
+
+async function syncAthleteToGoogleSheets(
+    athleteId
+) {
+
+    const athlete =
+        athletes.find(
+            a => a.id === athleteId
+        );
+
+
+    if (!athlete) {
+        return;
+    }
+
+
+    const snapshot =
+        await getDoc(
+            doc(
+                db,
+                "athletes",
+                athleteId
+            )
+        );
+
+
+    if (!snapshot.exists()) {
+        return;
+    }
+
+
+    const data =
+        snapshot.data();
+
+
+    await sendToGoogleSheets({
+
+        action:
+            "upsertAthlete",
+
+        athlete: {
+
+            id:
+                athleteId,
+
+            name:
+                athlete.name,
+
+            technical:
+                data.ratings?.["Technical"] || "",
+
+            fitness:
+                data.ratings?.["Fitness"] || "",
+
+            performance:
+                data.ratings?.["Coxing / Performance"] || "",
+
+            attitude:
+                data.ratings?.["Attitude"] || "",
+
+            communication:
+                data.ratings?.["Communication"] || "",
+
+            consistency:
+                data.ratings?.["Consistency"] || "",
+
+            notes:
+                data.notes || ""
+
+        }
+
+    });
+
+}
+
+
+/* =====================================================
+   SYNC HISTORY TO SHEETS
+===================================================== */
+
+async function syncHistoryToGoogleSheets(
+    athleteId,
+    historyItem
+) {
+
+    const athlete =
+        athletes.find(
+            a => a.id === athleteId
+        );
+
+
+    if (!athlete) {
+        return;
+    }
+
+
+    await sendToGoogleSheets({
+
+        action:
+            "addHistory",
+
+        history: {
+
+            date:
+                historyItem.date ||
+                new Date().toISOString(),
+
+            athleteId:
+                athleteId,
+
+            athlete:
+                athlete.name,
+
+            category:
+                historyItem.category || "",
+
+            oldRAG:
+                historyItem.oldValue ||
+                "Not Set",
+
+            newRAG:
+                historyItem.newValue ||
+                "Not Set",
+
+            changedBy:
+                historyItem.changedBy ||
+                "Unknown"
+
+        }
+
+    });
+
+}
+
+
+/* =====================================================
+   SYNC ALL ATHLETES TO SHEETS
+===================================================== */
+
+window.syncAllAthletesToGoogleSheets =
+    async function() {
+
+        if (
+            currentRole !== "Admin" &&
+            currentRole !== "Coach"
+        ) {
+
+            return;
+
+        }
+
+
+        for (const athlete of athletes) {
+
+            try {
+
+                await syncAthleteToGoogleSheets(
+                    athlete.id
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "Could not sync",
+                    athlete.name,
+                    error
+                );
+
+            }
+
+        }
+
+    };
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function getAthleteName(id) {
+
+    const athlete =
+        athletes.find(
+            a => a.id === id
+        );
+
+
+    return athlete
+        ? athlete.name
+        : id;
+
+}
+
+
+function formatDate(date) {
+
+    if (!date) {
+        return "Unknown date";
+    }
+
+
+    try {
+
+        return new Date(date)
+            .toLocaleString(
+                "en-GB",
+                {
+                    dateStyle: "medium",
+                    timeStyle: "short"
+                }
+            );
+
+    } catch {
+
+        return date;
+
+    }
+
+}
+
+
+function escapeHtml(value) {
+
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+function escapeJs(value) {
+
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /\\/g,
+        "\\\\"
+    )
+    .replace(
+        /'/g,
+        "\\'"
+    );
+
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+console.log(
+    "Leeds Rowing Club Athlete Management loaded."
+);
+
+</script>
+
+</body>
+</html>
