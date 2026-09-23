@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -23,9 +22,9 @@ body {
     color: #222;
 }
 
-/* =========================
+/* =====================================================
    LOGIN
-========================= */
+===================================================== */
 
 #loginScreen {
     min-height: 100vh;
@@ -87,6 +86,11 @@ body {
     background: #1f2937;
 }
 
+.login-box button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
 #loginError {
     display: none;
     margin-top: 15px;
@@ -94,11 +98,12 @@ body {
     background: #fee2e2;
     color: #991b1b;
     border-radius: 8px;
+    line-height: 1.4;
 }
 
-/* =========================
+/* =====================================================
    APP
-========================= */
+===================================================== */
 
 #app {
     display: none;
@@ -124,61 +129,69 @@ header {
 .header-user {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .role-badge {
     background: #374151;
-    padding: 7px 12px;
+    padding: 5px 10px;
     border-radius: 20px;
     font-size: 13px;
 }
 
 .logout-btn {
-    background: #ef4444;
-    border: none;
+    background: #dc2626;
     color: white;
-    padding: 9px 14px;
+    border: none;
+    padding: 8px 14px;
     border-radius: 7px;
     cursor: pointer;
-    font-weight: bold;
 }
 
-/* =========================
-   NAV
-========================= */
+.logout-btn:hover {
+    background: #b91c1c;
+}
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
 
 nav {
     background: white;
     border-bottom: 1px solid #ddd;
+    padding: 10px 20px;
     display: flex;
-    padding: 0 20px;
-    overflow-x: auto;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
 .nav-btn {
-    background: none;
     border: none;
-    padding: 16px 20px;
+    background: transparent;
+    padding: 10px 16px;
+    border-radius: 7px;
     cursor: pointer;
-    font-size: 15px;
-    color: #555;
-    white-space: nowrap;
+    font-weight: bold;
+    color: #4b5563;
+}
+
+.nav-btn:hover {
+    background: #f3f4f6;
 }
 
 .nav-btn.active {
-    color: #111827;
-    font-weight: bold;
-    border-bottom: 3px solid #111827;
+    background: #111827;
+    color: white;
 }
 
-/* =========================
+/* =====================================================
    MAIN
-========================= */
+===================================================== */
 
 main {
-    max-width: 1500px;
-    margin: auto;
+    max-width: 1400px;
+    margin: 0 auto;
     padding: 25px;
 }
 
@@ -192,95 +205,342 @@ main {
 
 .page-title {
     font-size: 28px;
-    margin-bottom: 7px;
+    margin-bottom: 8px;
 }
 
 .page-subtitle {
-    color: #666;
+    color: #6b7280;
     margin-bottom: 25px;
 }
 
-/* =========================
-   DASHBOARD
-========================= */
+/* =====================================================
+   CARDS
+===================================================== */
 
-.stats-grid {
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    margin-bottom: 20px;
+}
+
+.card-title {
+    font-size: 19px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+.dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns:
+        repeat(auto-fit, minmax(180px, 1fr));
     gap: 18px;
     margin-bottom: 25px;
 }
 
 .stat-card {
     background: white;
-    padding: 22px;
     border-radius: 12px;
-    border: 1px solid #e5e7eb;
+    padding: 22px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
-.stat-card h3 {
-    font-size: 14px;
+.stat-label {
     color: #6b7280;
-    margin-bottom: 10px;
+    font-size: 14px;
+    margin-bottom: 8px;
 }
 
 .stat-number {
-    font-size: 30px;
+    font-size: 32px;
     font-weight: bold;
 }
 
-/* =========================
-   TABLES
-========================= */
+.green-stat {
+    border-left: 5px solid #16a34a;
+}
 
-.table-container {
+.amber-stat {
+    border-left: 5px solid #d97706;
+}
+
+.red-stat {
+    border-left: 5px solid #dc2626;
+}
+
+.none-stat {
+    border-left: 5px solid #9ca3af;
+}
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+.search-box {
+    width: 100%;
+    max-width: 450px;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 15px;
+    margin-bottom: 20px;
+}
+
+/* =====================================================
+   FOLDERS
+===================================================== */
+
+.folder {
     background: white;
     border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    overflow: hidden;
+}
+
+.folder-header {
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.folder-header:hover {
+    background: #f3f4f6;
+}
+
+.folder-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.folder-arrow {
+    font-size: 18px;
+}
+
+.folder-content {
+    padding: 20px;
+}
+
+/* =====================================================
+   TABLE
+===================================================== */
+
+.table-wrapper {
+    width: 100%;
     overflow-x: auto;
-    border: 1px solid #e5e7eb;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 950px;
+    min-width: 900px;
 }
 
 th {
-    background: #f9fafb;
+    background: #f3f4f6;
     text-align: left;
-    padding: 14px;
+    padding: 12px;
     font-size: 13px;
-    color: #4b5563;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 2px solid #e5e7eb;
 }
 
 td {
-    padding: 13px 14px;
-    border-bottom: 1px solid #eee;
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: middle;
 }
 
-tr:last-child td {
-    border-bottom: none;
+tr:hover td {
+    background: #fafafa;
 }
 
-/* =========================
-   BUTTONS
-========================= */
+.athlete-name {
+    font-weight: bold;
+}
 
-.primary-btn {
+.athlete-link {
+    cursor: pointer;
+    color: #111827;
+}
+
+.athlete-link:hover {
+    text-decoration: underline;
+}
+
+/* =====================================================
+   RAG
+===================================================== */
+
+.rag-select {
+    padding: 7px 8px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    font-weight: bold;
+    min-width: 105px;
+    cursor: pointer;
+}
+
+.rag-none {
+    background: #f3f4f6;
+    color: #4b5563;
+}
+
+.rag-green-plus,
+.rag-green,
+.rag-green-minus {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.rag-amber-plus,
+.rag-amber,
+.rag-amber-minus {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.rag-red-plus,
+.rag-red,
+.rag-red-minus {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.rag-badge {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+/* =====================================================
+   PROFILE
+===================================================== */
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.profile-name {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.profile-group {
+    color: #6b7280;
+    margin-top: 5px;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+.profile-rag-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.profile-rag-label {
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.profile-rag-value {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+/* =====================================================
+   NOTES
+===================================================== */
+
+.notes-textarea {
+    width: 100%;
+    min-height: 180px;
+    resize: vertical;
+    padding: 13px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+}
+
+.save-btn {
+    margin-top: 12px;
     background: #111827;
     color: white;
     border: none;
-    padding: 10px 15px;
+    padding: 11px 18px;
     border-radius: 7px;
     cursor: pointer;
     font-weight: bold;
 }
 
-.primary-btn:hover {
+.save-btn:hover {
     background: #1f2937;
 }
+
+/* =====================================================
+   HISTORY
+===================================================== */
+
+.history-item {
+    background: white;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+.history-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.history-date {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.history-change {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.history-user {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+/* =====================================================
+   BUTTONS
+===================================================== */
 
 .secondary-btn {
     background: #e5e7eb;
@@ -292,268 +552,45 @@ tr:last-child td {
     font-weight: bold;
 }
 
-/* =========================
-   RAG
-========================= */
-
-.rag-select {
-    border: none;
-    border-radius: 6px;
-    padding: 7px 8px;
-    font-weight: bold;
-    cursor: pointer;
-    min-width: 115px;
+.secondary-btn:hover {
+    background: #d1d5db;
 }
 
-.rag-badge {
-    display: inline-block;
-    padding: 7px 11px;
-    border-radius: 7px;
-    font-weight: bold;
-    font-size: 13px;
-}
+/* =====================================================
+   EMPTY / LOADING
+===================================================== */
 
-.rag-green-plus {
-    background: #86efac;
-    color: #14532d;
-}
-
-.rag-green {
-    background: #bbf7d0;
-    color: #166534;
-}
-
-.rag-green-minus {
-    background: #dcfce7;
-    color: #166534;
-}
-
-.rag-amber-plus {
-    background: #fcd34d;
-    color: #78350f;
-}
-
-.rag-amber {
-    background: #fde68a;
-    color: #92400e;
-}
-
-.rag-amber-minus {
-    background: #fef3c7;
-    color: #92400e;
-}
-
-.rag-red-plus {
-    background: #fca5a5;
-    color: #7f1d1d;
-}
-
-.rag-red {
-    background: #fecaca;
-    color: #991b1b;
-}
-
-.rag-red-minus {
-    background: #fee2e2;
-    color: #991b1b;
-}
-
-.rag-none {
-    background: #e5e7eb;
-    color: #4b5563;
-}
-
-/* =========================
-   SEARCH
-========================= */
-
-.search-box {
-    width: 100%;
-    padding: 13px;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    margin-bottom: 18px;
-    font-size: 15px;
-}
-
-/* =========================
-   FOLDER
-========================= */
-
-.folder {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    margin-bottom: 18px;
-    overflow: hidden;
-}
-
-.folder-header {
-    padding: 17px 20px;
-    background: #f9fafb;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-}
-
-.folder-content {
-    padding: 18px;
-}
-
-/* =========================
-   PROFILE
-========================= */
-
-.profile-header {
-    background: white;
-    border-radius: 12px;
-    padding: 25px;
-    margin-bottom: 20px;
-    border: 1px solid #e5e7eb;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.profile-name {
-    font-size: 30px;
-    font-weight: bold;
-}
-
-.profile-id {
-    color: #6b7280;
-    margin-top: 5px;
-}
-
-.rag-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.rag-card,
-.notes-card,
-.history-item {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    border: 1px solid #e5e7eb;
-}
-
-.rag-card h3 {
-    margin-bottom: 14px;
-    font-size: 16px;
-}
-
-.rag-card select {
-    width: 100%;
-}
-
-.notes-card {
-    margin-bottom: 20px;
-}
-
-.notes-card h2 {
-    margin-bottom: 15px;
-}
-
-.notes-textarea {
-    width: 100%;
-    min-height: 150px;
-    resize: vertical;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    padding: 13px;
-    font-family: inherit;
-    font-size: 15px;
-}
-
-/* =========================
-   HISTORY
-========================= */
-
-.history-item {
-    margin-bottom: 12px;
-}
-
-.history-top {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.history-date,
-.history-user {
-    color: #6b7280;
-    font-size: 13px;
-}
-
-.history-change {
-    margin-top: 8px;
-    font-weight: bold;
-}
-
-.history-user {
-    margin-top: 6px;
-}
-
-/* =========================
-   OTHER
-========================= */
-
+.empty,
 .loading {
     text-align: center;
-    padding: 40px;
-    color: #666;
-}
-
-.empty {
+    color: #6b7280;
     padding: 35px;
-    text-align: center;
-    color: #777;
 }
 
-.save-message {
-    margin-top: 10px;
-    color: #166534;
-    font-weight: bold;
-    display: none;
-}
+/* =====================================================
+   RESPONSIVE
+===================================================== */
 
-@media(max-width: 1100px) {
-
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-}
-
-@media(max-width: 600px) {
+@media (max-width: 700px) {
 
     main {
         padding: 15px;
     }
 
-    .stats-grid,
-    .rag-grid {
-        grid-template-columns: 1fr;
+    header {
+        padding: 15px;
     }
 
-    .login-box {
-        padding: 25px;
+    .header-title {
+        font-size: 18px;
     }
 
     .page-title {
         font-size: 24px;
     }
 
-    .profile-name {
-        font-size: 25px;
+    .login-box {
+        padding: 25px;
     }
 
 }
@@ -564,341 +601,486 @@ tr:last-child td {
 
 <body>
 
-<!-- =========================
+
+<!-- =====================================================
      LOGIN
-========================= -->
+===================================================== -->
 
 <div id="loginScreen">
 
+    <div class="login-box">
 
-<div class="login-box">
+        <h1>Leeds Rowing Club</h1>
 
-    <h1>Leeds Rowing Club</h1>
+        <p>Athlete Management System</p>
 
-    <p>Athlete Management System</p>
+        <label for="username">
+            Username
+        </label>
 
-    <label for="username">Username</label>
+        <input
+            id="username"
+            type="text"
+            placeholder="Enter username"
+            autocomplete="username"
+        >
 
-    <input
-        id="username"
-        type="text"
-        placeholder="Enter username"
-        autocomplete="username"
-    >
+        <label for="password">
+            Password
+        </label>
 
-    <label for="password">Password</label>
+        <input
+            id="password"
+            type="password"
+            placeholder="Enter password"
+            autocomplete="current-password"
+        >
 
-    <input
-        id="password"
-        type="password"
-        placeholder="Enter password"
-        autocomplete="current-password"
-    >
+        <button
+            id="loginButton"
+            type="button"
+        >
+            Login
+        </button>
 
-    <button id="loginButton">
-        Login
-    </button>
+        <div id="loginError"></div>
 
-    <div id="loginError"></div>
+    </div>
 
 </div>
 
 
-</div>
-
-<!-- =========================
+<!-- =====================================================
      APP
-========================= -->
+===================================================== -->
 
 <div id="app">
 
 <header>
 
+    <div class="header-title">
+        Leeds Rowing Club Athlete Management
+    </div>
 
-<div class="header-title">
-    Leeds Rowing Club Athlete Management
-</div>
+    <div class="header-user">
 
-<div class="header-user">
+        <span id="loggedInUser"></span>
 
-    <span id="loggedInUser"></span>
+        <span
+            id="roleBadge"
+            class="role-badge">
+        </span>
 
-    <span
-        id="roleBadge"
-        class="role-badge">
-    </span>
+        <button
+            class="logout-btn"
+            id="logoutButton"
+            type="button"
+        >
+            Logout
+        </button>
 
-    <button
-        class="logout-btn"
-        id="logoutButton">
-        Logout
-    </button>
-
-</div>
-
+    </div>
 
 </header>
 
-<!-- =========================
+
+<!-- =====================================================
      NAV
-========================= -->
+===================================================== -->
 
 <nav>
 
+    <button
+        class="nav-btn active"
+        data-page="dashboardPage"
+        id="dashboardNav"
+        type="button"
+    >
+        Dashboard
+    </button>
 
-<button
-    class="nav-btn active"
-    data-page="dashboardPage"
-    id="dashboardNav">
-    Dashboard
-</button>
+    <button
+        class="nav-btn"
+        data-page="athletesPage"
+        id="athletesNav"
+        type="button"
+    >
+        Athletes
+    </button>
 
-<button
-    class="nav-btn"
-    data-page="athletesPage"
-    id="athletesNav">
-    Athletes
-</button>
+    <button
+        class="nav-btn"
+        data-page="profilePage"
+        id="profileNav"
+        type="button"
+    >
+        Profile
+    </button>
 
-<button
-    class="nav-btn"
-    data-page="profilePage"
-    id="profileNav">
-    Profile
-</button>
-
-<button
-    class="nav-btn"
-    data-page="historyPage"
-    id="historyNav">
-    History
-</button>
-
+    <button
+        class="nav-btn"
+        data-page="historyPage"
+        id="historyNav"
+        type="button"
+    >
+        History
+    </button>
 
 </nav>
 
+
 <main>
 
-<!-- =========================
+
+<!-- =====================================================
      DASHBOARD
-========================= -->
+===================================================== -->
 
 <section
     id="dashboardPage"
-    class="page active">
+    class="page active"
+>
 
-
-<h1 class="page-title">
-    Dashboard
-</h1>
-
-<p class="page-subtitle">
-    Leeds Rowing Club junior athlete overview.
-</p>
-
-<div class="stats-grid">
-
-    <div class="stat-card">
-        <h3>Total Athletes</h3>
-        <div
-            class="stat-number"
-            id="totalAthletes">
-            0
-        </div>
+    <div class="page-title">
+        Dashboard
     </div>
 
-    <div class="stat-card">
-        <h3>Green Ratings</h3>
-        <div
-            class="stat-number"
-            id="greenRatings">
-            0
-        </div>
+    <div class="page-subtitle">
+        Leeds Rowing Club athlete performance overview.
     </div>
 
-    <div class="stat-card">
-        <h3>Amber Ratings</h3>
-        <div
-            class="stat-number"
-            id="amberRatings">
-            0
+    <div class="dashboard-grid">
+
+        <div class="stat-card green-stat">
+
+            <div class="stat-label">
+                Green
+            </div>
+
+            <div
+                class="stat-number"
+                id="greenCount"
+            >
+                0
+            </div>
+
         </div>
+
+        <div class="stat-card amber-stat">
+
+            <div class="stat-label">
+                Amber
+            </div>
+
+            <div
+                class="stat-number"
+                id="amberCount"
+            >
+                0
+            </div>
+
+        </div>
+
+        <div class="stat-card red-stat">
+
+            <div class="stat-label">
+                Red
+            </div>
+
+            <div
+                class="stat-number"
+                id="redCount"
+            >
+                0
+            </div>
+
+        </div>
+
+        <div class="stat-card none-stat">
+
+            <div class="stat-label">
+                Not Set
+            </div>
+
+            <div
+                class="stat-number"
+                id="noneCount"
+            >
+                0
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="stat-card">
-        <h3>Red Ratings</h3>
-        <div
-            class="stat-number"
-            id="redRatings">
-            0
+
+    <div class="card">
+
+        <div class="card-title">
+            Overview
         </div>
+
+        <p>
+            Use the Athletes page to view and update athlete
+            performance ratings.
+        </p>
+
     </div>
-
-</div>
-
-<h2 style="margin-bottom:15px;">
-    Quick Athlete Access
-</h2>
-
-<div class="table-container">
-
-    <table>
-
-        <thead>
-
-            <tr>
-
-                <th>Athlete</th>
-                <th>Power Curve (erg)</th>
-                <th>Tech (erg)</th>
-                <th>Sculling Tech</th>
-                <th>Sweeping Tech</th>
-                <th>Profile</th>
-
-            </tr>
-
-        </thead>
-
-        <tbody id="dashboardAthletesBody"></tbody>
-
-    </table>
-
-</div>
-
 
 </section>
 
-<!-- =========================
+
+<!-- =====================================================
      ATHLETES
-========================= -->
+===================================================== -->
 
 <section
     id="athletesPage"
-    class="page">
-
-
-<h1 class="page-title">
-    Athletes
-</h1>
-
-<p class="page-subtitle">
-    Manage the Leeds Rowing Club junior squad.
-</p>
-
-<input
-    type="text"
-    id="athleteSearch"
-    class="search-box"
-    placeholder="Search athletes..."
+    class="page"
 >
 
-<div class="folder">
-
-    <div class="folder-header" id="boysFolderHeader">
-        <h2>📁 Boys</h2>
-        <span id="boysFolderArrow">▼</span>
+    <div class="page-title">
+        Athletes
     </div>
 
-    <div class="folder-content" id="boysFolderContent">
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Athlete</th>
-                        <th>Power Curve (erg)</th>
-                        <th>Tech (erg)</th>
-                        <th>Sculling Tech</th>
-                        <th>Sweeping Tech</th>
-                        <th>Open</th>
-                    </tr>
-                </thead>
-                <tbody id="athletesTableBody"></tbody>
-            </table>
+    <div class="page-subtitle">
+        Manage athlete performance ratings.
+    </div>
+
+
+    <input
+        id="athleteSearch"
+        class="search-box"
+        type="text"
+        placeholder="Search athletes..."
+    >
+
+
+    <!-- =========================
+         BOYS FOLDER
+    ========================= -->
+
+    <div
+        class="folder"
+        id="boysFolder"
+    >
+
+        <div
+            class="folder-header"
+            id="boysFolderHeader"
+        >
+
+            <div class="folder-title">
+                👦 Boys
+            </div>
+
+            <div
+                class="folder-arrow"
+                id="boysFolderArrow"
+            >
+                ▼
+            </div>
+
         </div>
-    </div>
 
-</div>
 
-<div class="folder">
+        <div
+            class="folder-content"
+            id="boysFolderContent"
+        >
 
-    <div class="folder-header" id="girlsFolderHeader">
-        <h2>📁 Girls</h2>
-        <span id="girlsFolderArrow">▶</span>
-    </div>
+            <div class="table-wrapper">
 
-    <div class="folder-content" id="girlsFolderContent" style="display:none;">
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Athlete</th>
-                        <th>Power Curve (erg)</th>
-                        <th>Tech (erg)</th>
-                        <th>Sculling Tech</th>
-                        <th>Sweeping Tech</th>
-                        <th>Open</th>
-                    </tr>
-                </thead>
-                <tbody id="girlsAthletesTableBody"></tbody>
-            </table>
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Athlete
+                            </th>
+
+                            <th>
+                                Power Curve (erg)
+                            </th>
+
+                            <th>
+                                Tech (erg)
+                            </th>
+
+                            <th>
+                                Sculling Tech
+                            </th>
+
+                            <th>
+                                Sweeping Tech
+                            </th>
+
+                            <th>
+                                Notes
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody
+                        id="boysAthletesTableBody"
+                    ></tbody>
+
+                </table>
+
+            </div>
+
         </div>
+
     </div>
 
-</div>
 
-<!-- =========================
+    <!-- =========================
+         GIRLS FOLDER
+    ========================= -->
+
+    <div
+        class="folder"
+        id="girlsFolder"
+    >
+
+        <div
+            class="folder-header"
+            id="girlsFolderHeader"
+        >
+
+            <div class="folder-title">
+                👧 Girls
+            </div>
+
+            <div
+                class="folder-arrow"
+                id="girlsFolderArrow"
+            >
+                ▼
+            </div>
+
+        </div>
+
+
+        <div
+            class="folder-content"
+            id="girlsFolderContent"
+        >
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Athlete
+                            </th>
+
+                            <th>
+                                Power Curve (erg)
+                            </th>
+
+                            <th>
+                                Tech (erg)
+                            </th>
+
+                            <th>
+                                Sculling Tech
+                            </th>
+
+                            <th>
+                                Sweeping Tech
+                            </th>
+
+                            <th>
+                                Notes
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody
+                        id="girlsAthletesTableBody"
+                    ></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
      PROFILE
-========================= -->
+===================================================== -->
 
 <section
     id="profilePage"
-    class="page">
+    class="page"
+>
 
+    <div id="profileContent">
 
-<div id="profileContent">
+        <div class="loading">
+            Loading profile...
+        </div>
 
-    <div class="loading">
-        Select an athlete to view their profile.
     </div>
-
-</div>
-
 
 </section>
 
-<!-- =========================
+
+<!-- =====================================================
      HISTORY
-========================= -->
+===================================================== -->
 
 <section
     id="historyPage"
-    class="page">
+    class="page"
+>
 
-
-<h1 class="page-title">
-    RAG History
-</h1>
-
-<p class="page-subtitle">
-    Record of Power Curve (erg), Tech (erg), Sculling Tech and Sweeping Tech rating changes.
-</p>
-
-<div id="historyContent">
-
-    <div class="loading">
-        Loading history...
+    <div class="page-title">
+        History
     </div>
 
-</div>
+    <div class="page-subtitle">
+        RAG rating changes and performance history.
+    </div>
 
+    <div id="historyContent">
+
+        <div class="loading">
+            Loading history...
+        </div>
+
+    </div>
 
 </section>
+
 
 </main>
 
 </div>
 
+
+<!-- =====================================================
+     FIREBASE / JAVASCRIPT
+===================================================== -->
+
 <script type="module">
+
 
 /* =====================================================
    FIREBASE IMPORTS
@@ -969,7 +1151,9 @@ const GOOGLE_SHEETS_SYNC_URL =
 ===================================================== */
 
 const app =
-    initializeApp(firebaseConfig);
+    initializeApp(
+        firebaseConfig
+    );
 
 const auth =
     getAuth(app);
@@ -1001,57 +1185,320 @@ const staffAccounts = {
 
 const athletes = [
 
-    { id: "alexg", name: "Alex Green", group: "Boys" },
-    { id: "baileym", name: "Bailey Marshall", group: "Boys" },
-    { id: "bertieb", name: "Bertie Beanland", group: "Boys" },
-    { id: "gabrielm", name: "Gabriel Maida", group: "Boys" },
-    { id: "hectorj", name: "Hector Jones", group: "Boys" },
-    { id: "jackb", name: "Jack Bailey", group: "Boys" },
-    { id: "jacke", name: "Jack East", group: "Boys" },
-    { id: "jacobh", name: "Jacob Hallman", group: "Boys" },
-    { id: "jacobs", name: "Jacob Smith", group: "Boys" },
-    { id: "jamief", name: "Jamie Ford", group: "Boys" },
-    { id: "joet", name: "Joe Tennant", group: "Boys" },
-    { id: "lucasb", name: "Lucas Brook", group: "Boys" },
-    { id: "mattyl", name: "Matty Lincoln", group: "Boys" },
-    { id: "maxw", name: "Max Welsh", group: "Boys" },
-    { id: "neop", name: "Neo Patel", group: "Boys" },
-    { id: "saml", name: "Sam Lucione", group: "Boys" },
-    { id: "sethj", name: "Seth Jones", group: "Boys" },
-    { id: "sethl", name: "Seth Langdon", group: "Boys" },
-    { id: "zacl", name: "Zac Lodge", group: "Boys" },
-    { id: "benw", name: "Ben Whittaker", group: "Boys" },
-    { id: "charliew", name: "Charlie Watts", group: "Boys" },
-    { id: "edwards", name: "Edward Steele", group: "Boys" },
-    { id: "fredt", name: "Fred Tattersall", group: "Boys" },
-    { id: "matthewk", name: "Matthew Kerry", group: "Boys" },
-    { id: "ryana", name: "Ryan Atkins", group: "Boys" },
-    { id: "annaj", name: "Anna James", group: "Girls" },
-    { id: "sophier", name: "Sophie Robertson", group: "Girls" },
-    { id: "alicea", name: "Alice Ashcroft", group: "Girls" },
-    { id: "neivew", name: "Neive Wahid", group: "Girls" },
-    { id: "laylamd", name: "Layla McMonagle-Dunn", group: "Girls" },
-    { id: "madisonf", name: "Madison Fleming", group: "Girls" },
-    { id: "sophiem", name: "Sophie Mullin", group: "Girls" },
-    { id: "christabelod", name: "Christabel Ohenewaa-Danso", group: "Girls" },
-    { id: "libbyc", name: "Libby Chadwick", group: "Girls" },
-    { id: "gracel", name: "Grace Lister", group: "Girls" },
-    { id: "zhiriaj", name: "Zhiri Al-Jaf", group: "Girls" },
-    { id: "freyal", name: "Freya Long", group: "Girls" },
-    { id: "poppyy", name: "Poppy Youlden", group: "Girls" },
-    { id: "connief", name: "Connie Fozzard", group: "Girls" },
-    { id: "islam", name: "Isla Marks", group: "Girls" },
-    { id: "elliew", name: "Ellie Withington", group: "Girls" },
-    { id: "aval", name: "Ava Lister", group: "Girls" },
-    { id: "kanonkh", name: "Kanon Kobri-Hill", group: "Girls" },
-    { id: "kierao", name: "Kiera O'Leary", group: "Girls" },
-    { id: "imeldag", name: "Imelda Gibbs", group: "Girls" },
-    { id: "claym", name: "Clay McMillian", group: "Girls" },
-    { id: "marthae", name: "Martha Ellis", group: "Girls" },
-    { id: "kaiaw", name: "Kaia Whittaker", group: "Girls" },
-    { id: "jenb", name: "Jen Bailey", group: "Girls" },
-    { id: "ellam", name: "Ella Mounsey", group: "Girls" },
-    { id: "chloec", name: "Chloe Carag", group: "Girls" }
+    /* =========================
+       BOYS
+    ========================= */
+
+    {
+        id: "alexg",
+        name: "Alex Green",
+        group: "Boys"
+    },
+
+    {
+        id: "baileym",
+        name: "Bailey Marshall",
+        group: "Boys"
+    },
+
+    {
+        id: "bertieb",
+        name: "Bertie Beanland",
+        group: "Boys"
+    },
+
+    {
+        id: "gabrielm",
+        name: "Gabriel Maida",
+        group: "Boys"
+    },
+
+    {
+        id: "hectorj",
+        name: "Hector Jones",
+        group: "Boys"
+    },
+
+    {
+        id: "jackb",
+        name: "Jack Bailey",
+        group: "Boys"
+    },
+
+    {
+        id: "jacke",
+        name: "Jack East",
+        group: "Boys"
+    },
+
+    {
+        id: "jacobh",
+        name: "Jacob Hallman",
+        group: "Boys"
+    },
+
+    {
+        id: "jacobs",
+        name: "Jacob Smith",
+        group: "Boys"
+    },
+
+    {
+        id: "jamief",
+        name: "Jamie Ford",
+        group: "Boys"
+    },
+
+    {
+        id: "joet",
+        name: "Joe Tennant",
+        group: "Boys"
+    },
+
+    {
+        id: "lucasb",
+        name: "Lucas Brook",
+        group: "Boys"
+    },
+
+    {
+        id: "mattyl",
+        name: "Matty Lincoln",
+        group: "Boys"
+    },
+
+    {
+        id: "maxw",
+        name: "Max Welsh",
+        group: "Boys"
+    },
+
+    {
+        id: "neop",
+        name: "Neo Patel",
+        group: "Boys"
+    },
+
+    {
+        id: "saml",
+        name: "Sam Lucione",
+        group: "Boys"
+    },
+
+    {
+        id: "sethj",
+        name: "Seth Jones",
+        group: "Boys"
+    },
+
+    {
+        id: "sethl",
+        name: "Seth Langdon",
+        group: "Boys"
+    },
+
+    {
+        id: "zacl",
+        name: "Zac Lodge",
+        group: "Boys"
+    },
+
+    {
+        id: "benw",
+        name: "Ben Whittaker",
+        group: "Boys"
+    },
+
+    {
+        id: "charliew",
+        name: "Charlie Watts",
+        group: "Boys"
+    },
+
+    {
+        id: "edwards",
+        name: "Edward Steele",
+        group: "Boys"
+    },
+
+    {
+        id: "fredt",
+        name: "Fred Tattersall",
+        group: "Boys"
+    },
+
+    {
+        id: "matthewk",
+        name: "Matthew Kerry",
+        group: "Boys"
+    },
+
+    {
+        id: "ryana",
+        name: "Ryan Atkins",
+        group: "Boys"
+    },
+
+
+    /* =========================
+       GIRLS
+    ========================= */
+
+    {
+        id: "annaj",
+        name: "Anna James",
+        group: "Girls"
+    },
+
+    {
+        id: "sophier",
+        name: "Sophie Robertson",
+        group: "Girls"
+    },
+
+    {
+        id: "alicea",
+        name: "Alice Ashcroft",
+        group: "Girls"
+    },
+
+    {
+        id: "neivew",
+        name: "Neive Wahid",
+        group: "Girls"
+    },
+
+    {
+        id: "laylamd",
+        name: "Layla McMonagle-Dunn",
+        group: "Girls"
+    },
+
+    {
+        id: "madisonf",
+        name: "Madison Fleming",
+        group: "Girls"
+    },
+
+    {
+        id: "sophiem",
+        name: "Sophie Mullin",
+        group: "Girls"
+    },
+
+    {
+        id: "christabelod",
+        name: "Christabel Ohenewaa-Danso",
+        group: "Girls"
+    },
+
+    {
+        id: "libbyc",
+        name: "Libby Chadwick",
+        group: "Girls"
+    },
+
+    {
+        id: "gracel",
+        name: "Grace Lister",
+        group: "Girls"
+    },
+
+    {
+        id: "zhiriaj",
+        name: "Zhiri Al-Jaf",
+        group: "Girls"
+    },
+
+    {
+        id: "freyal",
+        name: "Freya Long",
+        group: "Girls"
+    },
+
+    {
+        id: "poppyy",
+        name: "Poppy Youlden",
+        group: "Girls"
+    },
+
+    {
+        id: "connief",
+        name: "Connie Fozzard",
+        group: "Girls"
+    },
+
+    {
+        id: "islam",
+        name: "Isla Marks",
+        group: "Girls"
+    },
+
+    {
+        id: "elliew",
+        name: "Ellie Withington",
+        group: "Girls"
+    },
+
+    {
+        id: "aval",
+        name: "Ava Lister",
+        group: "Girls"
+    },
+
+    {
+        id: "kanonkh",
+        name: "Kanon Kobri-Hill",
+        group: "Girls"
+    },
+
+    {
+        id: "kierao",
+        name: "Kiera O'Leary",
+        group: "Girls"
+    },
+
+    {
+        id: "imeldag",
+        name: "Imelda Gibbs",
+        group: "Girls"
+    },
+
+    {
+        id: "claym",
+        name: "Clay McMillian",
+        group: "Girls"
+    },
+
+    {
+        id: "marthae",
+        name: "Martha Ellis",
+        group: "Girls"
+    },
+
+    {
+        id: "kaiaw",
+        name: "Kaia Whittaker",
+        group: "Girls"
+    },
+
+    {
+        id: "jenb",
+        name: "Jen Bailey",
+        group: "Girls"
+    },
+
+    {
+        id: "ellam",
+        name: "Ella Mounsey",
+        group: "Girls"
+    },
+
+    {
+        id: "chloec",
+        name: "Chloe Carag",
+        group: "Girls"
+    }
 
 ];
 
@@ -1098,6 +1545,7 @@ let currentUser = null;
 let currentRole = null;
 let currentAthleteId = null;
 let athleteData = {};
+
 let unsubscribeAthletes = null;
 let unsubscribeOwnAthlete = null;
 
@@ -1111,29 +1559,250 @@ const $ = id =>
 
 
 /* =====================================================
+   LOGIN
+===================================================== */
+
+async function login() {
+
+    const usernameInput =
+        $("username");
+
+    const passwordInput =
+        $("password");
+
+    const loginButton =
+        $("loginButton");
+
+    const username =
+        usernameInput.value
+            .trim()
+            .toLowerCase();
+
+    const password =
+        passwordInput.value;
+
+    if (!username || !password) {
+
+        showLoginError(
+            "Please enter your username and password."
+        );
+
+        return;
+
+    }
+
+    loginButton.disabled = true;
+    loginButton.textContent =
+        "Logging in...";
+
+    hideLoginError();
+
+    try {
+
+        const email =
+            username +
+            "@leedsrowingclub.firebaseapp.com";
+
+        console.log(
+            "Attempting Firebase login for:",
+            email
+        );
+
+        await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
+
+        console.log(
+            "Firebase login successful."
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Firebase login error:",
+            error
+        );
+
+        let message =
+            "Login failed.";
+
+        if (
+            error.code ===
+            "auth/invalid-credential"
+        ) {
+
+            message =
+                "Incorrect username or password.";
+
+        }
+
+        else if (
+            error.code ===
+            "auth/user-not-found"
+        ) {
+
+            message =
+                "That username does not exist in Firebase.";
+
+        }
+
+        else if (
+            error.code ===
+            "auth/wrong-password"
+        ) {
+
+            message =
+                "The password is incorrect.";
+
+        }
+
+        else if (
+            error.code ===
+            "auth/invalid-email"
+        ) {
+
+            message =
+                "The username/email format is invalid.";
+
+        }
+
+        else if (
+            error.code ===
+            "auth/network-request-failed"
+        ) {
+
+            message =
+                "Firebase could not be reached. Check your internet connection and Firebase configuration.";
+
+        }
+
+        else {
+
+            message =
+                "Login error: " +
+                (
+                    error.message ||
+                    error.code ||
+                    "Unknown error"
+                );
+
+        }
+
+        showLoginError(
+            message
+        );
+
+    }
+
+    finally {
+
+        loginButton.disabled = false;
+
+        loginButton.textContent =
+            "Login";
+
+    }
+
+}
+
+
+/*
+ * Make login available globally
+ * as an additional safety measure.
+ */
+
+window.loginUser = login;
+
+
+/* =====================================================
+   LOGIN ERROR
+===================================================== */
+
+function showLoginError(
+    message
+) {
+
+    const element =
+        $("loginError");
+
+    element.textContent =
+        message;
+
+    element.style.display =
+        "block";
+
+}
+
+
+function hideLoginError() {
+
+    const element =
+        $("loginError");
+
+    element.textContent =
+        "";
+
+    element.style.display =
+        "none";
+
+}
+
+
+/* =====================================================
    EVENT LISTENERS
 ===================================================== */
 
-$("loginButton")
-    .addEventListener("click", login);
+const loginButton =
+    $("loginButton");
 
-$("password")
-    .addEventListener(
+if (loginButton) {
+
+    loginButton.addEventListener(
+        "click",
+        login
+    );
+
+}
+
+
+const passwordInput =
+    $("password");
+
+if (passwordInput) {
+
+    passwordInput.addEventListener(
         "keydown",
         event => {
 
-            if (event.key === "Enter") {
+            if (
+                event.key ===
+                "Enter"
+            ) {
+
                 login();
+
             }
 
         }
     );
 
+}
+
+
 $("logoutButton")
     .addEventListener(
         "click",
-        () => signOut(auth)
+        () => {
+
+            signOut(auth);
+
+        }
     );
+
 
 $("athleteSearch")
     .addEventListener(
@@ -1147,127 +1816,215 @@ $("athleteSearch")
         }
     );
 
-function toggleFolder(contentId, arrowId) {
 
-    const content = $(contentId);
-    const arrow = $(arrowId);
+/* =====================================================
+   FOLDER TOGGLE
+===================================================== */
 
-    if (!content || !arrow) {
+function toggleFolder(
+    contentId,
+    arrowId
+) {
+
+    const content =
+        $(contentId);
+
+    const arrow =
+        $(arrowId);
+
+    if (
+        !content ||
+        !arrow
+    ) {
+
         return;
+
     }
 
-    if (content.style.display === "none") {
-        content.style.display = "block";
-        arrow.textContent = "▼";
-    } else {
-        content.style.display = "none";
-        arrow.textContent = "▶";
+    if (
+        content.style.display ===
+        "none"
+    ) {
+
+        content.style.display =
+            "block";
+
+        arrow.textContent =
+            "▼";
+
     }
+
+    else {
+
+        content.style.display =
+            "none";
+
+        arrow.textContent =
+            "▶";
+
+    }
+
 }
+
 
 $("boysFolderHeader")
     .addEventListener(
         "click",
-        () => toggleFolder(
-            "boysFolderContent",
-            "boysFolderArrow"
-        )
+        () => {
+
+            toggleFolder(
+                "boysFolderContent",
+                "boysFolderArrow"
+            );
+
+        }
     );
+
 
 $("girlsFolderHeader")
     .addEventListener(
         "click",
-        () => toggleFolder(
-            "girlsFolderContent",
-            "girlsFolderArrow"
-        )
+        () => {
+
+            toggleFolder(
+                "girlsFolderContent",
+                "girlsFolderArrow"
+            );
+
+        }
     );
 
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
 document
-    .querySelectorAll(".nav-btn")
-    .forEach(button => {
+    .querySelectorAll(
+        ".nav-btn"
+    )
+    .forEach(
+        button => {
 
-        button.addEventListener(
-            "click",
-            () => {
+            button.addEventListener(
+                "click",
+                () => {
 
-                showPage(
-                    button.dataset.page
+                    showPage(
+                        button.dataset.page
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+function showPage(
+    pageId
+) {
+
+    document
+        .querySelectorAll(
+            ".page"
+        )
+        .forEach(
+            page => {
+
+                page.classList.remove(
+                    "active"
                 );
 
             }
         );
 
-    });
+    document
+        .querySelectorAll(
+            ".nav-btn"
+        )
+        .forEach(
+            button => {
 
+                button.classList.remove(
+                    "active"
+                );
 
-/* =====================================================
-   LOGIN
-===================================================== */
-
-async function login() {
-
-    const username =
-        $("username")
-            .value
-            .trim()
-            .toLowerCase();
-
-    const password =
-        $("password").value;
-
-    if (!username || !password) {
-
-        showLoginError(
-            "Please enter your username and password."
+            }
         );
 
-        return;
+    const page =
+        $(pageId);
 
-    }
+    if (page) {
 
-    try {
-
-        await signInWithEmailAndPassword(
-
-            auth,
-
-            username +
-            "@leedsrowingclub.firebaseapp.com",
-
-            password
-
-        );
-
-        $("loginError")
-            .style
-            .display = "none";
-
-    } catch (error) {
-
-        console.error(error);
-
-        showLoginError(
-            "Incorrect username or password."
+        page.classList.add(
+            "active"
         );
 
     }
 
-}
+    const matchingButton =
+        document.querySelector(
+            `[data-page="${pageId}"]`
+        );
 
+    if (matchingButton) {
 
-/* =====================================================
-   LOGIN ERROR
-===================================================== */
+        matchingButton.classList.add(
+            "active"
+        );
 
-function showLoginError(message) {
+    }
 
-    $("loginError").textContent =
-        message;
+    if (
+        pageId ===
+        "dashboardPage"
+    ) {
 
-    $("loginError")
-        .style
-        .display = "block";
+        renderDashboard();
+
+    }
+
+    if (
+        pageId ===
+        "athletesPage"
+    ) {
+
+        renderAthletesTable();
+
+    }
+
+    if (
+        pageId ===
+        "profilePage"
+    ) {
+
+        renderProfile();
+
+    }
+
+    if (
+        pageId ===
+        "historyPage"
+    ) {
+
+        if (
+            currentRole ===
+            "Athlete"
+        ) {
+
+            renderOwnHistory();
+
+        }
+
+        else {
+
+            renderStaffHistory();
+
+        }
+
+    }
 
 }
 
@@ -1287,42 +2044,72 @@ onAuthStateChanged(
             currentAthleteId = null;
             athleteData = {};
 
-            if (unsubscribeAthletes) {
+            if (
+                unsubscribeAthletes
+            ) {
+
                 unsubscribeAthletes();
-                unsubscribeAthletes = null;
+
+                unsubscribeAthletes =
+                    null;
+
             }
 
-            if (unsubscribeOwnAthlete) {
+            if (
+                unsubscribeOwnAthlete
+            ) {
+
                 unsubscribeOwnAthlete();
-                unsubscribeOwnAthlete = null;
+
+                unsubscribeOwnAthlete =
+                    null;
+
             }
 
             $("app")
                 .style
-                .display = "none";
+                .display =
+                "none";
 
             $("loginScreen")
                 .style
-                .display = "flex";
+                .display =
+                "flex";
 
             return;
 
         }
 
-        currentUser = user;
+
+        currentUser =
+            user;
+
 
         const username =
-            user.email
-                .split("@")[0]
-                .toLowerCase();
+            (
+                user.email || ""
+            )
+            .split("@")[0]
+            .toLowerCase();
 
-        if (staffAccounts[username]) {
 
-            startStaffMode(username);
+        if (
+            staffAccounts[
+                username
+            ]
+        ) {
 
-        } else {
+            await startStaffMode(
+                username
+            );
 
-            startAthleteMode(username);
+        }
+
+        else {
+
+            await startAthleteMode(
+                username
+            );
 
         }
 
@@ -1334,85 +2121,118 @@ onAuthStateChanged(
    STAFF MODE
 ===================================================== */
 
-async function startStaffMode(username) {
+async function startStaffMode(
+    username
+) {
 
     currentRole =
-        staffAccounts[username].role;
+        staffAccounts[
+            username
+        ].role;
 
-    currentAthleteId = null;
+    currentAthleteId =
+        null;
+
 
     $("loginScreen")
         .style
-        .display = "none";
+        .display =
+        "none";
 
     $("app")
         .style
-        .display = "block";
+        .display =
+        "block";
 
-    $("loggedInUser").textContent =
-        username.charAt(0).toUpperCase() +
+
+    $("loggedInUser")
+        .textContent =
+        username
+            .charAt(0)
+            .toUpperCase() +
         username.slice(1);
 
-    $("roleBadge").textContent =
+
+    $("roleBadge")
+        .textContent =
         currentRole;
+
 
     $("dashboardNav")
         .style
-        .display = "block";
+        .display =
+        "block";
 
     $("athletesNav")
         .style
-        .display = "block";
+        .display =
+        "block";
 
     $("historyNav")
         .style
-        .display = "block";
+        .display =
+        "block";
 
     $("profileNav")
         .style
-        .display = "block";
+        .display =
+        "block";
 
-    showPage("dashboardPage");
+
+    showPage(
+        "dashboardPage"
+    );
+
 
     await ensureAthleteDocuments();
 
-    if (unsubscribeAthletes) {
+
+    if (
+        unsubscribeAthletes
+    ) {
+
         unsubscribeAthletes();
+
     }
 
-    unsubscribeAthletes = onSnapshot(
 
-        collection(db, "athletes"),
+    unsubscribeAthletes =
+        onSnapshot(
 
-        snapshot => {
+            collection(
+                db,
+                "athletes"
+            ),
 
-            athleteData = {};
+            snapshot => {
 
-            snapshot.forEach(
-                documentSnapshot => {
+                athleteData = {};
 
-                    athleteData[
-                        documentSnapshot.id
-                    ] =
-                        documentSnapshot.data();
+                snapshot.forEach(
+                    documentSnapshot => {
 
-                }
-            );
+                        athleteData[
+                            documentSnapshot.id
+                        ] =
+                            documentSnapshot.data();
 
-            renderEverything();
+                    }
+                );
 
-        },
+                renderEverything();
 
-        error => {
+            },
 
-            console.error(
-                "Firestore listener error:",
-                error
-            );
+            error => {
 
-        }
+                console.error(
+                    "Firestore listener error:",
+                    error
+                );
 
-    );
+            }
+
+        );
 
 }
 
@@ -1421,18 +2241,25 @@ async function startStaffMode(username) {
    ATHLETE MODE
 ===================================================== */
 
-async function startAthleteMode(username) {
+async function startAthleteMode(
+    username
+) {
 
     const athlete =
         athletes.find(
             item =>
-                item.id.toLowerCase() ===
-                username.toLowerCase()
+                item.id
+                    .toLowerCase() ===
+                username
+                    .toLowerCase()
         );
+
 
     if (!athlete) {
 
-        await signOut(auth);
+        await signOut(
+            auth
+        );
 
         showLoginError(
             "This account is not linked to an athlete."
@@ -1442,198 +2269,221 @@ async function startAthleteMode(username) {
 
     }
 
-    currentRole = "Athlete";
+
+    currentRole =
+        "Athlete";
 
     currentAthleteId =
         athlete.id;
 
+
     $("loginScreen")
         .style
-        .display = "none";
+        .display =
+        "none";
 
     $("app")
         .style
-        .display = "block";
+        .display =
+        "block";
 
-    $("loggedInUser").textContent =
+
+    $("loggedInUser")
+        .textContent =
         athlete.name;
 
-    $("roleBadge").textContent =
+    $("roleBadge")
+        .textContent =
         "Athlete";
+
 
     $("dashboardNav")
         .style
-        .display = "none";
+        .display =
+        "none";
 
     $("athletesNav")
         .style
-        .display = "none";
+        .display =
+        "none";
 
     $("historyNav")
         .style
-        .display = "block";
+        .display =
+        "block";
 
     $("profileNav")
         .style
-        .display = "block";
+        .display =
+        "block";
 
-    showPage("profilePage");
 
-    if (unsubscribeOwnAthlete) {
-        unsubscribeOwnAthlete();
-    }
-
-    unsubscribeOwnAthlete = onSnapshot(
-
-        doc(
-            db,
-            "athletes",
-            currentAthleteId
-        ),
-
-        snapshot => {
-
-            if (!snapshot.exists()) {
-
-                showProfileMessage(
-                    "Athlete profile has not been created yet."
-                );
-
-                return;
-
-            }
-
-            athleteData = {
-
-                [currentAthleteId]:
-                    snapshot.data()
-
-            };
-
-            renderOwnProfile();
-            renderOwnHistory();
-
-        },
-
-        error => {
-
-            console.error(error);
-
-            showProfileMessage(
-                "Unable to load your profile."
-            );
-
-        }
-
+    showPage(
+        "profilePage"
     );
 
-}
+
+    if (
+        unsubscribeOwnAthlete
+    ) {
+
+        unsubscribeOwnAthlete();
+
+    }
 
 
-/* =====================================================
-   CREATE MISSING ATHLETE DOCUMENTS
-===================================================== */
+    unsubscribeOwnAthlete =
+        onSnapshot(
 
-async function ensureAthleteDocuments() {
-
-    for (const athlete of athletes) {
-
-        const reference =
             doc(
                 db,
                 "athletes",
                 athlete.id
-            );
+            ),
 
-        const snapshot =
-            await getDoc(reference);
+            snapshot => {
 
-        if (!snapshot.exists()) {
+                if (
+                    snapshot.exists()
+                ) {
 
-            await setDoc(
-                reference,
-                {
-                    name: athlete.name,
-                    group: athlete.group,
-                    ratings: {},
-                    notes: "",
-                    history: []
+                    athleteData[
+                        athlete.id
+                    ] =
+                        snapshot.data();
+
                 }
-            );
 
-        } else {
+                else {
 
-            // Update only the athlete's identity/group.
-            // Existing ratings, notes and history are preserved.
-            await setDoc(
-                reference,
-                {
-                    name: athlete.name,
-                    group: athlete.group
-                },
-                {
-                    merge: true
+                    athleteData[
+                        athlete.id
+                    ] = {
+
+                        name:
+                            athlete.name,
+
+                        group:
+                            athlete.group,
+
+                        ratings: {},
+
+                        notes: "",
+
+                        history: []
+
+                    };
+
                 }
-            );
 
-        }
 
-    }
+                renderProfile();
+
+            },
+
+            error => {
+
+                console.error(
+                    "Athlete profile error:",
+                    error
+                );
+
+            }
+
+        );
 
 }
 
+
 /* =====================================================
-   PAGE NAVIGATION
+   ENSURE ATHLETE DOCUMENTS
 ===================================================== */
 
-function showPage(pageId) {
+async function ensureAthleteDocuments() {
 
-    document
-        .querySelectorAll(".page")
-        .forEach(
-            page =>
-                page.classList.remove("active")
-        );
+    for (
+        const athlete
+        of athletes
+    ) {
 
-    document
-        .querySelectorAll(".nav-btn")
-        .forEach(
-            button =>
-                button.classList.remove("active")
-        );
+        try {
 
-    const page =
-        $(pageId);
+            const reference =
+                doc(
+                    db,
+                    "athletes",
+                    athlete.id
+                );
 
-    if (page) {
-        page.classList.add("active");
-    }
+            const snapshot =
+                await getDoc(
+                    reference
+                );
 
-    const navigation =
-        document.querySelector(
-            `[data-page="${pageId}"]`
-        );
 
-    if (navigation) {
-        navigation.classList.add("active");
-    }
+            if (
+                !snapshot.exists()
+            ) {
 
-    if (pageId === "historyPage") {
+                await setDoc(
+                    reference,
+                    {
 
-        if (currentRole === "Athlete") {
-            renderOwnHistory();
-        } else {
-            renderStaffHistory();
+                        name:
+                            athlete.name,
+
+                        group:
+                            athlete.group,
+
+                        ratings: {},
+
+                        notes: "",
+
+                        history: []
+
+                    }
+                );
+
+            }
+
+            else {
+
+                /*
+                 * IMPORTANT:
+                 * Only update the name/group.
+                 *
+                 * Existing ratings, notes and
+                 * history are NOT overwritten.
+                 */
+
+                await setDoc(
+                    reference,
+                    {
+
+                        name:
+                            athlete.name,
+
+                        group:
+                            athlete.group
+
+                    },
+                    {
+                        merge: true
+                    }
+                );
+
+            }
+
         }
 
-    }
+        catch (error) {
 
-    if (pageId === "profilePage") {
+            console.error(
+                "Could not initialise:",
+                athlete.name,
+                error
+            );
 
-        if (currentRole === "Athlete") {
-            renderOwnProfile();
-        } else {
-            renderProfile();
         }
 
     }
@@ -1648,10 +2498,24 @@ function showPage(pageId) {
 function renderEverything() {
 
     renderDashboard();
+
     renderAthletesTable();
 
-    if (currentAthleteId) {
-        renderProfile();
+    renderProfile();
+
+    if (
+        currentRole ===
+        "Athlete"
+    ) {
+
+        renderOwnHistory();
+
+    }
+
+    else {
+
+        renderStaffHistory();
+
     }
 
 }
@@ -1663,140 +2527,148 @@ function renderEverything() {
 
 function renderDashboard() {
 
+    if (
+        ![
+            "Admin",
+            "Coach"
+        ].includes(
+            currentRole
+        )
+    ) {
+
+        return;
+
+    }
+
+
     let green = 0;
     let amber = 0;
     let red = 0;
-
-    Object
-        .values(athleteData)
-        .forEach(data => {
-
-            categories.forEach(category => {
-
-                const value =
-                    data.ratings?.[category] || "";
-
-                if (value.startsWith("Green")) {
-                    green++;
-                }
-
-                else if (value.startsWith("Amber")) {
-                    amber++;
-                }
-
-                else if (value.startsWith("Red")) {
-                    red++;
-                }
-
-            });
-
-        });
-
-    $("totalAthletes").textContent =
-        athletes.length;
-
-    $("greenRatings").textContent =
-        green;
-
-    $("amberRatings").textContent =
-        amber;
-
-    $("redRatings").textContent =
-        red;
+    let none = 0;
 
 
-    $("dashboardAthletesBody")
-        .innerHTML =
+    athletes.forEach(
+        athlete => {
 
-        athletes.map(
-            athlete => {
+            const data =
+                athleteData[
+                    athlete.id
+                ];
 
-                const data =
-                    athleteData[athlete.id] || {};
+            if (!data) {
 
-                return `
+                none++;
 
-                    <tr>
-
-                        <td>
-                            <strong>
-                                ${escapeHtml(athlete.name)}
-                            </strong>
-                        </td>
-
-                        <td>
-                            ${ragBadge(
-                                data.ratings?.[
-                                    "Power Curve (erg)"
-                                ]
-                            )}
-                        </td>
-
-                        <td>
-                            ${ragBadge(
-                                data.ratings?.[
-                                    "Tech (erg)"
-                                ]
-                            )}
-                        </td>
-
-                        <td>
-                            ${ragBadge(
-                                data.ratings?.[
-                                    "Sculling Tech"
-                                ]
-                            )}
-                        </td>
-
-                        <td>
-                            ${ragBadge(
-                                data.ratings?.[
-                                    "Sweeping Tech"
-                                ]
-                            )}
-                        </td>
-
-                        <td>
-
-                            <button
-                                class="primary-btn"
-                                onclick="openProfile('${escapeJs(athlete.id)}')">
-
-                                Open
-
-                            </button>
-
-                        </td>
-
-                    </tr>
-
-                `;
+                return;
 
             }
-        )
-        .join("");
+
+
+            categories.forEach(
+                category => {
+
+                    const value =
+                        data.ratings?.[
+                            category
+                        ] || "";
+
+
+                    if (!value) {
+
+                        none++;
+
+                    }
+
+                    else if (
+                        value.startsWith(
+                            "Green"
+                        )
+                    ) {
+
+                        green++;
+
+                    }
+
+                    else if (
+                        value.startsWith(
+                            "Amber"
+                        )
+                    ) {
+
+                        amber++;
+
+                    }
+
+                    else if (
+                        value.startsWith(
+                            "Red"
+                        )
+                    ) {
+
+                        red++;
+
+                    }
+
+                    else {
+
+                        none++;
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+
+    $("greenCount")
+        .textContent =
+        green;
+
+    $("amberCount")
+        .textContent =
+        amber;
+
+    $("redCount")
+        .textContent =
+        red;
+
+    $("noneCount")
+        .textContent =
+        none;
 
 }
 
 
 /* =====================================================
-   ATHLETES TABLE
+   ATHLETE TABLE
 ===================================================== */
 
 function renderAthletesTable(
-    searchTerm = ""
+    search = ""
 ) {
 
-    const search =
-        searchTerm
-            .trim()
-            .toLowerCase();
+    if (
+        ![
+            "Admin",
+            "Coach"
+        ].includes(
+            currentRole
+        )
+    ) {
+
+        return;
+
+    }
+
 
     renderAthleteGroupTable(
         "Boys",
-        "athletesTableBody",
+        "boysAthletesTableBody",
         search
     );
+
 
     renderAthleteGroupTable(
         "Girls",
@@ -1806,163 +2678,222 @@ function renderAthletesTable(
 
 }
 
+
+/* =====================================================
+   GROUP TABLE
+===================================================== */
+
 function renderAthleteGroupTable(
     group,
     bodyId,
     search = ""
 ) {
 
-    const body = $(bodyId);
+    const body =
+        $(bodyId);
 
     if (!body) {
+
         return;
+
     }
 
-    body.innerHTML =
-        athletes
-            .filter(
-                athlete =>
-                    athlete.group === group &&
-                    athlete.name
-                        .toLowerCase()
-                        .includes(search)
-            )
-            .map(
-                athlete => {
 
-                    const data =
-                        athleteData[athlete.id] || {};
+    const searchTerm =
+        search
+            .trim()
+            .toLowerCase();
 
-                    return `
 
-                        <tr>
+    const groupAthletes =
+        athletes.filter(
+            athlete => {
 
-                            <td>
+                if (
+                    athlete.group !==
+                    group
+                ) {
 
-                                <strong>
-                                    ${escapeHtml(
-                                        athlete.name
-                                    )}
-                                </strong>
-
-                            </td>
-
-                            <td>
-
-                                ${staffRagSelect(
-                                    athlete.id,
-                                    "Power Curve (erg)",
-                                    data.ratings?.[
-                                        "Power Curve (erg)"
-                                    ]
-                                )}
-
-                            </td>
-
-                            <td>
-
-                                ${staffRagSelect(
-                                    athlete.id,
-                                    "Tech (erg)",
-                                    data.ratings?.[
-                                        "Tech (erg)"
-                                    ]
-                                )}
-
-                            </td>
-
-                            <td>
-
-                                ${staffRagSelect(
-                                    athlete.id,
-                                    "Sculling Tech",
-                                    data.ratings?.[
-                                        "Sculling Tech"
-                                    ]
-                                )}
-
-                            </td>
-
-                            <td>
-
-                                ${staffRagSelect(
-                                    athlete.id,
-                                    "Sweeping Tech",
-                                    data.ratings?.[
-                                        "Sweeping Tech"
-                                    ]
-                                )}
-
-                            </td>
-
-                            <td>
-
-                                <button
-                                    class="primary-btn"
-                                    onclick="openProfile('${escapeJs(athlete.id)}')">
-
-                                    Open
-
-                                </button>
-
-                            </td>
-
-                        </tr>
-
-                    `;
+                    return false;
 
                 }
+
+
+                if (!searchTerm) {
+
+                    return true;
+
+                }
+
+
+                return athlete.name
+                    .toLowerCase()
+                    .includes(
+                        searchTerm
+                    );
+
+            }
+        );
+
+
+    if (
+        groupAthletes.length ===
+        0
+    ) {
+
+        body.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="6"
+                    class="empty"
+                >
+                    No athletes found.
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    body.innerHTML =
+        groupAthletes
+            .map(
+                athlete =>
+                    athleteRowHtml(
+                        athlete
+                    )
             )
             .join("");
 
 }
 
+
+/* =====================================================
+   ATHLETE ROW
+===================================================== */
+
+function athleteRowHtml(
+    athlete
+) {
+
+    const data =
+        athleteData[
+            athlete.id
+        ] || {};
+
+
+    return `
+
+        <tr>
+
+            <td>
+
+                <span
+                    class="athlete-name athlete-link"
+                    data-athlete-id="${escapeHtml(
+                        athlete.id
+                    )}"
+                >
+
+                    ${escapeHtml(
+                        athlete.name
+                    )}
+
+                </span>
+
+            </td>
+
+
+            ${categories
+                .map(
+                    category => `
+
+                        <td>
+
+                            ${ragSelectHtml(
+                                athlete.id,
+                                category,
+                                data.ratings?.[
+                                    category
+                                ] || ""
+                            )}
+
+                        </td>
+
+                    `
+                )
+                .join("")}
+
+
+            <td>
+
+                <button
+                    class="secondary-btn"
+                    type="button"
+                    data-notes-athlete="${escapeHtml(
+                        athlete.id
+                    )}"
+                >
+                    View
+                </button>
+
+            </td>
+
+        </tr>
+
+    `;
+
+}
+
+
 /* =====================================================
    RAG SELECT
 ===================================================== */
 
-function staffRagSelect(
+function ragSelectHtml(
     athleteId,
     category,
     currentValue
 ) {
 
-    const value =
-        ragOptions.includes(currentValue)
-            ? currentValue
-            : "";
-
     return `
 
         <select
-
-            class="rag-select ${ragClass(value)}"
-
-            onchange="
-                changeRAG(
-                    '${escapeJs(athleteId)}',
-                    '${escapeJs(category)}',
-                    this.value
-                )
-            "
-
+            class="rag-select ${ragClass(
+                currentValue
+            )}"
+            data-athlete="${escapeHtml(
+                athleteId
+            )}"
+            data-category="${escapeHtml(
+                category
+            )}"
         >
 
             ${ragOptions
                 .map(
-                    rag => `
+                    option => `
 
                         <option
-                            value="${escapeHtml(rag)}"
+                            value="${escapeHtml(
+                                option
+                            )}"
                             ${
-                                value === rag
+                                option ===
+                                currentValue
                                     ? "selected"
                                     : ""
                             }
                         >
 
                             ${
-                                rag ||
+                                option ||
                                 "Not Set"
                             }
 
@@ -1970,8 +2901,7 @@ function staffRagSelect(
 
                     `
                 )
-                .join("")
-            }
+                .join("")}
 
         </select>
 
@@ -1981,44 +2911,129 @@ function staffRagSelect(
 
 
 /* =====================================================
+   TABLE EVENT HANDLING
+===================================================== */
+
+document.addEventListener(
+    "change",
+    event => {
+
+        if (
+            event.target.matches(
+                ".rag-select"
+            )
+        ) {
+
+            const athleteId =
+                event.target
+                    .dataset
+                    .athlete;
+
+            const category =
+                event.target
+                    .dataset
+                    .category;
+
+            const value =
+                event.target.value;
+
+            changeRAG(
+                athleteId,
+                category,
+                value
+            );
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "click",
+    event => {
+
+        const athleteElement =
+            event.target.closest(
+                "[data-athlete-id]"
+            );
+
+        if (
+            athleteElement
+        ) {
+
+            const athleteId =
+                athleteElement
+                    .dataset
+                    .athleteId;
+
+            openAthleteProfile(
+                athleteId
+            );
+
+            return;
+
+        }
+
+
+        const notesElement =
+            event.target.closest(
+                "[data-notes-athlete]"
+            );
+
+        if (
+            notesElement
+        ) {
+
+            const athleteId =
+                notesElement
+                    .dataset
+                    .notesAthlete;
+
+            openAthleteProfile(
+                athleteId
+            );
+
+        }
+
+    }
+);
+
+
+/* =====================================================
    CHANGE RAG
 ===================================================== */
 
-window.changeRAG = async function(
+window.changeRAG =
+async function(
     athleteId,
     category,
     newValue
 ) {
 
     if (
-        !["Admin", "Coach"]
-            .includes(currentRole)
+        ![
+            "Admin",
+            "Coach"
+        ].includes(
+            currentRole
+        )
     ) {
+
         return;
+
     }
 
-    if (
-        !categories.includes(category)
-    ) {
-        return;
-    }
 
-    if (
-        !ragOptions.includes(newValue)
-    ) {
-        return;
-    }
+    const reference =
+        doc(
+            db,
+            "athletes",
+            athleteId
+        );
+
 
     try {
-
-        const reference =
-            doc(
-                db,
-                "athletes",
-                athleteId
-            );
-
-        let historyItem = null;
 
         await runTransaction(
             db,
@@ -2029,48 +3044,60 @@ window.changeRAG = async function(
                         reference
                     );
 
-                if (!snapshot.exists()) {
-
-                    throw new Error(
-                        "Athlete document does not exist."
-                    );
-
-                }
 
                 const existing =
-                    snapshot.data();
+                    snapshot.exists()
+                        ? snapshot.data()
+                        : {};
+
 
                 const ratings =
                     {
                         ...(existing.ratings || {})
                     };
 
+
                 const oldValue =
-                    ratings[category] || "";
+                    ratings[
+                        category
+                    ] || "";
+
 
                 if (
-                    oldValue === newValue
-                ) {
-                    return;
-                }
-
-                if (
-                    newValue === ""
+                    newValue
                 ) {
 
-                    delete ratings[category];
-
-                } else {
-
-                    ratings[category] =
+                    ratings[
+                        category
+                    ] =
                         newValue;
 
                 }
 
-                historyItem = {
+                else {
+
+                    delete ratings[
+                        category
+                    ];
+
+                }
+
+
+                const history =
+                    Array.isArray(
+                        existing.history
+                    )
+                        ? [
+                            ...existing.history
+                        ]
+                        : [];
+
+
+                history.push({
 
                     date:
-                        new Date().toISOString(),
+                        new Date()
+                            .toISOString(),
 
                     category:
                         category,
@@ -2082,32 +3109,44 @@ window.changeRAG = async function(
                         newValue,
 
                     changedBy:
-                        currentUser?.email ||
+                        currentUser
+                            ?.email ||
                         "Unknown"
 
-                };
+                });
 
-                const history =
-                    Array.isArray(
-                        existing.history
-                    )
-                        ? [
-                            ...existing.history
-                        ]
-                        : [];
 
-                history.unshift(
-                    historyItem
-                );
-
-                transaction.update(
+                transaction.set(
                     reference,
                     {
+
                         ratings:
                             ratings,
 
                         history:
-                            history
+                            history,
+
+                        name:
+                            existing.name ||
+                            athletes.find(
+                                a =>
+                                    a.id ===
+                                    athleteId
+                            )?.name ||
+                            "",
+
+                        group:
+                            existing.group ||
+                            athletes.find(
+                                a =>
+                                    a.id ===
+                                    athleteId
+                            )?.group ||
+                            "Boys"
+
+                    },
+                    {
+                        merge: true
                     }
                 );
 
@@ -2115,33 +3154,55 @@ window.changeRAG = async function(
         );
 
 
-        if (historyItem) {
+        await syncAthleteToGoogleSheets(
+            athleteId
+        );
 
-            await syncAthleteToGoogleSheets(
+
+        const latest =
+            athleteData[
                 athleteId
-            );
+            ];
 
-            await syncHistoryToGoogleSheets(
-                athleteId,
-                historyItem
-            );
+
+        if (
+            latest &&
+            Array.isArray(
+                latest.history
+            )
+        ) {
+
+            const item =
+                latest.history[
+                    latest.history.length - 1
+                ];
+
+            if (
+                item &&
+                item.category ===
+                category
+            ) {
+
+                await syncHistoryToGoogleSheets(
+                    athleteId,
+                    item
+                );
+
+            }
 
         }
 
+    }
 
-    } catch (error) {
+    catch (error) {
 
         console.error(
-            "RAG update failed:",
+            "Could not change RAG:",
             error
         );
 
         alert(
-            "The RAG rating could not be changed.\n\n" +
-            (
-                error?.message ||
-                ""
-            )
+            "Unable to save the RAG rating. Please try again."
         );
 
     }
@@ -2153,25 +3214,18 @@ window.changeRAG = async function(
    OPEN PROFILE
 ===================================================== */
 
-window.openProfile = function(
+function openAthleteProfile(
     athleteId
 ) {
-
-    if (
-        currentRole === "Athlete" &&
-        athleteId !== currentAthleteId
-    ) {
-        return;
-    }
 
     currentAthleteId =
         athleteId;
 
-    showPage("profilePage");
+    showPage(
+        "profilePage"
+    );
 
-    renderProfile();
-
-};
+}
 
 
 /* =====================================================
@@ -2180,9 +3234,25 @@ window.openProfile = function(
 
 function renderProfile() {
 
-    if (!currentAthleteId) {
+    if (
+        !currentAthleteId
+    ) {
+
+        $("profileContent")
+            .innerHTML = `
+
+                <div class="empty">
+
+                    No athlete selected.
+
+                </div>
+
+            `;
+
         return;
+
     }
+
 
     const athlete =
         athletes.find(
@@ -2191,887 +3261,875 @@ function renderProfile() {
                 currentAthleteId
         );
 
+
     if (!athlete) {
+
         return;
+
     }
 
+
     const data =
-        athleteData[currentAthleteId] || {};
+        athleteData[
+            athlete.id
+        ] || {};
 
-    const isStaff =
-        ["Admin", "Coach"]
-            .includes(currentRole);
 
-    let html = `
+    const ratings =
+        data.ratings ||
+        {};
 
-        <div class="profile-header">
 
-            <div>
+    $("profileContent")
+        .innerHTML = `
 
-                <div class="profile-name">
+            <div class="profile-header">
 
-                    ${escapeHtml(
-                        athlete.name
-                    )}
+                <div>
 
-                </div>
+                    <div class="profile-name">
 
-                <div class="profile-id">
+                        ${escapeHtml(
+                            athlete.name
+                        )}
 
-                    Athlete ID:
-                    ${escapeHtml(
-                        athlete.id
-                    )}
+                    </div>
+
+                    <div class="profile-group">
+
+                        ${escapeHtml(
+                            athlete.group
+                        )}
+
+                    </div>
 
                 </div>
 
             </div>
 
-            <button
-                class="secondary-btn"
-                onclick="showPage('athletesPage')"
+
+            <div class="profile-grid">
+
+                ${categories
+                    .map(
+                        category => `
+
+                            <div
+                                class="profile-rag-card"
+                            >
+
+                                <div
+                                    class="profile-rag-label"
+                                >
+
+                                    ${escapeHtml(
+                                        category
+                                    )}
+
+                                </div>
+
+                                <div
+                                    class="profile-rag-value"
+                                >
+
+                                    ${ragBadge(
+                                        ratings[
+                                            category
+                                        ] || ""
+                                    )}
+
+                                </div>
+
+                            </div>
+
+                        `
+                    )
+                    .join("")}
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-title">
+                    Notes
+                </div>
+
                 ${
-                    isStaff
-                        ? ""
-                        : "style='display:none;'"
+                    [
+                        "Admin",
+                        "Coach"
+                    ].includes(
+                        currentRole
+                    )
+                        ? `
+
+                            <textarea
+                                id="athleteNotes"
+                                class="notes-textarea"
+                                placeholder="Add notes about this athlete..."
+                            >${escapeHtml(
+                                data.notes || ""
+                            )}</textarea>
+
+                            <button
+                                class="save-btn"
+                                id="saveNotesButton"
+                                type="button"
+                            >
+                                Save Notes
+                            </button>
+
+                        `
+                        : `
+
+                            <div>
+
+                                ${
+                                    data.notes
+                                        ? escapeHtml(
+                                            data.notes
+                                        )
+                                        : "No notes have been added."
+
+                                }
+
+                            </div>
+
+                        `
                 }
-            >
 
-                ← Back to Athletes
+            </div>
 
-            </button>
-
-        </div>
-
-        <div class="rag-grid">
-
-    `;
+        `;
 
 
-    categories.forEach(
-        category => {
+    const saveButton =
+        $("saveNotesButton");
 
-            const value =
-                data.ratings?.[
-                    category
-                ] || "";
 
-            html += `
+    if (saveButton) {
 
-                <div class="rag-card">
+        saveButton.addEventListener(
+            "click",
+            saveNotes
+        );
 
-                    <h3>
-                        ${escapeHtml(
-                            category
-                        )}
-                    </h3>
+    }
 
-                    ${
-                        isStaff
+}
 
-                            ? staffRagSelect(
-                                athlete.id,
-                                category,
-                                value
-                            )
 
-                            : ragBadge(value)
+/* =====================================================
+   SAVE NOTES
+===================================================== */
+
+async function saveNotes() {
+
+    if (
+        !currentAthleteId
+    ) {
+
+        return;
+
+    }
+
+
+    const textarea =
+        $("athleteNotes");
+
+
+    if (!textarea) {
+
+        return;
+
+    }
+
+
+    try {
+
+        await setDoc(
+
+            doc(
+                db,
+                "athletes",
+                currentAthleteId
+            ),
+
+            {
+
+                notes:
+                    textarea.value,
+
+                name:
+                    athletes.find(
+                        a =>
+                            a.id ===
+                            currentAthleteId
+                    )?.name ||
+                    "",
+
+                group:
+                    athletes.find(
+                        a =>
+                            a.id ===
+                            currentAthleteId
+                    )?.group ||
+                    "Boys"
+
+            },
+
+            {
+                merge: true
+            }
+
+        );
+
+
+        await syncAthleteToGoogleSheets(
+            currentAthleteId
+        );
+
+
+        alert(
+            "Notes saved."
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Unable to save notes:",
+            error
+        );
+
+        alert(
+            "Unable to save notes."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   STAFF HISTORY
+===================================================== */
+
+function renderStaffHistory() {
+
+    if (
+        ![
+            "Admin",
+            "Coach"
+        ].includes(
+            currentRole
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const all = [];
+
+
+    athletes.forEach(
+        athlete => {
+
+            const data =
+                athleteData[
+                    athlete.id
+                ];
+
+
+            if (!data) {
+
+                return;
+
+            }
+
+
+            const history =
+                Array.isArray(
+                    data.history
+                )
+                    ? data.history
+                    : [];
+
+
+            history
+                .filter(
+                    item =>
+                        categories.includes(
+                            item.category
+                        )
+                )
+                .forEach(
+                    item => {
+
+                        all.push({
+
+                            ...item,
+
+                            athlete:
+                                athlete.name,
+
+                            athleteId:
+                                athlete.id
+
+                        });
+
                     }
+                );
+
+        }
+    );
+
+
+    all.sort(
+        (a, b) =>
+            new Date(b.date) -
+            new Date(a.date)
+    );
+
+
+    $("historyContent")
+        .innerHTML =
+
+        all.length
+
+            ? all
+                .map(
+                    historyHtmlStaff
+                )
+                .join("")
+
+            : `
+
+                <div class="empty">
+
+                    No RAG changes recorded yet.
 
                 </div>
 
             `;
 
-        }
-    );
-
-
-    html += `
-
-        </div>
-
-        <div class="notes-card">
-
-            <h2>
-                Coach Notes
-            </h2>
-
-            <textarea
-                id="profileNotes"
-                class="notes-textarea"
-                ${
-                    isStaff
-                        ? ""
-                        : "readonly"
-                }
-            >${escapeHtml(
-                data.notes || ""
-            )}</textarea>
-
-
-`;
-
-
-if (isStaff) {
-
-    html += `
-
-        <br>
-        <br>
-
-        <button
-            class="primary-btn"
-            onclick="saveNotes()"
-        >
-
-            Save Notes
-
-        </button>
-
-        <div
-            id="notesSavedMessage"
-            class="save-message"
-        >
-
-            Notes saved.
-
-        </div>
-
-    `;
-
 }
 
 
-html += `
+/* =====================================================
+   OWN HISTORY
+===================================================== */
 
-    </div>
+function renderOwnHistory() {
 
-    <div class="notes-card">
-
-        <h2>
-            RAG History
-        </h2>
-
-        <div id="profileHistory">
-
-`;
+    const data =
+        athleteData[
+            currentAthleteId
+        ] || {};
 
 
-const history =
-    Array.isArray(data.history)
-        ? data.history
-        : [];
-
-const filtered =
-    history
+    const history =
+        (
+            Array.isArray(
+                data.history
+            )
+                ? data.history
+                : []
+        )
         .filter(
             item =>
                 categories.includes(
                     item.category
                 )
+        );
+
+
+    $("historyContent")
+        .innerHTML =
+
+        history.length
+
+            ? history
+                .map(
+                    historyHtml
+                )
+                .join("")
+
+            : `
+
+                <div class="empty">
+
+                    No RAG changes recorded yet.
+
+                </div>
+
+            `;
+
+}
+
+
+/* =====================================================
+   HISTORY HTML
+===================================================== */
+
+function historyHtml(
+    item
+) {
+
+    return `
+
+        <div class="history-item">
+
+            <div class="history-top">
+
+                <strong>
+
+                    ${escapeHtml(
+                        item.category || ""
+                    )}
+
+                </strong>
+
+                <span class="history-date">
+
+                    ${formatDate(
+                        item.date
+                    )}
+
+                </span>
+
+            </div>
+
+            <div class="history-change">
+
+                ${ragBadge(
+                    item.oldValue
+                )}
+
+                →
+
+                ${ragBadge(
+                    item.newValue
+                )}
+
+            </div>
+
+            <div class="history-user">
+
+                Changed by:
+
+                ${escapeHtml(
+                    item.changedBy ||
+                    "Unknown"
+                )}
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+function historyHtmlStaff(
+    item
+) {
+
+    return `
+
+        <div class="history-item">
+
+            <div class="history-top">
+
+                <strong>
+
+                    ${escapeHtml(
+                        item.athlete ||
+                        ""
+                    )}
+
+                </strong>
+
+                <span class="history-date">
+
+                    ${formatDate(
+                        item.date
+                    )}
+
+                </span>
+
+            </div>
+
+            <div style="margin-top:8px;">
+
+                <strong>
+
+                    ${escapeHtml(
+                        item.category ||
+                        ""
+                    )}
+
+                </strong>
+
+            </div>
+
+            <div class="history-change">
+
+                ${ragBadge(
+                    item.oldValue
+                )}
+
+                →
+
+                ${ragBadge(
+                    item.newValue
+                )}
+
+            </div>
+
+            <div class="history-user">
+
+                Changed by:
+
+                ${escapeHtml(
+                    item.changedBy ||
+                    "Unknown"
+                )}
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+   RAG CLASS
+===================================================== */
+
+function ragClass(
+    value
+) {
+
+    switch (
+        value
+    ) {
+
+        case "Green+":
+            return "rag-green-plus";
+
+        case "Green":
+            return "rag-green";
+
+        case "Green-":
+            return "rag-green-minus";
+
+        case "Amber+":
+            return "rag-amber-plus";
+
+        case "Amber":
+            return "rag-amber";
+
+        case "Amber-":
+            return "rag-amber-minus";
+
+        case "Red+":
+            return "rag-red-plus";
+
+        case "Red":
+            return "rag-red";
+
+        case "Red-":
+            return "rag-red-minus";
+
+        default:
+            return "rag-none";
+
+    }
+
+}
+
+
+/* =====================================================
+   RAG BADGE
+===================================================== */
+
+function ragBadge(
+    value
+) {
+
+    const cleanValue =
+        value || "";
+
+
+    return `
+
+        <span
+            class="rag-badge ${ragClass(
+                cleanValue
+            )}"
+        >
+
+            ${
+                escapeHtml(
+                    cleanValue ||
+                    "Not Set"
+                )
+            }
+
+        </span>
+
+    `;
+
+}
+
+
+/* =====================================================
+   GOOGLE SHEETS SEND
+===================================================== */
+
+async function sendToGoogleSheets(
+    payload
+) {
+
+    if (
+        !GOOGLE_SHEETS_SYNC_URL ||
+        GOOGLE_SHEETS_SYNC_URL.includes(
+            "PASTE_"
         )
-        .slice(0, 20);
+    ) {
+
+        return;
+
+    }
 
 
-html += filtered.length
+    try {
 
-    ? filtered
-        .map(historyHtml)
-        .join("")
+        await fetch(
+            GOOGLE_SHEETS_SYNC_URL,
+            {
 
-    : `
+                method:
+                    "POST",
 
-        <div class="empty">
+                mode:
+                    "no-cors",
 
-            No rating changes recorded yet.
+                headers: {
 
-        </div>
+                    "Content-Type":
+                        "text/plain;charset=utf-8"
 
-    `;
+                },
 
+                body:
+                    JSON.stringify(
+                        payload
+                    )
 
-html += `
-
-        </div>
-
-    </div>
-
-`;
-
-
-$("profileContent")
-    .innerHTML = html;
-
-
-}
-
-/* =====================================================
-OWN PROFILE
-===================================================== */
-
-function renderOwnProfile() {
-
-
-renderProfile();
-
-
-}
-
-function showProfileMessage(
-message
-) {
-
-
-$("profileContent")
-    .innerHTML = `
-
-        <div class="empty">
-
-            ${escapeHtml(message)}
-
-        </div>
-
-    `;
-
-
-}
-
-/* =====================================================
-SAVE NOTES
-===================================================== */
-
-window.saveNotes = async function() {
-
-
-if (
-    !["Admin", "Coach"]
-        .includes(currentRole)
-) {
-    return;
-}
-
-if (!currentAthleteId) {
-    return;
-}
-
-const textarea =
-    $("profileNotes");
-
-if (!textarea) {
-    return;
-}
-
-try {
-
-    await setDoc(
-
-        doc(
-            db,
-            "athletes",
-            currentAthleteId
-        ),
-
-        {
-            notes:
-                textarea.value
-        },
-
-        {
-            merge: true
-        }
-
-    );
-
-    await syncAthleteToGoogleSheets(
-        currentAthleteId
-    );
-
-    const message =
-        $("notesSavedMessage");
-
-    if (message) {
-
-        message.style.display =
-            "block";
-
-        setTimeout(
-            () => {
-
-                message.style.display =
-                    "none";
-
-            },
-            2000
+            }
         );
 
     }
 
-} catch (error) {
+    catch (error) {
 
-    console.error(error);
-
-    alert(
-        "Unable to save notes."
-    );
-
-}
-
-
-};
-
-/* =====================================================
-STAFF HISTORY
-===================================================== */
-
-function renderStaffHistory() {
-
-
-const all = [];
-
-athletes.forEach(
-    athlete => {
-
-        const data =
-            athleteData[
-                athlete.id
-            ];
-
-        if (!data) {
-            return;
-        }
-
-        const history =
-            Array.isArray(
-                data.history
-            )
-                ? data.history
-                : [];
-
-        history
-            .filter(
-                item =>
-                    categories.includes(
-                        item.category
-                    )
-            )
-            .forEach(
-                item => {
-
-                    all.push({
-
-                        ...item,
-
-                        athlete:
-                            athlete.name,
-
-                        athleteId:
-                            athlete.id
-
-                    });
-
-                }
-            );
+        console.error(
+            "Google Sheets sync error:",
+            error
+        );
 
     }
-);
-
-
-all.sort(
-    (a, b) =>
-        new Date(b.date) -
-        new Date(a.date)
-);
-
-
-$("historyContent")
-    .innerHTML =
-
-    all.length
-
-        ? all
-            .map(historyHtmlStaff)
-            .join("")
-
-        : `
-
-            <div class="empty">
-
-                No RAG changes recorded yet.
-
-            </div>
-
-        `;
-
 
 }
+
 
 /* =====================================================
-OWN HISTORY
-===================================================== */
-
-function renderOwnHistory() {
-
-
-const data =
-    athleteData[
-        currentAthleteId
-    ] || {};
-
-const history =
-    (
-        Array.isArray(
-            data.history
-        )
-            ? data.history
-            : []
-    )
-    .filter(
-        item =>
-            categories.includes(
-                item.category
-            )
-    );
-
-$("historyContent")
-    .innerHTML =
-
-    history.length
-
-        ? history
-            .map(historyHtml)
-            .join("")
-
-        : `
-
-            <div class="empty">
-
-                No RAG changes recorded yet.
-
-            </div>
-
-        `;
-
-
-}
-
-/* =====================================================
-HISTORY HTML
-===================================================== */
-
-function historyHtml(item) {
-
-
-return `
-
-    <div class="history-item">
-
-        <div class="history-top">
-
-            <strong>
-
-                ${escapeHtml(
-                    item.category || ""
-                )}
-
-            </strong>
-
-            <span class="history-date">
-
-                ${formatDate(
-                    item.date
-                )}
-
-            </span>
-
-        </div>
-
-        <div class="history-change">
-
-            ${ragBadge(
-                item.oldValue
-            )}
-
-            →
-
-            ${ragBadge(
-                item.newValue
-            )}
-
-        </div>
-
-        <div class="history-user">
-
-            Changed by:
-
-            ${escapeHtml(
-                item.changedBy ||
-                "Unknown"
-            )}
-
-        </div>
-
-    </div>
-
-`;
-
-
-}
-
-function historyHtmlStaff(item) {
-
-
-return `
-
-    <div class="history-item">
-
-        <div class="history-top">
-
-            <strong>
-
-                ${escapeHtml(
-                    item.athlete ||
-                    ""
-                )}
-
-            </strong>
-
-            <span class="history-date">
-
-                ${formatDate(
-                    item.date
-                )}
-
-            </span>
-
-        </div>
-
-        <div style="margin-top:8px;">
-
-            <strong>
-
-                ${escapeHtml(
-                    item.category ||
-                    ""
-                )}
-
-            </strong>
-
-        </div>
-
-        <div class="history-change">
-
-            ${ragBadge(
-                item.oldValue
-            )}
-
-            →
-
-            ${ragBadge(
-                item.newValue
-            )}
-
-        </div>
-
-        <div class="history-user">
-
-            Changed by:
-
-            ${escapeHtml(
-                item.changedBy ||
-                "Unknown"
-            )}
-
-        </div>
-
-    </div>
-
-`;
-
-
-}
-
-/* =====================================================
-RAG CLASS
-===================================================== */
-
-function ragClass(value) {
-
-
-switch (value) {
-
-    case "Green+":
-        return "rag-green-plus";
-
-    case "Green":
-        return "rag-green";
-
-    case "Green-":
-        return "rag-green-minus";
-
-    case "Amber+":
-        return "rag-amber-plus";
-
-    case "Amber":
-        return "rag-amber";
-
-    case "Amber-":
-        return "rag-amber-minus";
-
-    case "Red+":
-        return "rag-red-plus";
-
-    case "Red":
-        return "rag-red";
-
-    case "Red-":
-        return "rag-red-minus";
-
-    default:
-        return "rag-none";
-
-}
-
-
-}
-
-/* =====================================================
-RAG BADGE
-===================================================== */
-
-function ragBadge(value) {
-
-
-const cleanValue =
-    value || "";
-
-return `
-
-    <span
-        class="rag-badge ${ragClass(
-            cleanValue
-        )}"
-    >
-
-        ${
-            escapeHtml(
-                cleanValue ||
-                "Not Set"
-            )
-        }
-
-    </span>
-
-`;
-
-
-}
-
-/* =====================================================
-GOOGLE SHEETS SEND
-===================================================== */
-
-async function sendToGoogleSheets(
-payload
-) {
-
-
-if (
-    !GOOGLE_SHEETS_SYNC_URL ||
-    GOOGLE_SHEETS_SYNC_URL.includes(
-        "PASTE_"
-    )
-) {
-    return;
-}
-
-try {
-
-    await fetch(
-        GOOGLE_SHEETS_SYNC_URL,
-        {
-
-            method: "POST",
-
-            mode: "no-cors",
-
-            headers: {
-                "Content-Type":
-                    "text/plain;charset=utf-8"
-            },
-
-            body:
-                JSON.stringify(payload)
-
-        }
-    );
-
-} catch (error) {
-
-    console.error(
-        "Google Sheets sync error:",
-        error
-    );
-
-}
-
-
-}
-
-/* =====================================================
-SYNC ATHLETE TO GOOGLE SHEETS
+   SYNC ATHLETE
 ===================================================== */
 
 async function syncAthleteToGoogleSheets(
-athleteId
+    athleteId
 ) {
 
+    const athlete =
+        athletes.find(
+            item =>
+                item.id ===
+                athleteId
+        );
 
-const athlete =
-    athletes.find(
-        item =>
-            item.id === athleteId
-    );
 
-if (!athlete) {
-    return;
-}
+    if (!athlete) {
 
-const snapshot =
-    await getDoc(
-        doc(
-            db,
-            "athletes",
-            athleteId
-        )
-    );
-
-if (!snapshot.exists()) {
-    return;
-}
-
-const data =
-    snapshot.data();
-
-await sendToGoogleSheets({
-
-    action:
-        "upsertAthlete",
-
-    athlete: {
-
-        id:
-            athleteId,
-
-        name:
-            athlete.name,
-
-        group:
-            athlete.group || "Boys",
-
-        powerCurveErg:
-            data.ratings?.[
-                "Power Curve (erg)"
-            ] || "",
-
-        techErg:
-            data.ratings?.[
-                "Tech (erg)"
-            ] || "",
-
-        scullingTech:
-            data.ratings?.[
-                "Sculling Tech"
-            ] || "",
-
-        sweepingTech:
-            data.ratings?.[
-                "Sweeping Tech"
-            ] || "",
-
-        notes:
-            data.notes || ""
+        return;
 
     }
 
-});
 
+    const snapshot =
+        await getDoc(
+            doc(
+                db,
+                "athletes",
+                athleteId
+            )
+        );
+
+
+    if (
+        !snapshot.exists()
+    ) {
+
+        return;
+
+    }
+
+
+    const data =
+        snapshot.data();
+
+
+    await sendToGoogleSheets({
+
+        action:
+            "upsertAthlete",
+
+        athlete: {
+
+            id:
+                athleteId,
+
+            name:
+                athlete.name,
+
+            group:
+                athlete.group ||
+                "Boys",
+
+            powerCurveErg:
+                data.ratings?.[
+                    "Power Curve (erg)"
+                ] || "",
+
+            techErg:
+                data.ratings?.[
+                    "Tech (erg)"
+                ] || "",
+
+            scullingTech:
+                data.ratings?.[
+                    "Sculling Tech"
+                ] || "",
+
+            sweepingTech:
+                data.ratings?.[
+                    "Sweeping Tech"
+                ] || "",
+
+            notes:
+                data.notes || ""
+
+        }
+
+    });
 
 }
 
+
 /* =====================================================
-SYNC HISTORY
+   SYNC HISTORY
 ===================================================== */
 
 async function syncHistoryToGoogleSheets(
-athleteId,
-item
+    athleteId,
+    item
 ) {
 
+    const athlete =
+        athletes.find(
+            athlete =>
+                athlete.id ===
+                athleteId
+        );
 
-const athlete =
-    athletes.find(
-        athlete =>
-            athlete.id ===
-            athleteId
-    );
 
-if (!athlete) {
-    return;
-}
+    if (!athlete) {
 
-await sendToGoogleSheets({
-
-    action:
-        "addHistory",
-
-    history: {
-
-        date:
-            item.date ||
-            new Date().toISOString(),
-
-        athleteId:
-            athleteId,
-
-        athlete:
-            athlete.name,
-
-        category:
-            item.category || "",
-
-        oldRAG:
-            item.oldValue ||
-            "Not Set",
-
-        newRAG:
-            item.newValue ||
-            "Not Set",
-
-        changedBy:
-            item.changedBy ||
-            "Unknown"
+        return;
 
     }
 
-});
 
+    await sendToGoogleSheets({
+
+        action:
+            "addHistory",
+
+        history: {
+
+            date:
+                item.date ||
+                new Date()
+                    .toISOString(),
+
+            athleteId:
+                athleteId,
+
+            athlete:
+                athlete.name,
+
+            category:
+                item.category ||
+                "",
+
+            oldRAG:
+                item.oldValue ||
+                "Not Set",
+
+            newRAG:
+                item.newValue ||
+                "Not Set",
+
+            changedBy:
+                item.changedBy ||
+                "Unknown"
+
+        }
+
+    });
 
 }
 
+
 /* =====================================================
-SYNC ALL ATHLETES
+   SYNC ALL ATHLETES
 ===================================================== */
 
 window.syncAllAthletesToGoogleSheets =
 async function() {
 
-
     if (
-        !["Admin", "Coach"]
-            .includes(currentRole)
+        ![
+            "Admin",
+            "Coach"
+        ].includes(
+            currentRole
+        )
     ) {
+
         return;
+
     }
+
 
     for (
         const athlete
@@ -3084,7 +4142,9 @@ async function() {
                 athlete.id
             );
 
-        } catch (error) {
+        }
+
+        catch (error) {
 
             console.error(
                 "Could not sync",
@@ -3100,102 +4160,91 @@ async function() {
 
 
 /* =====================================================
-DATE FORMAT
+   DATE FORMAT
 ===================================================== */
 
-function formatDate(date) {
+function formatDate(
+    date
+) {
+
+    if (!date) {
+
+        return "Unknown date";
+
+    }
 
 
-if (!date) {
-    return "Unknown date";
+    try {
+
+        return new Date(
+            date
+        ).toLocaleString(
+            "en-GB",
+            {
+                dateStyle:
+                    "medium",
+                timeStyle:
+                    "short"
+            }
+        );
+
+    }
+
+    catch {
+
+        return date;
+
+    }
+
 }
 
-try {
-
-    return new Date(
-        date
-    ).toLocaleString(
-        "en-GB",
-        {
-            dateStyle: "medium",
-            timeStyle: "short"
-        }
-    );
-
-} catch {
-
-    return date;
-
-}
-
-
-}
 
 /* =====================================================
-HTML ESCAPING
+   HTML ESCAPING
 ===================================================== */
 
-function escapeHtml(value) {
+function escapeHtml(
+    value
+) {
 
-
-return String(
-    value ?? ""
-)
-
-    .replace(
-        /&/g,
-        "&amp;"
+    return String(
+        value ?? ""
     )
 
-    .replace(
-        /</g,
-        "&lt;"
-    )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
 
-    .replace(
-        />/g,
-        "&gt;"
-    )
+        .replace(
+            /</g,
+            "&lt;"
+        )
 
-    .replace(
-        /"/g,
-        "&quot;"
-    )
+        .replace(
+            />/g,
+            "&gt;"
+        )
 
-    .replace(
-        /'/g,
-        "&#039;"
-    );
+        .replace(
+            /"/g,
+            "&quot;"
+        )
 
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
 }
+
 
 /* =====================================================
-JAVASCRIPT ESCAPING
+   STARTUP
 ===================================================== */
-
-function escapeJs(value) {
-
-
-return String(
-    value ?? ""
-)
-
-    .replace(
-        /\\/g,
-        "\\\\"
-    )
-
-    .replace(
-        /'/g,
-        "\\'"
-    );
-
-
-}
 
 console.log(
-"Leeds Rowing Club Athlete Management loaded with 4 RAG topics."
+    "Leeds Rowing Club Athlete Management loaded."
 );
 
 </script>
