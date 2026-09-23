@@ -569,8 +569,6 @@ tr:last-child td {
 ========================= -->
 
 <div id="loginScreen">
-
-```
 <div class="login-box">
 
     <h1>Leeds Rowing Club</h1>
@@ -602,8 +600,6 @@ tr:last-child td {
     <div id="loginError"></div>
 
 </div>
-```
-
 </div>
 
 <!-- =========================
@@ -613,8 +609,6 @@ tr:last-child td {
 <div id="app">
 
 <header>
-
-```
 <div class="header-title">
     Leeds Rowing Club Athlete Management
 </div>
@@ -635,8 +629,6 @@ tr:last-child td {
     </button>
 
 </div>
-```
-
 </header>
 
 <!-- =========================
@@ -644,8 +636,6 @@ tr:last-child td {
 ========================= -->
 
 <nav>
-
-```
 <button
     class="nav-btn active"
     data-page="dashboardPage"
@@ -673,8 +663,6 @@ tr:last-child td {
     id="historyNav">
     History
 </button>
-```
-
 </nav>
 
 <main>
@@ -686,8 +674,6 @@ tr:last-child td {
 <section
     id="dashboardPage"
     class="page active">
-
-```
 <h1 class="page-title">
     Dashboard
 </h1>
@@ -764,8 +750,6 @@ tr:last-child td {
     </table>
 
 </div>
-```
-
 </section>
 
 <!-- =========================
@@ -775,8 +759,6 @@ tr:last-child td {
 <section
     id="athletesPage"
     class="page">
-
-```
 <h1 class="page-title">
     Athletes
 </h1>
@@ -794,53 +776,57 @@ tr:last-child td {
 
 <div class="folder">
 
-    <div
-        class="folder-header"
-        id="boysFolderHeader">
-
-        <h2>
-            📁 Boys
-        </h2>
-
-        <span id="boysFolderArrow">
-            ▼
-        </span>
-
+    <div class="folder-header" id="boysFolderHeader">
+        <h2>📁 Boys</h2>
+        <span id="boysFolderArrow">▼</span>
     </div>
 
-    <div
-        class="folder-content"
-        id="boysFolderContent">
-
+    <div class="folder-content" id="boysFolderContent">
         <div class="table-container">
-
             <table>
-
                 <thead>
-
                     <tr>
-
                         <th>Athlete</th>
                         <th>Power Curve (erg)</th>
                         <th>Tech (erg)</th>
                         <th>Sculling Tech</th>
                         <th>Sweeping Tech</th>
                         <th>Open</th>
-
                     </tr>
-
                 </thead>
-
-                <tbody id="athletesTableBody"></tbody>
-
+                <tbody id="boysAthletesTableBody"></tbody>
             </table>
-
         </div>
-
     </div>
 
 </div>
-```
+
+<div class="folder">
+
+    <div class="folder-header" id="girlsFolderHeader">
+        <h2>📁 Girls</h2>
+        <span id="girlsFolderArrow">▼</span>
+    </div>
+
+    <div class="folder-content" id="girlsFolderContent">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Athlete</th>
+                        <th>Power Curve (erg)</th>
+                        <th>Tech (erg)</th>
+                        <th>Sculling Tech</th>
+                        <th>Sweeping Tech</th>
+                        <th>Open</th>
+                    </tr>
+                </thead>
+                <tbody id="girlsAthletesTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
 
 </section>
 
@@ -851,8 +837,6 @@ tr:last-child td {
 <section
     id="profilePage"
     class="page">
-
-```
 <div id="profileContent">
 
     <div class="loading">
@@ -860,8 +844,6 @@ tr:last-child td {
     </div>
 
 </div>
-```
-
 </section>
 
 <!-- =========================
@@ -871,8 +853,6 @@ tr:last-child td {
 <section
     id="historyPage"
     class="page">
-
-```
 <h1 class="page-title">
     RAG History
 </h1>
@@ -888,8 +868,6 @@ tr:last-child td {
     </div>
 
 </div>
-```
-
 </section>
 
 </main>
@@ -999,33 +977,59 @@ const staffAccounts = {
 
 const athletes = [
 
-    { id: "alexg", name: "Alex Green" },
-    { id: "baileym", name: "Bailey Marshall" },
-    { id: "bertieb", name: "Bertie Beanland" },
-    { id: "gabrielm", name: "Gabriel Maida" },
-    { id: "hectorj", name: "Hector Jones" },
-    { id: "jackb", name: "Jack Bailey" },
-    { id: "jacke", name: "Jack East" },
-    { id: "jacobh", name: "Jacob Hallman" },
-    { id: "jacobs", name: "Jacob Smith" },
-    { id: "jamief", name: "Jamie Ford" },
-    { id: "joet", name: "Joe Tennant" },
-    { id: "lucasb", name: "Lucas Brook" },
-    { id: "mattyl", name: "Matty Lincoln" },
-    { id: "maxw", name: "Max Welsh" },
-    { id: "neop", name: "Neo Patel" },
-    { id: "saml", name: "Sam Lucione" },
-    { id: "sethj", name: "Seth Jones" },
-    { id: "sethl", name: "Seth Langdon" },
-    { id: "zacl", name: "Zac Lodge" },
-    { id: "benw", name: "Ben Whittaker" },
-    { id: "charliew", name: "Charlie Watts" },
-    { id: "edwards", name: "Edward Steele" },
-    { id: "fredt", name: "Fred Tattersall" },
-    { id: "matthewk", name: "Matthew Kerry" },
-    { id: "ryana", name: "Ryan Atkins" },
-    { id: "elijaha", name: "Elijah Alam" },
-    { id: "louisr", name: "Louis Rich" }
+    { id: "alexg", name: "Alex Green", group: "Boys" },
+    { id: "baileym", name: "Bailey Marshall", group: "Boys" },
+    { id: "bertieb", name: "Bertie Beanland", group: "Boys" },
+    { id: "gabrielm", name: "Gabriel Maida", group: "Boys" },
+    { id: "hectorj", name: "Hector Jones", group: "Boys" },
+    { id: "jackb", name: "Jack Bailey", group: "Boys" },
+    { id: "jacke", name: "Jack East", group: "Boys" },
+    { id: "jacobh", name: "Jacob Hallman", group: "Boys" },
+    { id: "jacobs", name: "Jacob Smith", group: "Boys" },
+    { id: "jamief", name: "Jamie Ford", group: "Boys" },
+    { id: "joet", name: "Joe Tennant", group: "Boys" },
+    { id: "lucasb", name: "Lucas Brook", group: "Boys" },
+    { id: "mattyl", name: "Matty Lincoln", group: "Boys" },
+    { id: "maxw", name: "Max Welsh", group: "Boys" },
+    { id: "neop", name: "Neo Patel", group: "Boys" },
+    { id: "saml", name: "Sam Lucione", group: "Boys" },
+    { id: "sethj", name: "Seth Jones", group: "Boys" },
+    { id: "sethl", name: "Seth Langdon", group: "Boys" },
+    { id: "zacl", name: "Zac Lodge", group: "Boys" },
+    { id: "benw", name: "Ben Whittaker", group: "Boys" },
+    { id: "charliew", name: "Charlie Watts", group: "Boys" },
+    { id: "edwards", name: "Edward Steele", group: "Boys" },
+    { id: "fredt", name: "Fred Tattersall", group: "Boys" },
+    { id: "matthewk", name: "Matthew Kerry", group: "Boys" },
+    { id: "ryana", name: "Ryan Atkins", group: "Boys" },
+    { id: "elijaha", name: "Elijah Alam", group: "Boys" },
+    { id: "louisr", name: "Louis Rich", group: "Boys" },
+    { id: "annaj", name: "Anna James", group: "Girls" },
+    { id: "sophier", name: "Sophie Robertson", group: "Girls" },
+    { id: "alicea", name: "Alice Ashcroft", group: "Girls" },
+    { id: "neivew", name: "Neive Wahid", group: "Girls" },
+    { id: "laylamd", name: "Layla McMonagle-Dunn", group: "Girls" },
+    { id: "madisonf", name: "Madison Fleming", group: "Girls" },
+    { id: "sophiem", name: "Sophie Mullin", group: "Girls" },
+    { id: "christabelod", name: "Christabel Ohenewaa-Danso", group: "Girls" },
+    { id: "libbyc", name: "Libby Chadwick", group: "Girls" },
+    { id: "gracel", name: "Grace Lister", group: "Girls" },
+    { id: "zhiriaj", name: "Zhiri Al-Jaf", group: "Girls" },
+    { id: "freyal", name: "Freya Long", group: "Girls" },
+    { id: "poppyy", name: "Poppy Youlden", group: "Girls" },
+    { id: "connief", name: "Connie Fozzard", group: "Girls" },
+    { id: "islam", name: "Isla Marks", group: "Girls" },
+    { id: "elliew", name: "Ellie Withington", group: "Girls" },
+    { id: "aval", name: "Ava Lister", group: "Girls" },
+    { id: "kanonkh", name: "Kanon Kobri-Hill", group: "Girls" },
+    { id: "kierao", name: "Kiera O'Leary", group: "Girls" },
+    { id: "imeldag", name: "Imelda Gibbs", group: "Girls" },
+    { id: "claym", name: "Clay McMillian", group: "Girls" },
+    { id: "marthae", name: "Martha Ellis", group: "Girls" },
+    { id: "kaiaw", name: "Kaia Whittaker", group: "Girls" },
+    { id: "jenb", name: "Jen Bailey", group: "Girls" },
+    { id: "ellam", name: "Ella Mounsey", group: "Girls" },
+    { id: "chloec", name: "Chloe Carag", group: "Girls" }
 
 ];
 
@@ -1121,31 +1125,41 @@ $("athleteSearch")
         }
     );
 
-$("boysFolderHeader")
-    .addEventListener(
-        "click",
-        () => {
+function setupFolderToggle(headerId, contentId, arrowId) {
 
-            const content =
-                $("boysFolderContent");
+    const header = $(headerId);
+    const content = $(contentId);
+    const arrow = $(arrowId);
 
-            const arrow =
-                $("boysFolderArrow");
+    if (!header || !content || !arrow) {
+        return;
+    }
 
-            if (content.style.display === "none") {
+    header.addEventListener("click", () => {
 
-                content.style.display = "block";
-                arrow.textContent = "▼";
-
-            } else {
-
-                content.style.display = "none";
-                arrow.textContent = "▶";
-
-            }
-
+        if (content.style.display === "none") {
+            content.style.display = "block";
+            arrow.textContent = "▼";
+        } else {
+            content.style.display = "none";
+            arrow.textContent = "▶";
         }
-    );
+
+    });
+
+}
+
+setupFolderToggle(
+    "boysFolderHeader",
+    "boysFolderContent",
+    "boysFolderArrow"
+);
+
+setupFolderToggle(
+    "girlsFolderHeader",
+    "girlsFolderContent",
+    "girlsFolderArrow"
+);
 
 document
     .querySelectorAll(".nav-btn")
@@ -1498,7 +1512,7 @@ async function startAthleteMode(username) {
    CREATE MISSING ATHLETE DOCUMENTS
 ===================================================== */
 
-async function ensureAthleteDocuments() {
+async async function ensureAthleteDocuments() {
 
     for (const athlete of athletes) {
 
@@ -1509,27 +1523,23 @@ async function ensureAthleteDocuments() {
                 athlete.id
             );
 
-        const snapshot =
-            await getDoc(reference);
-
-        if (!snapshot.exists()) {
-
-            await setDoc(
-                reference,
-                {
-                    name: athlete.name,
-                    ratings: {},
-                    notes: "",
-                    history: []
-                }
-            );
-
-        }
+        await setDoc(
+            reference,
+            {
+                name: athlete.name,
+                group: athlete.group,
+                ratings: {},
+                notes: "",
+                history: []
+            },
+            {
+                merge: true
+            }
+        );
 
     }
 
 }
-
 
 /* =====================================================
    PAGE NAVIGATION
@@ -1732,21 +1742,44 @@ function renderDashboard() {
    ATHLETES TABLE
 ===================================================== */
 
-function renderAthletesTable(
-    searchTerm = ""
-) {
+function renderAthletesTable(searchTerm = "") {
 
     const search =
         searchTerm
             .trim()
             .toLowerCase();
 
-    $("athletesTableBody")
-        .innerHTML =
+    renderAthleteGroupTable(
+        "Boys",
+        "boysAthletesTableBody",
+        search
+    );
 
+    renderAthleteGroupTable(
+        "Girls",
+        "girlsAthletesTableBody",
+        search
+    );
+
+}
+
+function renderAthleteGroupTable(
+    group,
+    bodyId,
+    search
+) {
+
+    const body = $(bodyId);
+
+    if (!body) {
+        return;
+    }
+
+    body.innerHTML =
         athletes
             .filter(
                 athlete =>
+                    athlete.group === group &&
                     athlete.name
                         .toLowerCase()
                         .includes(search)
@@ -1762,17 +1795,14 @@ function renderAthletesTable(
                         <tr>
 
                             <td>
-
                                 <strong>
                                     ${escapeHtml(
                                         athlete.name
                                     )}
                                 </strong>
-
                             </td>
 
                             <td>
-
                                 ${staffRagSelect(
                                     athlete.id,
                                     "Power Curve (erg)",
@@ -1780,11 +1810,9 @@ function renderAthletesTable(
                                         "Power Curve (erg)"
                                     ]
                                 )}
-
                             </td>
 
                             <td>
-
                                 ${staffRagSelect(
                                     athlete.id,
                                     "Tech (erg)",
@@ -1792,11 +1820,9 @@ function renderAthletesTable(
                                         "Tech (erg)"
                                     ]
                                 )}
-
                             </td>
 
                             <td>
-
                                 ${staffRagSelect(
                                     athlete.id,
                                     "Sculling Tech",
@@ -1804,11 +1830,9 @@ function renderAthletesTable(
                                         "Sculling Tech"
                                     ]
                                 )}
-
                             </td>
 
                             <td>
-
                                 ${staffRagSelect(
                                     athlete.id,
                                     "Sweeping Tech",
@@ -1816,19 +1840,14 @@ function renderAthletesTable(
                                         "Sweeping Tech"
                                     ]
                                 )}
-
                             </td>
 
                             <td>
-
                                 <button
                                     class="primary-btn"
                                     onclick="openProfile('${escapeJs(athlete.id)}')">
-
                                     Open
-
                                 </button>
-
                             </td>
 
                         </tr>
@@ -1840,7 +1859,6 @@ function renderAthletesTable(
             .join("");
 
 }
-
 
 /* =====================================================
    RAG SELECT
@@ -2148,6 +2166,11 @@ function renderProfile() {
                         athlete.id
                     )}
 
+                    ·
+                    ${escapeHtml(
+                        athlete.group || ""
+                    )}
+
                 </div>
 
             </div>
@@ -2232,8 +2255,6 @@ function renderProfile() {
             >${escapeHtml(
                 data.notes || ""
             )}</textarea>
-
-```
 `;
 
 
@@ -2326,8 +2347,6 @@ html += `
 
 $("profileContent")
     .innerHTML = html;
-```
-
 }
 
 /* =====================================================
@@ -2335,18 +2354,12 @@ OWN PROFILE
 ===================================================== */
 
 function renderOwnProfile() {
-
-```
 renderProfile();
-```
-
 }
 
 function showProfileMessage(
 message
 ) {
-
-```
 $("profileContent")
     .innerHTML = `
 
@@ -2357,8 +2370,6 @@ $("profileContent")
         </div>
 
     `;
-```
-
 }
 
 /* =====================================================
@@ -2366,8 +2377,6 @@ SAVE NOTES
 ===================================================== */
 
 window.saveNotes = async function() {
-
-```
 if (
     !["Admin", "Coach"]
         .includes(currentRole)
@@ -2440,8 +2449,6 @@ try {
     );
 
 }
-```
-
 };
 
 /* =====================================================
@@ -2449,8 +2456,6 @@ STAFF HISTORY
 ===================================================== */
 
 function renderStaffHistory() {
-
-```
 const all = [];
 
 athletes.forEach(
@@ -2526,8 +2531,6 @@ $("historyContent")
             </div>
 
         `;
-```
-
 }
 
 /* =====================================================
@@ -2535,8 +2538,6 @@ OWN HISTORY
 ===================================================== */
 
 function renderOwnHistory() {
-
-```
 const data =
     athleteData[
         currentAthleteId
@@ -2575,8 +2576,6 @@ $("historyContent")
             </div>
 
         `;
-```
-
 }
 
 /* =====================================================
@@ -2584,8 +2583,6 @@ HISTORY HTML
 ===================================================== */
 
 function historyHtml(item) {
-
-```
 return `
 
     <div class="history-item">
@@ -2638,13 +2635,9 @@ return `
     </div>
 
 `;
-```
-
 }
 
 function historyHtmlStaff(item) {
-
-```
 return `
 
     <div class="history-item">
@@ -2711,8 +2704,6 @@ return `
     </div>
 
 `;
-```
-
 }
 
 /* =====================================================
@@ -2720,8 +2711,6 @@ RAG CLASS
 ===================================================== */
 
 function ragClass(value) {
-
-```
 switch (value) {
 
     case "Green+":
@@ -2755,8 +2744,6 @@ switch (value) {
         return "rag-none";
 
 }
-```
-
 }
 
 /* =====================================================
@@ -2764,8 +2751,6 @@ RAG BADGE
 ===================================================== */
 
 function ragBadge(value) {
-
-```
 const cleanValue =
     value || "";
 
@@ -2787,8 +2772,6 @@ return `
     </span>
 
 `;
-```
-
 }
 
 /* =====================================================
@@ -2798,8 +2781,6 @@ GOOGLE SHEETS SEND
 async function sendToGoogleSheets(
 payload
 ) {
-
-```
 if (
     !GOOGLE_SHEETS_SYNC_URL ||
     GOOGLE_SHEETS_SYNC_URL.includes(
@@ -2838,8 +2819,6 @@ try {
     );
 
 }
-```
-
 }
 
 /* =====================================================
@@ -2849,8 +2828,6 @@ SYNC ATHLETE TO GOOGLE SHEETS
 async function syncAthleteToGoogleSheets(
 athleteId
 ) {
-
-```
 const athlete =
     athletes.find(
         item =>
@@ -2890,6 +2867,9 @@ await sendToGoogleSheets({
         name:
             athlete.name,
 
+        group:
+            athlete.group || "Boys",
+
         powerCurveErg:
             data.ratings?.[
                 "Power Curve (erg)"
@@ -2916,8 +2896,6 @@ await sendToGoogleSheets({
     }
 
 });
-```
-
 }
 
 /* =====================================================
@@ -2928,8 +2906,6 @@ async function syncHistoryToGoogleSheets(
 athleteId,
 item
 ) {
-
-```
 const athlete =
     athletes.find(
         athlete =>
@@ -2976,8 +2952,6 @@ await sendToGoogleSheets({
     }
 
 });
-```
-
 }
 
 /* =====================================================
@@ -2986,8 +2960,6 @@ SYNC ALL ATHLETES
 
 window.syncAllAthletesToGoogleSheets =
 async function() {
-
-```
     if (
         !["Admin", "Coach"]
             .includes(currentRole)
@@ -3019,15 +2991,11 @@ async function() {
     }
 
 };
-```
-
 /* =====================================================
 DATE FORMAT
 ===================================================== */
 
 function formatDate(date) {
-
-```
 if (!date) {
     return "Unknown date";
 }
@@ -3049,8 +3017,6 @@ try {
     return date;
 
 }
-```
-
 }
 
 /* =====================================================
@@ -3058,8 +3024,6 @@ HTML ESCAPING
 ===================================================== */
 
 function escapeHtml(value) {
-
-```
 return String(
     value ?? ""
 )
@@ -3088,8 +3052,6 @@ return String(
         /'/g,
         "&#039;"
     );
-```
-
 }
 
 /* =====================================================
@@ -3097,8 +3059,6 @@ JAVASCRIPT ESCAPING
 ===================================================== */
 
 function escapeJs(value) {
-
-```
 return String(
     value ?? ""
 )
@@ -3112,8 +3072,6 @@ return String(
         /'/g,
         "\\'"
     );
-```
-
 }
 
 console.log(
