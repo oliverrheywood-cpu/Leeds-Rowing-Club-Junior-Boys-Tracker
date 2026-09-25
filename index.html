@@ -1527,13 +1527,8 @@ function loadScoresFromGoogleSheets() {
 
     return new Promise(function(resolve, reject) {
 
-        if (
-            !GOOGLE_SHEETS_SYNC_URL ||
-            GOOGLE_SHEETS_SYNC_URL.includes("PASTE_")
-        ) {
-            reject(new Error("Google Sheets URL is not configured."));
-            return;
-        }
+        const url =
+            "https://script.google.com/macros/s/AKfycbxfQ1lgiF9jEMb88vmgaE_1EzKaZL9hZY3Jyz2lxCToypXkXR5ve7oNDJPUHYFoZFze/exec";
 
         const callbackName =
             "scoresCallback_" +
@@ -1541,63 +1536,114 @@ function loadScoresFromGoogleSheets() {
             "_" +
             Math.floor(Math.random() * 100000);
 
+        let finished = false;
+
         const script =
             document.createElement("script");
 
-        const timeout =
-            setTimeout(function() {
-
-                cleanup();
-                reject(new Error("The Scores sheet took too long to respond."));
-
-            }, 15000);
-
         function cleanup() {
-
-            clearTimeout(timeout);
-
-            delete window[callbackName];
 
             if (script.parentNode) {
                 script.parentNode.removeChild(script);
             }
 
+            try {
+                delete window[callbackName];
+            } catch (e) {
+                window[callbackName] = undefined;
+            }
+
         }
 
-        window[callbackName] = function(data) {
+        function fail(message) {
+
+            if (finished) return;
+
+            finished = true;
 
             cleanup();
 
-            resolve(data);
+            reject(new Error(message));
 
-        };
+        }
 
-        script.onerror = function() {
+        const timeout =
+            setTimeout(function() {
 
-            cleanup();
-            reject(new Error("Could not connect to the Scores sheet."));
+                fail(
+                    "The Scores sheet took too long to respond."
+                );
 
-        };
+            }, 20000);
 
-        /*
-         * Google Apps Script documents JSONP using the
-         * "prefix" parameter. The Apps Script accepts both
-         * prefix and callback, but prefix is the documented
-         * form and avoids the problem we were seeing.
-         */
+
+        window[callbackName] =
+            function(data) {
+
+                if (finished) return;
+
+                finished = true;
+
+                clearTimeout(timeout);
+
+                cleanup();
+
+                if (
+                    !data ||
+                    data.success !== true
+                ) {
+
+                    reject(
+                        new Error(
+                            data &&
+                            data.error
+                                ? data.error
+                                : "The Scores sheet returned an error."
+                        )
+                    );
+
+                    return;
+
+                }
+
+                resolve(data);
+
+            };
+
+
+        script.onerror =
+            function() {
+
+                clearTimeout(timeout);
+
+                fail(
+                    "Could not connect to the Scores sheet."
+                );
+
+            };
+
+
+        script.type =
+            "text/javascript";
+
+        script.async = true;
+
+
         script.src =
-            GOOGLE_SHEETS_SYNC_URL +
-            "?action=getScores&prefix=" +
+            url +
+            "?action=getScores" +
+            "&prefix=" +
             encodeURIComponent(callbackName) +
             "&_=" +
             Date.now();
 
-        document.body.appendChild(script);
+
+        document.head.appendChild(script);
 
     });
 
 }
-
+    
 function renderScoresTable(searchTerm = "") {
 
     const head = $("scoresTableHead");
