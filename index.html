@@ -581,6 +581,7 @@ let currentWorkoutSession = "Session A";
 
 let workoutPlanSignature = "";
 let workoutPlanGroup = "";
+let workoutPlanFallbackActive = false;
 const pendingWorkoutSaves = {};
 const sheetBackupTimers = {};
 
@@ -1560,13 +1561,31 @@ function jsonpRequest(params) {
     return new Promise(function(resolve, reject) {
         const callbackName = "wpCb_" + Date.now() + "_" + Math.floor(Math.random() * 1000000);
         const script = document.createElement("script");
-        let finished = false;
-        const timeout = setTimeout(function() { cleanup(); reject(new Error("Apps Script workout request timed out.")); }, 15000);
-        function cleanup() { clearTimeout(timeout); try { delete window[callbackName]; } catch (e) { window[callbackName] = undefined; } if (script.parentNode) script.parentNode.removeChild(script); }
-        window[callbackName] = function(data) { if (finished) return; finished=true; cleanup(); resolve(data); };
-        script.onerror = function() { if (finished) return; finished=true; cleanup(); reject(new Error("Could not reach the Apps Script deployment.")); };
-        const separator = GOOGLE_SHEETS_SYNC_URL.indexOf("?") === -1 ? "?" : "&";
-        script.src = GOOGLE_SHEETS_SYNC_URL + separator + params + "&callback=" + encodeURIComponent(callbackName) + "&_=" + Date.now();
+
+        function cleanup() {
+            clearTimeout(timeout);
+            try { delete window[callbackName]; } catch (e) { window[callbackName] = undefined; }
+            if (script.parentNode) script.parentNode.removeChild(script);
+        }
+
+        const timeout = setTimeout(function() {
+            cleanup();
+            reject(new Error("Google Sheets timed out."));
+        }, 15000);
+
+        window[callbackName] = function(data) {
+            cleanup();
+            resolve(data);
+        };
+
+        script.onerror = function() {
+            cleanup();
+            reject(new Error("Could not reach Google Sheets."));
+        };
+
+        script.src = GOOGLE_SHEETS_SYNC_URL + "?" + params +
+            "&callback=" + encodeURIComponent(callbackName) +
+            "&_=" + Date.now();
         script.async = true;
         document.head.appendChild(script);
     });
@@ -1575,6 +1594,13 @@ function jsonpRequest(params) {
 async function refreshWorkoutPlan(group) {
     const requestedGroup = String(group || getWorkoutTargetGroup() || "Boys");
     const status = $("workoutStatus");
+
+    // If Sheets has already failed for this group, the built-in plan is now the
+    // active source. Do not keep requesting Sheets every time the page renders.
+    if (workoutPlanFallbackActive &&
+        workoutPlanGroup.toLowerCase() === requestedGroup.toLowerCase()) {
+        return;
+    }
 
     try {
         if (status && !workoutPlanGroup) {
@@ -1596,6 +1622,7 @@ async function refreshWorkoutPlan(group) {
         workoutPlanSignature = signature;
         workoutPlanGroup = requestedGroup;
         workoutPlans = result.plan;
+        workoutPlanFallbackActive = false;
 
         const page = $("workoutsPage");
         if (page && page.classList.contains("active")) {
@@ -1605,20 +1632,24 @@ async function refreshWorkoutPlan(group) {
     } catch (error) {
         console.error("Workout plan refresh failed:", error);
 
-        // Do not leave the user permanently stuck on "Loading workout plan..."
-        if (String(requestedGroup).toLowerCase() === "girls") {
-            const page = $("workoutsPage");
-            if (page && page.classList.contains("active")) renderWorkoutPage();
-            return;
+        // IMPORTANT: activate the built-in plan. Previously the page displayed
+        // an error but left workoutPlanGroup empty, so renderWorkoutPage() kept
+        // calling refreshWorkoutPlan() and the page stayed in a loading loop.
+        workoutPlanGroup = requestedGroup;
+        workoutPlanSignature = "fallback|" + requestedGroup;
+        workoutPlanFallbackActive = true;
+
+        if (status) {
+            setWorkoutStatus(
+                "Google Sheets workout plan unavailable — using the built-in backup plan.",
+                "error"
+            );
         }
 
-        if (String(requestedGroup).toLowerCase() === "boys") {
-            if (status) setWorkoutStatus("Live Google Sheets plan unavailable — using the built-in workout plan.", "error");
-            const page = $("workoutsPage");
-            if (page && page.classList.contains("active")) renderWorkoutPage();
-            return;
+        const page = $("workoutsPage");
+        if (page && page.classList.contains("active")) {
+            renderWorkoutPage();
         }
-        if (status) setWorkoutStatus("Girls workout plan is not available yet.", "error");
     }
 }
 
