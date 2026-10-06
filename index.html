@@ -1556,80 +1556,17 @@ function getWorkoutBucket(athleteId, session, week) {
 
 /* ---------- Live plan from Google Sheets ---------- */
 
-async function getWorkoutPlanFromSheets(group) {
-    const requestedGroup = String(group || "Boys");
-    const url = GOOGLE_SHEETS_SYNC_URL +
-        "?action=getWorkoutPlan" +
-        "&group=" + encodeURIComponent(requestedGroup) +
-        "&_=" + Date.now();
-
-    const response = await fetch(url, {
-        method: "GET",
-        cache: "no-store"
-    });
-
-    if (!response.ok) {
-        throw new Error("Apps Script returned HTTP " + response.status);
-    }
-
-    const text = await response.text();
-    let data;
-    try {
-        data = JSON.parse(text);
-    } catch (error) {
-        console.error("Apps Script returned:", text);
-        throw new Error("Apps Script did not return valid JSON.");
-    }
-
-    if (!data || data.success !== true) {
-        throw new Error(data && data.error ? data.error : "Apps Script returned no workout plan.");
-    }
-
-    if (!data.plan) {
-        throw new Error("The Workouts sheet returned an empty plan.");
-    }
-
-    return data;
-}
-
-function getWorkoutPlanViaJsonp(group) {
+function jsonpRequest(params) {
     return new Promise(function(resolve, reject) {
-        const requestedGroup = String(group || "Boys");
         const callbackName = "wpCb_" + Date.now() + "_" + Math.floor(Math.random() * 1000000);
         const script = document.createElement("script");
         let finished = false;
-        const timeout = setTimeout(function() {
-            if (finished) return;
-            finished = true;
-            cleanup();
-            reject(new Error("Google Sheets timed out."));
-        }, 15000);
-
-        function cleanup() {
-            clearTimeout(timeout);
-            try { delete window[callbackName]; } catch (e) { window[callbackName] = undefined; }
-            if (script.parentNode) script.parentNode.removeChild(script);
-        }
-
-        window[callbackName] = function(data) {
-            if (finished) return;
-            finished = true;
-            cleanup();
-            resolve(data);
-        };
-
-        script.onerror = function() {
-            if (finished) return;
-            finished = true;
-            cleanup();
-            reject(new Error("Could not reach Google Sheets."));
-        };
-
-        script.src = GOOGLE_SHEETS_SYNC_URL +
-            "?action=getWorkoutPlan" +
-            "&group=" + encodeURIComponent(requestedGroup) +
-            "&prefix=" + encodeURIComponent(callbackName) +
-            "&_=" + Date.now();
+        const timeout = setTimeout(function() { cleanup(); reject(new Error("Apps Script workout request timed out.")); }, 15000);
+        function cleanup() { clearTimeout(timeout); try { delete window[callbackName]; } catch (e) { window[callbackName] = undefined; } if (script.parentNode) script.parentNode.removeChild(script); }
+        window[callbackName] = function(data) { if (finished) return; finished=true; cleanup(); resolve(data); };
+        script.onerror = function() { if (finished) return; finished=true; cleanup(); reject(new Error("Could not reach the Apps Script deployment.")); };
+        const separator = GOOGLE_SHEETS_SYNC_URL.indexOf("?") === -1 ? "?" : "&";
+        script.src = GOOGLE_SHEETS_SYNC_URL + separator + params + "&callback=" + encodeURIComponent(callbackName) + "&_=" + Date.now();
         script.async = true;
         document.head.appendChild(script);
     });
@@ -1644,13 +1581,11 @@ async function refreshWorkoutPlan(group) {
             setWorkoutStatus("Loading workout plan…", "");
         }
 
-        let result;
-        try {
-            result = await getWorkoutPlanFromSheets(requestedGroup);
-        } catch (fetchError) {
-            console.warn("Normal workout-plan fetch failed; trying JSONP fallback:", fetchError);
-            result = await getWorkoutPlanViaJsonp(requestedGroup);
-        }
+        const result = await jsonpRequest(
+            "action=getWorkoutPlan" +
+            "&group=" + encodeURIComponent(requestedGroup) +
+            "&_=" + Date.now()
+        );
 
         if (!result || result.success !== true || !result.plan) {
             throw new Error((result && result.error) || "The Apps Script returned no workout plan.");
@@ -1677,25 +1612,13 @@ async function refreshWorkoutPlan(group) {
             return;
         }
 
-        if (status) {
-            setWorkoutStatus(
-                "Workout plan could not be loaded from Google Sheets. Check the Apps Script deployment.",
-                "error"
-            );
+        if (String(requestedGroup).toLowerCase() === "boys") {
+            if (status) setWorkoutStatus("Live Google Sheets plan unavailable — using the built-in workout plan.", "error");
+            const page = $("workoutsPage");
+            if (page && page.classList.contains("active")) renderWorkoutPage();
+            return;
         }
-
-        const content = $("workoutContent");
-        if (content) {
-            content.innerHTML = `
-                <div class="girls-workout-coming-soon">
-                    <div class="girls-workout-coming-soon-title">Workout plan unavailable</div>
-                    <div class="girls-workout-coming-soon-text">
-                        The website cannot currently reach the Google Sheets workout plan.
-                        Please make sure the Apps Script has been redeployed after the latest Code.gs update.
-                    </div>
-                </div>
-            `;
-        }
+        if (status) setWorkoutStatus("Girls workout plan is not available yet.", "error");
     }
 }
 
@@ -2094,53 +2017,32 @@ async function saveWorkoutExercise(entry) {
     try {
         setWorkoutStatus("Saving…", "");
 
-        const athleteRef = doc(db, "athletes", athleteId);
-
-        await runTransaction(db, async function(transaction) {
-            const snap = await transaction.get(athleteRef);
-            const existing = snap.exists() ? (snap.data() || {}) : {};
-            const existingWorkouts = existing.workouts || {};
-            const existingSession = existingWorkouts[session] || {};
-            const existingWeek = existingSession[week] || {};
-            const existingExercises = existingWeek.exercises || {};
-
-            const updatedExercise = {
-                exercise: item.exercise,
-                target: item.target,
-                sets: sets,
-                personalNote: personalNote,
-                coachingNote: item.coachingNote || "",
-                updatedAt: now
-            };
-
-            const updatedWeek = {
-                ...existingWeek,
-                savedAt: now,
-                savedBy: currentUser?.email || athlete.name,
-                exercises: {
-                    ...existingExercises,
-                    [itemId]: updatedExercise
+        await setDoc(
+            doc(db, "athletes", athleteId),
+            {
+                // Athletes may only touch "workouts" (per the Firestore rules), so name/group are staff-only here.
+                ...(isStaff() ? { name: athlete.name, group: athlete.group } : {}),
+                workouts: {
+                    [session]: {
+                        [week]: {
+                            savedAt: now,
+                            savedBy: currentUser?.email || athlete.name,
+                            exercises: {
+                                [itemId]: {
+                                    exercise: item.exercise,
+                                    target: item.target,
+                                    sets: sets,
+                                    personalNote: personalNote,
+                                    coachingNote: item.coachingNote || "",
+                                    updatedAt: now
+                                }
+                            }
+                        }
+                    }
                 }
-            };
-
-            const updatedSession = {
-                ...existingSession,
-                [week]: updatedWeek
-            };
-
-            const updatedWorkouts = {
-                ...existingWorkouts,
-                [session]: updatedSession
-            };
-
-            const payload = { workouts: updatedWorkouts };
-            if (isStaff()) {
-                payload.name = athlete.name;
-                payload.group = athlete.group;
-            }
-
-            transaction.set(athleteRef, payload, { merge: true });
-        });
+            },
+            { merge: true }
+        );
 
         setWorkoutStatus("Saved ✓ " + new Date().toLocaleTimeString("en-GB"), "success");
         scheduleWorkoutSheetBackup(athleteId, session, week);
