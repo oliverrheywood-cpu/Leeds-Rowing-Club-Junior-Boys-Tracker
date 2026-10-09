@@ -1208,6 +1208,7 @@ async function startAthleteMode(username) {
                     ratings: {},
                     ratingsNotes: {},
                     notes: "",
+                    athleteNotes: "",
                     history: [],
                     workouts: {}
                 };
@@ -1251,6 +1252,7 @@ async function ensureAthleteDocuments() {
                     ratings: {},
                     ratingsNotes: {},
                     notes: "",
+                    athleteNotes: "",
                     history: [],
                     workouts: {}
                 });
@@ -2279,67 +2281,93 @@ function renderProfile() {
         </div>
 
         <div class="card">
-            <div class="card-title">Notes</div>
-
-            ${canEditAthleteNotes(athlete.id)
+            <div class="card-title">Coaches Notes</div>
+            ${isStaff()
                 ? `
-                    <textarea id="athleteNotes" class="notes-textarea" placeholder="Add notes about this athlete...">${escapeHtml(data.notes || "")}</textarea>
-                    <button class="save-btn" id="saveNotesButton">Save Notes</button>
+                    <textarea id="coachesNotes" class="notes-textarea" placeholder="Add coaching notes about this athlete...">${escapeHtml(data.notes || "")}</textarea>
+                    <button class="save-btn" id="saveCoachesNotesButton">Save Coaches Notes</button>
                 `
                 : `
-                    <div class="notes-readonly">
-                        ${data.notes ? escapeHtml(data.notes) : "No notes have been added."}
+                    <div class="notes-readonly" style="white-space:pre-wrap;line-height:1.5;">
+                        ${data.notes ? escapeHtml(data.notes) : "No coaches notes have been added."}
+                    </div>
+                `}
+        </div>
+
+        <div class="card">
+            <div class="card-title">Athlete Notes</div>
+            <p style="color:#6b7280;margin-bottom:12px;">Your personal notes. Only you can edit your own Athlete Notes; Coaches Notes are managed separately by staff.</p>
+            ${currentRole === "Athlete" && currentAthleteId === athlete.id
+                ? `
+                    <textarea id="athleteNotes" class="notes-textarea" placeholder="Add your own notes here...">${escapeHtml(data.athleteNotes || "")}</textarea>
+                    <button class="save-btn" id="saveAthleteNotesButton">Save Athlete Notes</button>
+                `
+                : `
+                    <div class="notes-readonly" style="white-space:pre-wrap;line-height:1.5;">
+                        ${data.athleteNotes ? escapeHtml(data.athleteNotes) : "No athlete notes have been added."}
                     </div>
                 `}
         </div>
 
     `;
 
-    const saveButton = $("saveNotesButton");
+    const coachesButton = $("saveCoachesNotesButton");
+    if (coachesButton) coachesButton.addEventListener("click", saveCoachesNotes);
 
-    if (saveButton) saveButton.addEventListener("click", saveNotes);
+    const athleteButton = $("saveAthleteNotesButton");
+    if (athleteButton) athleteButton.addEventListener("click", saveAthleteNotes);
 
 }
 
 
 /* =====================================================
-   SAVE NOTES - STAFF ONLY
+   SAVE COACHES NOTES - STAFF ONLY
 ====================================================== */
 
-async function saveNotes() {
+async function saveCoachesNotes() {
+    if (!currentAthleteId || !isStaff()) return;
 
-    if (!currentAthleteId) return;
-    if (!canEditAthleteNotes(currentAthleteId)) return;
-
-    const textarea = $("athleteNotes");
-
+    const textarea = $("coachesNotes");
     if (!textarea) return;
 
     try {
-
         const athlete = athletes.find(function(a) { return a.id === currentAthleteId; });
-
-        await setDoc(
-            doc(db, "athletes", currentAthleteId),
-            {
-                notes: textarea.value,
-                name: athlete?.name || "",
-                group: athlete?.group || "Boys"
-            },
-            { merge: true }
-        );
+        await setDoc(doc(db, "athletes", currentAthleteId), {
+            notes: textarea.value,
+            name: athlete?.name || "",
+            group: athlete?.group || "Boys"
+        }, { merge: true });
 
         await syncAthleteToGoogleSheets(currentAthleteId);
-
-        alert("Notes saved.");
-
+        alert("Coaches Notes saved.");
     } catch (error) {
-
         console.error(error);
-        alert("Unable to save notes.");
-
+        alert("Unable to save Coaches Notes.");
     }
+}
 
+
+/* =====================================================
+   SAVE ATHLETE NOTES - OWN ATHLETE ONLY
+====================================================== */
+
+async function saveAthleteNotes() {
+    // Never trust only the visible UI: check role and exact signed-in athlete again.
+    if (currentRole !== "Athlete" || !currentAthleteId) return;
+
+    const textarea = $("athleteNotes");
+    if (!textarea) return;
+
+    try {
+        await setDoc(doc(db, "athletes", currentAthleteId), {
+            athleteNotes: textarea.value
+        }, { merge: true });
+
+        alert("Athlete Notes saved.");
+    } catch (error) {
+        console.error(error);
+        alert("Unable to save Athlete Notes. Please try again.");
+    }
 }
 
 
