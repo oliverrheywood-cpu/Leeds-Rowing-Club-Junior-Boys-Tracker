@@ -196,7 +196,11 @@ td { padding: 12px; border-bottom: 1px solid #e5e7eb; vertical-align: middle; }
 .workout-target-cell { text-align: center; font-weight: bold; white-space: nowrap; }
 .workout-pair-text { display: block; margin-top: 3px; font-size: 11px; color: #6b7280; font-weight: normal; }
 .workout-set-input { width: 100%; min-width: 85px; padding: 9px 8px; border: 1px solid #b8c0ca; border-radius: 6px; font-size: 14px; text-align: center; background: white; }
-.workout-set-input:focus, .workout-personal-note:focus { outline: 2px solid #93c5fd; border-color: #3b82f6; }
+.workout-set-input:focus, .workout-rpe-input:focus, .workout-personal-note:focus { outline: 2px solid #93c5fd; border-color: #3b82f6; }
+.workout-set-entry { display: flex; flex-direction: column; gap: 6px; }
+.workout-rpe-label { font-size: 11px; font-weight: bold; color: #6b7280; text-align: left; }
+.workout-rpe-input { width: 100%; min-width: 70px; padding: 7px 6px; border: 1px solid #c7cdd5; border-radius: 6px; font-size: 13px; text-align: center; background: #fff; }
+.workout-rpe-input:disabled { background: #f9fafb; color: #374151; }
 .workout-set-input:disabled, .workout-personal-note:disabled { background: #f9fafb; color: #374151; }
 .workout-personal-note { width: 100%; min-height: 42px; resize: vertical; padding: 8px; border: 1px solid #b8c0ca; border-radius: 6px; font: 14px Arial, Helvetica, sans-serif; }
 .workout-coaching-note { font-size: 13px; color: #4b5563; line-height: 1.35; white-space: pre-wrap; }
@@ -1825,7 +1829,9 @@ function renderWorkoutExercises(athleteId, session, week) {
             if (key.indexOf(oldContext + "|") !== 0) return;
             const itemId = key.slice(oldContext.length + 1);
             drafts[itemId] = {
-                weights: Array.from(content.querySelectorAll(`[data-workout-exercise="${CSS.escape(itemId)}"]`))
+                weights: Array.from(content.querySelectorAll(`[data-workout-exercise="${CSS.escape(itemId)}"][data-field="weight"]`))
+                    .map(function(el) { return el.value; }),
+                rpes: Array.from(content.querySelectorAll(`[data-workout-exercise="${CSS.escape(itemId)}"][data-field="rpe"]`))
                     .map(function(el) { return el.value; }),
                 note: (content.querySelector(`[data-workout-exercise-note="${CSS.escape(itemId)}"]`) || {}).value
             };
@@ -1854,19 +1860,38 @@ function renderWorkoutExercises(athleteId, session, week) {
 
             return `
                 <td>
-                    <input
-                        class="workout-set-input"
-                        type="text"
-                        inputmode="decimal"
-                        autocomplete="off"
-                        data-workout-exercise="${escapeHtml(item.id)}"
-                        data-set-index="${setIndex}"
-                        data-field="weight"
-                        value="${escapeHtml(set.weight || "")}"
-                        placeholder="${escapeHtml(placeholder)}"
-                        aria-label="${escapeHtml(item.exercise)} Set ${setIndex + 1}"
-                        ${editable ? "" : "disabled"}
-                    >
+                    <div class="workout-set-entry">
+                        <input
+                            class="workout-set-input"
+                            type="text"
+                            inputmode="decimal"
+                            autocomplete="off"
+                            data-workout-exercise="${escapeHtml(item.id)}"
+                            data-set-index="${setIndex}"
+                            data-field="weight"
+                            value="${escapeHtml(set.weight || "")}"
+                            placeholder="${escapeHtml(placeholder)}"
+                            aria-label="${escapeHtml(item.exercise)} Set ${setIndex + 1} weight or reps"
+                            ${editable ? "" : "disabled"}
+                        >
+                        <label class="workout-rpe-label" for="rpe-${escapeHtml(item.id)}-${setIndex}">RPE (optional)</label>
+                        <input
+                            id="rpe-${escapeHtml(item.id)}-${setIndex}"
+                            class="workout-rpe-input"
+                            type="number"
+                            min="1"
+                            max="10"
+                            step="1"
+                            inputmode="numeric"
+                            data-workout-exercise="${escapeHtml(item.id)}"
+                            data-set-index="${setIndex}"
+                            data-field="rpe"
+                            value="${escapeHtml(set.rpe ?? "")}"
+                            placeholder="1–10"
+                            aria-label="${escapeHtml(item.exercise)} Set ${setIndex + 1} RPE, optional"
+                            ${editable ? "" : "disabled"}
+                        >
+                    </div>
                 </td>
             `;
         }).join("");
@@ -1929,8 +1954,11 @@ function renderWorkoutExercises(athleteId, session, week) {
     // Put back any unsaved typing
     Object.keys(drafts).forEach(function(itemId) {
         const d = drafts[itemId];
-        content.querySelectorAll(`[data-workout-exercise="${CSS.escape(itemId)}"]`).forEach(function(el, i) {
+        content.querySelectorAll(`[data-workout-exercise="${CSS.escape(itemId)}"][data-field="weight"]`).forEach(function(el, i) {
             if (d.weights[i] !== undefined) el.value = d.weights[i];
+        });
+        content.querySelectorAll(`[data-workout-exercise="${CSS.escape(itemId)}"][data-field="rpe"]`).forEach(function(el, i) {
+            if (d.rpes && d.rpes[i] !== undefined) el.value = d.rpes[i];
         });
         const noteEl = content.querySelector(`[data-workout-exercise-note="${CSS.escape(itemId)}"]`);
         if (noteEl && d.note !== undefined) noteEl.value = d.note;
@@ -1991,8 +2019,9 @@ function updateWorkoutInputsInPlace(athleteId, session, week) {
         if (el === document.activeElement) return;
 
         const sets = (exercises[id] && exercises[id].sets) || [];
-        const value = (sets[Number(el.dataset.setIndex)] || {}).weight || "";
-        if (el.value !== value) el.value = value;
+        const set = sets[Number(el.dataset.setIndex)] || {};
+        const value = el.dataset.field === "rpe" ? (set.rpe ?? "") : (set.weight || "");
+        if (el.value !== String(value)) el.value = value;
     });
 
     document.querySelectorAll("#workoutContent [data-workout-exercise-note]").forEach(function(el) {
@@ -2062,12 +2091,16 @@ async function saveWorkoutExercise(entry) {
     const sets = [];
 
     for (let i = 0; i < (item.sets || 3); i++) {
-        const el = document.querySelector(
-            `#workoutContent [data-workout-exercise="${CSS.escape(itemId)}"][data-set-index="${i}"]`
+        const weightEl = document.querySelector(
+            `#workoutContent [data-workout-exercise="${CSS.escape(itemId)}"][data-set-index="${i}"][data-field="weight"]`
+        );
+        const rpeEl = document.querySelector(
+            `#workoutContent [data-workout-exercise="${CSS.escape(itemId)}"][data-set-index="${i}"][data-field="rpe"]`
         );
         const prev = previousSets[i] || {};
-        const weight = el ? el.value.trim() : (prev.weight || "");
-        sets.push({ reps: prev.reps || "", weight: weight, completed: weight !== "" });
+        const weight = weightEl ? weightEl.value.trim() : (prev.weight || "");
+        const rpe = rpeEl ? rpeEl.value.trim() : (prev.rpe ?? "");
+        sets.push({ reps: prev.reps || "", weight: weight, rpe: rpe, completed: weight !== "" });
     }
 
     const noteEl = document.querySelector(
