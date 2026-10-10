@@ -301,7 +301,7 @@ td { padding: 12px; border-bottom: 1px solid #e5e7eb; vertical-align: middle; }
                 <table>
                     <thead>
                         <tr>
-                            <th>Athlete</th><th>Power Curve (erg)</th><th>Tech (erg)</th><th>Motivation</th><th>Notes</th><th>Points</th>
+                            <th>Athlete</th><th>Power Curve (erg)</th><th>Tech (erg)</th><th>Hustle</th><th>Notes</th><th>Points</th>
                         </tr>
                     </thead>
                     <tbody id="boysAthletesTableBody"></tbody>
@@ -320,7 +320,7 @@ td { padding: 12px; border-bottom: 1px solid #e5e7eb; vertical-align: middle; }
                 <table>
                     <thead>
                         <tr>
-                            <th>Athlete</th><th>Power Curve (erg)</th><th>Tech (erg)</th><th>Motivation</th><th>Notes</th><th>Points</th>
+                            <th>Athlete</th><th>Power Curve (erg)</th><th>Tech (erg)</th><th>Hustle</th><th>Notes</th><th>Points</th>
                         </tr>
                     </thead>
                     <tbody id="girlsAthletesTableBody"></tbody>
@@ -561,7 +561,7 @@ const athletes = [
    RAG SETTINGS
 ====================================================== */
 
-const categories = ["Power Curve (erg)", "Tech (erg)", "Motivation"];
+const categories = ["Power Curve (erg)", "Tech (erg)", "Hustle"];
 
 const ragOptions = ["", "Green+", "Green", "Green-", "Amber+", "Amber", "Amber-", "Red+", "Red", "Red-"];
 
@@ -2539,7 +2539,7 @@ async function syncAthleteToGoogleSheets(athleteId) {
             group: athlete.group,
             powerCurveErg: data.ratings?.["Power Curve (erg)"] || "",
             techErg: data.ratings?.["Tech (erg)"] || "",
-            motivation: data.ratings?.["Motivation"] || "",
+            motivation: data.ratings?.["Hustle"] || data.ratings?.["Motivation"] || "",
             notes: data.notes || ""
         }
     });
