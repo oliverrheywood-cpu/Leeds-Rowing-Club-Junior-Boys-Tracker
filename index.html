@@ -113,7 +113,9 @@ td { padding: 12px; border-bottom: 1px solid #e5e7eb; vertical-align: middle; }
 
 /* HISTORY */
 
-.history-item { background: white; border-radius: 10px; padding: 16px; margin-bottom: 12px; border: 1px solid #e5e7eb; }
+.history-chart-card { background: white; border-radius: 12px; padding: 18px; border: 1px solid #e5e7eb; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+.history-chart-wrap { position: relative; width: 100%; height: min(62vh, 560px); min-height: 320px; }
+.history-empty { background: white; border-radius: 10px; padding: 20px; color: #6b7280; border: 1px solid #e5e7eb; }
 .history-top { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
 .history-date { color: #6b7280; font-size: 13px; }
 .history-change { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
@@ -433,6 +435,7 @@ td { padding: 12px; border-bottom: 1px solid #e5e7eb; vertical-align: middle; }
 </div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
@@ -2410,99 +2413,82 @@ async function saveAthleteNotes() {
 }
 
 
-/* =====================================================
-   HISTORY - STAFF
-====================================================== */
+/* HISTORY - SCATTER PLOT */
+let historyChart = null;
+const ragScore = { "Red-":0.5, "Red":1, "Red+":1.5, "Amber-":2, "Amber":2.5, "Amber+":3, "Green-":3.5, "Green":4, "Green+":4.5 };
+const ragLabels = { 0.5:"Red-", 1:"Red", 1.5:"Red+", 2:"Amber-", 2.5:"Amber", 3:"Amber+", 3.5:"Green-", 4:"Green", 4.5:"Green+" };
+const historyColors = { "Power Curve (erg)":"#2563eb", "Tech (erg)":"#7c3aed", "Hustle":"#16a34a" };
+function normaliseHistoryCategory(category) {
+    return category === "Motivation" ? "Hustle" : category;
+}
+function isRagHistoryCategory(category) {
+    return categories.includes(normaliseHistoryCategory(category));
+}
 
 function renderStaffHistory() {
-
     if (!isStaff()) return;
-
     const all = [];
-
     athletes.forEach(function(athlete) {
-
-        const history = Array.isArray(athleteData[athlete.id]?.history)
-            ? athleteData[athlete.id].history
-            : [];
-
-        history
-            .filter(function(item) { return categories.includes(item.category); })
-            .forEach(function(item) {
-                all.push({ ...item, athlete: athlete.name, athleteId: athlete.id });
-            });
-
+        const history = Array.isArray(athleteData[athlete.id]?.history) ? athleteData[athlete.id].history : [];
+        history.filter(function(item) { return isRagHistoryCategory(item.category); }).forEach(function(item) {
+            all.push({ ...item, athlete: athlete.name, athleteId: athlete.id });
+        });
     });
-
-    all.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
-
-    $("historyContent").innerHTML = all.length
-        ? all.map(historyHtmlStaff).join("")
-        : '<div class="empty">No RAG changes recorded yet.</div>';
-
+    renderHistoryScatter(all, true);
 }
-
-
-/* =====================================================
-   HISTORY - ATHLETE
-====================================================== */
 
 function renderOwnHistory() {
-
-    const history = (Array.isArray(athleteData[currentAthleteId]?.history)
-        ? athleteData[currentAthleteId].history
-        : [])
-        .filter(function(item) { return categories.includes(item.category); });
-
-    history.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
-
-    $("historyContent").innerHTML = history.length
-        ? history.map(historyHtml).join("")
-        : '<div class="empty">No RAG changes recorded yet.</div>';
-
+    const history = (Array.isArray(athleteData[currentAthleteId]?.history) ? athleteData[currentAthleteId].history : [])
+        .filter(function(item) { return isRagHistoryCategory(item.category); });
+    const athlete = athletes.find(function(a) { return a.id === currentAthleteId; });
+    renderHistoryScatter(history.map(function(item) { return { ...item, athlete: athlete?.name || "", athleteId: currentAthleteId }; }), false);
 }
 
-
-/* =====================================================
-   HISTORY HTML
-====================================================== */
-
-function historyHtml(item) {
-
-    return `
-        <div class="history-item">
-            <div class="history-top">
-                <strong>${escapeHtml(item.category || "")}</strong>
-                <span class="history-date">${formatDate(item.date)}</span>
-            </div>
-            <div class="history-change">
-                ${ragBadge(item.oldValue)} → ${ragBadge(item.newValue)}
-            </div>
-            <div class="history-user">Changed by: ${escapeHtml(item.changedBy || "Unknown")}</div>
-        </div>
-    `;
-
+function renderHistoryScatter(history, showAthlete) {
+    const container = $("historyContent");
+    if (historyChart) { historyChart.destroy(); historyChart = null; }
+    const pointsByCategory = {};
+    history.forEach(function(item) {
+        const timestamp = new Date(item.date).getTime(), score = ragScore[item.newValue];
+        if (!Number.isFinite(timestamp) || score === undefined) return;
+        const category = normaliseHistoryCategory(item.category || "Other");
+        if (!pointsByCategory[category]) pointsByCategory[category] = [];
+        pointsByCategory[category].push({ x:timestamp, y:score, athlete:item.athlete || "", category:category,
+            oldValue:item.oldValue || "Not Set", newValue:item.newValue || "", changedBy:item.changedBy || "Unknown" });
+    });
+    const names = Object.keys(pointsByCategory);
+    if (!names.length) { container.innerHTML = '<div class="history-empty">No RAG changes recorded yet.</div>'; return; }
+    container.innerHTML = '<div class="history-chart-card"><div class="history-chart-wrap"><canvas id="historyScatterChart" role="img" aria-label="Scatter plot of RAG ratings over time"></canvas></div></div>';
+    const datasets = names.map(function(category) {
+        const color = historyColors[category] || "#d97706";
+        return { label:category, data:pointsByCategory[category].sort(function(a,b) { return a.x-b.x; }), backgroundColor:color, borderColor:color, pointRadius:6, pointHoverRadius:9 };
+    });
+    historyChart = new Chart($("historyScatterChart"), { type:"scatter", data:{ datasets:datasets }, options:{
+        responsive:true, maintainAspectRatio:false, interaction:{ mode:"nearest", intersect:true },
+        plugins:{ legend:{ position:"bottom" }, tooltip:{ callbacks:{
+            title:function(items) { return items.length ? formatDate(items[0].raw.x) : ""; },
+            label:function(context) {
+                const p=context.raw, lines=[];
+                if (showAthlete && p.athlete) lines.push(p.athlete);
+                lines.push(p.category + ": " + p.newValue, p.oldValue + " → " + p.newValue, "Changed by: " + p.changedBy);
+                return lines;
+            }
+        } } },
+        scales:{
+            x:{ type:"linear", title:{ display:true, text:"Date" }, ticks:{ maxTicksLimit:8, callback:function(value) {
+                return new Date(Number(value)).toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"2-digit" });
+            } } },
+            y:{ min:0.25, max:4.75, title:{ display:true, text:"RAG rating" }, ticks:{ stepSize:0.5, callback:function(value) { return ragLabels[value] || ""; } },
+                grid:{ color:function(context) {
+                    const label=ragLabels[context.tick.value] || "";
+                    if (label.indexOf("Red")===0) return "rgba(220,38,38,.14)";
+                    if (label.indexOf("Amber")===0) return "rgba(217,119,6,.14)";
+                    return "rgba(22,163,74,.14)";
+                } }
+            }
+        }
+    } });
 }
-
-function historyHtmlStaff(item) {
-
-    return `
-        <div class="history-item">
-            <div class="history-top">
-                <strong>${escapeHtml(item.athlete || "")}</strong>
-                <span class="history-date">${formatDate(item.date)}</span>
-            </div>
-            <div><strong>${escapeHtml(item.category || "")}</strong></div>
-            <div class="history-change">
-                ${ragBadge(item.oldValue)} → ${ragBadge(item.newValue)}
-            </div>
-            <div class="history-user">Changed by: ${escapeHtml(item.changedBy || "Unknown")}</div>
-        </div>
-    `;
-
-}
-
-
 /* =====================================================
    RAG DISPLAY
 ====================================================== */
