@@ -69,6 +69,23 @@ main { max-width: 1400px; margin: 0 auto; padding: 25px; }
 
 .search-box { width: 100%; max-width: 450px; padding: 12px 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 15px; margin-bottom: 20px; }
 
+/* RATING WEEK SELECTOR */
+
+.rating-week-toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 18px; }
+.rating-week-toolbar label { font-size: 14px; font-weight: bold; color: #4b5563; }
+.rating-week-select { padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 15px; font-weight: bold; background: white; cursor: pointer; }
+.rating-week-hint { color: #6b7280; font-size: 13px; }
+.profile-week-bar { margin-bottom: 18px; }
+
+/* WEEKLY SUMMARY (profile) */
+
+.weekly-summary-table { width: 100%; min-width: 0; border-collapse: collapse; }
+.weekly-summary-table th { background: #f3f4f6; text-align: left; padding: 10px 12px; font-size: 13px; border-bottom: 2px solid #e5e7eb; }
+.weekly-summary-table td { padding: 10px 12px; border-bottom: 1px solid #e5e7eb; vertical-align: middle; }
+.weekly-summary-table tr.weekly-current td { background: #eff6ff; }
+.weekly-summary-week { font-weight: bold; cursor: pointer; }
+.weekly-summary-week:hover { text-decoration: underline; }
+
 /* FOLDERS */
 
 .folder { margin-bottom: 20px; overflow: hidden; }
@@ -279,7 +296,7 @@ td { padding: 12px; border-bottom: 1px solid #e5e7eb; vertical-align: middle; }
 
 <section id="dashboardPage" class="page active">
     <div class="page-title">Dashboard</div>
-    <div class="page-subtitle">Leeds Rowing Club athlete performance overview.</div>
+    <div class="page-subtitle">Leeds Rowing Club athlete performance overview (latest ratings).</div>
 
     <div class="dashboard-grid">
         <div class="stat-card green-stat"><div class="stat-label">Green</div><div class="stat-number" id="greenCount">0</div></div>
@@ -290,7 +307,7 @@ td { padding: 12px; border-bottom: 1px solid #e5e7eb; vertical-align: middle; }
 
     <div class="card">
         <div class="card-title">Overview</div>
-        <p>Use the Athletes page to view and update athlete performance ratings.</p>
+        <p>Use the Athletes page to view and update athlete performance ratings week by week.</p>
     </div>
 </section>
 
@@ -299,7 +316,13 @@ td { padding: 12px; border-bottom: 1px solid #e5e7eb; vertical-align: middle; }
 
 <section id="athletesPage" class="page">
     <div class="page-title">Athletes</div>
-    <div class="page-subtitle">Manage athlete performance ratings.</div>
+    <div class="page-subtitle">Manage athlete performance ratings. Ratings are saved separately for each week.</div>
+
+    <div class="rating-week-toolbar">
+        <label for="ratingWeekSelect">Week</label>
+        <select id="ratingWeekSelect" class="rating-week-select"></select>
+        <span class="rating-week-hint">Changes you make are saved to the week shown here.</span>
+    </div>
 
     <input id="athleteSearch" class="search-box" type="text" placeholder="Search athletes...">
 
@@ -578,6 +601,9 @@ const categories = ["Power Curve (erg)", "Tech (erg)", "Hustle"];
 
 const ragOptions = ["", "Green+", "Green", "Green-", "Amber+", "Amber", "Amber-", "Red+", "Red", "Red-"];
 
+/* Weeks available for RAG ratings (same 12 weeks as the workout logger). */
+const ratingWeeks = Array.from({ length: 12 }, function(_, i) { return "Week " + (i + 1); });
+
 
 /* =====================================================
    STATE
@@ -589,6 +615,10 @@ let currentAthleteId = null;
 let athleteData = {};
 let unsubscribeAthletes = null;
 let unsubscribeOwnAthlete = null;
+
+/* Week currently shown for RAG ratings (Athletes + Profile pages). */
+let currentRatingWeek = "Week 1";
+let ratingWeekInitialised = false;
 
 let currentWorkoutSession = "Session A";
 
@@ -645,6 +675,99 @@ function canEditAthlete(athleteId) {
     if (isStaff()) return true;
     return currentRole === "Athlete" && currentAthleteId === athleteId;
 }
+
+
+/* =====================================================
+   WEEKLY RAG RATINGS
+
+   Firestore layout (per athlete document):
+     weeklyRatings: { "Week 1": { "Power Curve (erg)": "Green", ... }, "Week 2": {...} }
+     ratings:       the LATEST value of each category across all weeks
+                    (used by the dashboard, Google Sheets and the rankings)
+
+   Older athlete documents that only have "ratings" are shown as Week 1.
+====================================================== */
+
+function weekNumber(week) {
+    const n = parseInt(String(week).replace(/\D/g, ""), 10);
+    return isNaN(n) ? 0 : n;
+}
+
+function hasWeeklyRatings(data) {
+    return !!(data && data.weeklyRatings && typeof data.weeklyRatings === "object" &&
+        Object.keys(data.weeklyRatings).length);
+}
+
+/* The ratings for one athlete in one week. */
+function getWeekRatings(data, week) {
+    if (hasWeeklyRatings(data)) return data.weeklyRatings[week] || {};
+    return week === "Week 1" ? ((data && data.ratings) || {}) : {};
+}
+
+/* Weeks that have at least one rating, in order. */
+function getRatedWeeks(data) {
+    let weeks = [];
+
+    if (hasWeeklyRatings(data)) {
+        weeks = Object.keys(data.weeklyRatings).filter(function(week) {
+            const ratings = data.weeklyRatings[week] || {};
+            return categories.some(function(category) { return !!ratings[category]; });
+        });
+    } else if (data && data.ratings && categories.some(function(category) { return !!data.ratings[category]; })) {
+        weeks = ["Week 1"];
+    }
+
+    return weeks.sort(function(a, b) { return weekNumber(a) - weekNumber(b); });
+}
+
+function ratingWeekOptionsHtml(selected) {
+    return ratingWeeks.map(function(week) {
+        return `<option value="${escapeHtml(week)}" ${week === selected ? "selected" : ""}>${escapeHtml(week)}</option>`;
+    }).join("");
+}
+
+function populateRatingWeekSelect() {
+    const select = $("ratingWeekSelect");
+    if (select) select.innerHTML = ratingWeekOptionsHtml(currentRatingWeek);
+}
+
+/* Choose a sensible starting week: the latest week that has any rating. */
+function initialiseRatingWeek() {
+    if (ratingWeekInitialised) return;
+
+    let latest = 0;
+
+    const ids = isStaff()
+        ? athletes.map(function(a) { return a.id; })
+        : (currentAthleteId ? [currentAthleteId] : []);
+
+    ids.forEach(function(id) {
+        getRatedWeeks(athleteData[id]).forEach(function(week) {
+            latest = Math.max(latest, weekNumber(week));
+        });
+    });
+
+    if (latest >= 1 && latest <= ratingWeeks.length) currentRatingWeek = "Week " + latest;
+
+    ratingWeekInitialised = true;
+    populateRatingWeekSelect();
+}
+
+function setRatingWeek(week) {
+    if (!ratingWeeks.includes(week)) return;
+    currentRatingWeek = week;
+    populateRatingWeekSelect();
+    renderAthletesTable($("athleteSearch") ? $("athleteSearch").value : "");
+    renderProfile();
+}
+
+document.addEventListener("change", function(event) {
+    if (event.target.matches(".rating-week-select")) {
+        setRatingWeek(event.target.value);
+    }
+});
+
+populateRatingWeekSelect();
 
 
 /* =====================================================
@@ -1093,6 +1216,9 @@ onAuthStateChanged(auth, async function(user) {
         currentAthleteId = null;
         athleteData = {};
         workoutPositionRestored = false;
+        ratingWeekInitialised = false;
+        currentRatingWeek = "Week 1";
+        populateRatingWeekSelect();
 
         if (unsubscribeAthletes) { unsubscribeAthletes(); unsubscribeAthletes = null; }
         if (unsubscribeOwnAthlete) { unsubscribeOwnAthlete(); unsubscribeOwnAthlete = null; }
@@ -1157,6 +1283,7 @@ async function startStaffMode(username) {
                 athleteData[document.id] = document.data();
             });
 
+            initialiseRatingWeek();
             renderEverything();
 
         },
@@ -1219,6 +1346,7 @@ async function startAthleteMode(username) {
                     name: athlete.name,
                     group: athlete.group,
                     ratings: {},
+                    weeklyRatings: {},
                     ratingsNotes: {},
                     notes: "",
                     athleteNotes: "",
@@ -1227,6 +1355,7 @@ async function startAthleteMode(username) {
                 };
             }
 
+            initialiseRatingWeek();
             renderProfile();
 
             if ($("workoutsPage").classList.contains("active")) {
@@ -1263,6 +1392,7 @@ async function ensureAthleteDocuments() {
                     name: athlete.name,
                     group: athlete.group,
                     ratings: {},
+                    weeklyRatings: {},
                     ratingsNotes: {},
                     notes: "",
                     athleteNotes: "",
@@ -1310,7 +1440,7 @@ function renderEverything() {
 
 
 /* =====================================================
-   DASHBOARD
+   DASHBOARD  (uses each athlete's latest ratings)
 ====================================================== */
 
 function renderDashboard() {
@@ -1383,9 +1513,10 @@ const pointRankingValues = {
     "Green-": 3.5, "Green": 4, "Green+": 4.5
 };
 
+/* Points for the week currently selected. */
 function getAthletePointTotal(athlete) {
     const data = athleteData[athlete.id] || {};
-    const ratings = data.ratings || {};
+    const ratings = getWeekRatings(data, currentRatingWeek);
 
     return categories.reduce(function(total, category) {
         const value = ratings[category] || "";
@@ -1401,6 +1532,7 @@ function formatPointTotal(athlete) {
 function athleteRowHtml(athlete) {
 
     const data = athleteData[athlete.id] || {};
+    const weekRatings = getWeekRatings(data, currentRatingWeek);
 
     return `
         <tr>
@@ -1411,7 +1543,7 @@ function athleteRowHtml(athlete) {
             </td>
 
             ${categories.map(function(category) {
-                const value = data.ratings?.[category] || "";
+                const value = weekRatings[category] || "";
                 return `<td>${canEditRAG() ? ragSelectHtml(athlete.id, category, value) : ragBadge(value)}</td>`;
             }).join("")}
 
@@ -1463,7 +1595,8 @@ document.addEventListener("change", function(event) {
         changeRAG(
             event.target.dataset.athlete,
             event.target.dataset.category,
-            event.target.value
+            event.target.value,
+            currentRatingWeek
         );
 
     }
@@ -1488,6 +1621,14 @@ document.addEventListener("click", function(event) {
 
     if (notesElement) {
         openAthleteProfile(notesElement.dataset.notesAthlete);
+        return;
+    }
+
+    /* Clicking a week in the weekly summary jumps to that week. */
+    const weekElement = event.target.closest("[data-summary-week]");
+
+    if (weekElement) {
+        setRatingWeek(weekElement.dataset.summaryWeek);
     }
 
 });
@@ -1499,12 +1640,14 @@ function openAthleteProfile(athleteId) {
 
 
 /* =====================================================
-   CHANGE RAG
+   CHANGE RAG  (saved against a specific week)
 ====================================================== */
 
-async function changeRAG(athleteId, category, newValue) {
+async function changeRAG(athleteId, category, newValue, week) {
 
     if (!canEditRAG()) return;
+
+    week = week || currentRatingWeek;
 
     const reference = doc(db, "athletes", athleteId);
 
@@ -1512,6 +1655,7 @@ async function changeRAG(athleteId, category, newValue) {
 
     const historyItem = {
         date: new Date().toISOString(),
+        week: week,
         category: category,
         oldValue: "",
         newValue: newValue,
@@ -1526,13 +1670,46 @@ async function changeRAG(athleteId, category, newValue) {
 
             const existing = snapshot.exists() ? snapshot.data() : {};
 
-            const ratings = { ...(existing.ratings || {}) };
+            /* Copy the weekly ratings. Older documents only have "ratings", which count as Week 1. */
+            const weekly = {};
 
-            oldValue = ratings[category] || "";
+            if (hasWeeklyRatings(existing)) {
+                Object.keys(existing.weeklyRatings).forEach(function(w) {
+                    weekly[w] = { ...(existing.weeklyRatings[w] || {}) };
+                });
+            } else if (existing.ratings && Object.keys(existing.ratings).length) {
+                weekly["Week 1"] = { ...existing.ratings };
+            }
+
+            const weekRatings = { ...(weekly[week] || {}) };
+
+            oldValue = weekRatings[category] || "";
             historyItem.oldValue = oldValue;
 
-            if (newValue) ratings[category] = newValue;
-            else delete ratings[category];
+            if (newValue) weekRatings[category] = newValue;
+            else delete weekRatings[category];
+
+            if (Object.keys(weekRatings).length) weekly[week] = weekRatings;
+            else delete weekly[week];
+
+            /* "ratings" always holds the latest value of each category across all weeks. */
+            const ratings = { ...(existing.ratings || {}) };
+
+            categories.forEach(function(cat) {
+                let latestWeek = 0;
+                let latestValue = "";
+
+                Object.keys(weekly).forEach(function(w) {
+                    const value = (weekly[w] || {})[cat];
+                    if (value && weekNumber(w) >= latestWeek) {
+                        latestWeek = weekNumber(w);
+                        latestValue = value;
+                    }
+                });
+
+                if (latestValue) ratings[cat] = latestValue;
+                else delete ratings[cat];
+            });
 
             const history = Array.isArray(existing.history) ? [...existing.history] : [];
 
@@ -1540,16 +1717,21 @@ async function changeRAG(athleteId, category, newValue) {
 
             const athlete = athletes.find(function(a) { return a.id === athleteId; });
 
+            /*
+             * mergeFields REPLACES these fields exactly, so a rating set back to
+             * "Not Set" is really removed (a plain merge would keep the old value).
+             */
             transaction.set(
                 reference,
                 {
                     name: existing.name || athlete?.name || "",
                     group: existing.group || athlete?.group || "Boys",
                     ratings: ratings,
+                    weeklyRatings: weekly,
                     notes: existing.notes || "",
                     history: history
                 },
-                { merge: true }
+                { mergeFields: ["name", "group", "ratings", "weeklyRatings", "notes", "history"] }
             );
 
         });
@@ -2282,6 +2464,48 @@ function setWorkoutSession(session) {
    PROFILE
 ====================================================== */
 
+function weeklySummaryHtml(athlete, data) {
+
+    const weeks = getRatedWeeks(data);
+
+    if (!weeks.length) {
+        return '<div class="notes-readonly" style="color:#6b7280;">No weekly ratings have been recorded yet.</div>';
+    }
+
+    const rows = weeks.map(function(week) {
+        const ratings = getWeekRatings(data, week);
+
+        const points = categories.reduce(function(total, category) {
+            return total + (pointRankingValues[ratings[category] || ""] || 0);
+        }, 0);
+
+        return `
+            <tr class="${week === currentRatingWeek ? "weekly-current" : ""}">
+                <td><span class="weekly-summary-week" data-summary-week="${escapeHtml(week)}">${escapeHtml(week)}</span></td>
+                ${categories.map(function(category) {
+                    return `<td>${ragBadge(ratings[category] || "")}</td>`;
+                }).join("")}
+                <td><strong>${points.toFixed(1).replace(/\.0$/, "")} / 13.5</strong></td>
+            </tr>
+        `;
+    }).join("");
+
+    return `
+        <div class="table-wrapper">
+            <table class="weekly-summary-table">
+                <thead>
+                    <tr>
+                        <th>Week</th>
+                        ${categories.map(function(category) { return `<th>${escapeHtml(category)}</th>`; }).join("")}
+                        <th>Points</th>
+                    </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+            </table>
+        </div>
+    `;
+}
+
 function renderProfile() {
 
     const container = $("profileContent");
@@ -2296,7 +2520,7 @@ function renderProfile() {
     if (!athlete) return;
 
     const data = athleteData[athlete.id] || {};
-    const ratings = data.ratings || {};
+    const ratings = getWeekRatings(data, currentRatingWeek);
 
     container.innerHTML = `
 
@@ -2305,6 +2529,14 @@ function renderProfile() {
                 <div class="profile-name">${escapeHtml(athlete.name)}</div>
                 <div class="profile-group">${escapeHtml(athlete.group)}</div>
             </div>
+        </div>
+
+        <div class="rating-week-toolbar profile-week-bar">
+            <label for="profileWeekSelect">Week</label>
+            <select id="profileWeekSelect" class="rating-week-select">${ratingWeekOptionsHtml(currentRatingWeek)}</select>
+            <span class="rating-week-hint">${canEditRAG()
+                ? "Ratings you change are saved to this week."
+                : "Choose a week to see the ratings you had."}</span>
         </div>
 
         <div class="profile-grid">
@@ -2320,6 +2552,11 @@ function renderProfile() {
                     </div>
                 `;
             }).join("")}
+        </div>
+
+        <div class="card">
+            <div class="card-title">Weekly Ratings</div>
+            ${weeklySummaryHtml(athlete, data)}
         </div>
 
         <div class="card">
@@ -2453,7 +2690,7 @@ function renderHistoryScatter(history, showAthlete) {
         if (!Number.isFinite(timestamp) || score === undefined) return;
         const category = normaliseHistoryCategory(item.category || "Other");
         if (!pointsByCategory[category]) pointsByCategory[category] = [];
-        pointsByCategory[category].push({ x:timestamp, y:score, athlete:item.athlete || "", category:category,
+        pointsByCategory[category].push({ x:timestamp, y:score, athlete:item.athlete || "", category:category, week:item.week || "",
             oldValue:item.oldValue || "Not Set", newValue:item.newValue || "", changedBy:item.changedBy || "Unknown" });
     });
     const names = Object.keys(pointsByCategory);
@@ -2470,6 +2707,7 @@ function renderHistoryScatter(history, showAthlete) {
             label:function(context) {
                 const p=context.raw, lines=[];
                 if (showAthlete && p.athlete) lines.push(p.athlete);
+                if (p.week) lines.push(p.week);
                 lines.push(p.category + ": " + p.newValue, p.oldValue + " → " + p.newValue, "Changed by: " + p.changedBy);
                 return lines;
             }
@@ -2541,7 +2779,7 @@ async function sendToGoogleSheets(payload) {
 
 
 /* =====================================================
-   FIREBASE -> GOOGLE SHEETS
+   FIREBASE -> GOOGLE SHEETS  (sends each athlete's latest ratings)
 ====================================================== */
 
 async function syncAthleteToGoogleSheets(athleteId) {
@@ -2590,6 +2828,7 @@ async function syncHistoryToGoogleSheets(athleteId, item) {
             athleteId: athleteId,
             athlete: athlete.name,
             topic: item.category || "",
+            week: item.week || "",
             oldRag: item.oldValue || "",
             newRag: item.newValue || "",
             source: item.changedBy || "Website"
