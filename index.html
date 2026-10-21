@@ -336,7 +336,7 @@ td { padding: 12px; border-bottom: 1px solid #e5e7eb; vertical-align: middle; }
                 <table>
                     <thead>
                         <tr>
-                            <th>Athlete</th><th>Power Curve (erg 1)</th><th>Tech (erg 1)</th><th>Hustle (erg 1)</th><th>Power Curve (erg 2)</th><th>Tech (erg 2)</th><th>Hustle (erg 2)</th><th>Notes</th><th>Points</th>
+                            <th>Athlete</th><th>Power Curve (erg)</th><th>Tech (erg)</th><th>Hustle</th><th>Notes</th><th>Points</th>
                         </tr>
                     </thead>
                     <tbody id="boysAthletesTableBody"></tbody>
@@ -355,7 +355,7 @@ td { padding: 12px; border-bottom: 1px solid #e5e7eb; vertical-align: middle; }
                 <table>
                     <thead>
                         <tr>
-                            <th>Athlete</th><th>Power Curve (erg 1)</th><th>Tech (erg 1)</th><th>Hustle (erg 1)</th><th>Power Curve (erg 2)</th><th>Tech (erg 2)</th><th>Hustle (erg 2)</th><th>Notes</th><th>Points</th>
+                            <th>Athlete</th><th>Power Curve (erg)</th><th>Tech (erg)</th><th>Hustle</th><th>Notes</th><th>Points</th>
                         </tr>
                     </thead>
                     <tbody id="girlsAthletesTableBody"></tbody>
@@ -597,7 +597,7 @@ const athletes = [
    RAG SETTINGS
 ====================================================== */
 
-const categories = ["Power Curve (erg 1)", "Tech (erg 1)", "Hustle (erg 1)", "Power Curve (erg 2)", "Tech (erg 2)", "Hustle (erg 2)"];
+const categories = ["Power Curve (erg)", "Tech (erg)", "Hustle"];
 
 const ragOptions = ["", "Green+", "Green", "Green-", "Amber+", "Amber", "Amber-", "Red+", "Red", "Red-"];
 
@@ -700,12 +700,8 @@ function hasWeeklyRatings(data) {
 
 /* The ratings for one athlete in one week. */
 function getWeekRatings(data, week) {
-    let source = hasWeeklyRatings(data) ? (data.weeklyRatings[week] || {}) : (week === "Week 1" ? ((data && data.ratings) || {}) : {});
-    const ratings = { ...source };
-    if (ratings["Power Curve (erg)"] && !ratings["Power Curve (erg 1)"]) ratings["Power Curve (erg 1)"] = ratings["Power Curve (erg)"];
-    if (ratings["Tech (erg)"] && !ratings["Tech (erg 1)"]) ratings["Tech (erg 1)"] = ratings["Tech (erg)"];
-    if (ratings["Hustle"] && !ratings["Hustle (erg 1)"]) ratings["Hustle (erg 1)"] = ratings["Hustle"];
-    return ratings;
+    if (hasWeeklyRatings(data)) return data.weeklyRatings[week] || {};
+    return week === "Week 1" ? ((data && data.ratings) || {}) : {};
 }
 
 /* Weeks that have at least one rating, in order. */
@@ -714,10 +710,10 @@ function getRatedWeeks(data) {
 
     if (hasWeeklyRatings(data)) {
         weeks = Object.keys(data.weeklyRatings).filter(function(week) {
-            const ratings = getWeekRatings(data, week);
+            const ratings = data.weeklyRatings[week] || {};
             return categories.some(function(category) { return !!ratings[category]; });
         });
-    } else if (data && data.ratings && categories.some(function(category) { return !!getWeekRatings(data, "Week 1")[category]; })) {
+    } else if (data && data.ratings && categories.some(function(category) { return !!data.ratings[category]; })) {
         weeks = ["Week 1"];
     }
 
@@ -1503,7 +1499,7 @@ function renderGroupTable(group, bodyId, search) {
     });
 
     if (!list.length) {
-        body.innerHTML = '<tr><td colspan="9" class="empty">No athletes found.</td></tr>';
+        body.innerHTML = '<tr><td colspan="6" class="empty">No athletes found.</td></tr>';
         return;
     }
 
@@ -1530,7 +1526,7 @@ function getAthletePointTotal(athlete) {
 
 function formatPointTotal(athlete) {
     const total = getAthletePointTotal(athlete);
-    return total.toFixed(1).replace(/\.0$/, "") + " / 27";
+    return total.toFixed(1).replace(/\.0$/, "") + " / 13.5";
 }
 
 function athleteRowHtml(athlete) {
@@ -2804,11 +2800,9 @@ async function syncAthleteToGoogleSheets(athleteId) {
             id: athleteId,
             name: athlete.name,
             group: athlete.group,
-            powerCurveErg: data.ratings?.["Power Curve (erg 1)"] || data.ratings?.["Power Curve (erg)"] || "",
-            techErg: data.ratings?.["Tech (erg 1)"] || data.ratings?.["Tech (erg)"] || "",
-            motivation: data.ratings?.["Hustle (erg 1)"] || data.ratings?.["Hustle"] || data.ratings?.["Motivation"] || "",
-            weeklyRatings: data.weeklyRatings || {},
-            ratings: data.ratings || {},
+            powerCurveErg: data.ratings?.["Power Curve (erg)"] || "",
+            techErg: data.ratings?.["Tech (erg)"] || "",
+            motivation: data.ratings?.["Hustle"] || data.ratings?.["Motivation"] || "",
             notes: data.notes || ""
         }
     });
