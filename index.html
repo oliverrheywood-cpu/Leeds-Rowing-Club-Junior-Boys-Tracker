@@ -627,6 +627,8 @@ let workoutPlanGroup = "";
 let workoutPlanFallbackActive = false;
 const pendingWorkoutSaves = {};
 const sheetBackupTimers = {};
+const workoutSaveChains = {};
+const workoutSaveInFlight = {};
 
 /* Fallback only: the live plan comes from the "Workouts" tab in Google Sheets. */
 let workoutPlans = {
@@ -2248,7 +2250,7 @@ function handleWorkoutInput(event) {
         session: session,
         week: week,
         id: itemId,
-        timer: setTimeout(function() { commitPendingWorkoutSave(key); }, 700)
+        timer: setTimeout(function() { commitPendingWorkoutSave(key).catch(function(error) { console.error("Autosave failed:", error); }); }, 700)
     };
 
     setWorkoutStatus("Typing… saving automatically.", "");
@@ -2262,11 +2264,32 @@ function commitPendingWorkoutSave(key) {
     return saveWorkoutExercise(entry);
 }
 
-function flushWorkoutSaves() {
-    return Promise.all(Object.keys(pendingWorkoutSaves).map(commitPendingWorkoutSave));
+async function flushWorkoutSaves() {
+    const pending = Object.keys(pendingWorkoutSaves).map(commitPendingWorkoutSave);
+    await Promise.all(pending);
+    // A timer may already have committed a save and removed it from the pending map.
+    await Promise.all(Object.values(workoutSaveInFlight));
 }
 
-async function saveWorkoutExercise(entry) {
+function saveWorkoutExercise(entry) {
+    const chainKey = String(entry.athleteId || "").toLowerCase();
+    const previous = workoutSaveChains[chainKey] || Promise.resolve();
+    const next = previous.catch(function() {}).then(function() {
+        return writeWorkoutExercise(entry);
+    });
+    workoutSaveChains[chainKey] = next;
+    workoutSaveInFlight[chainKey] = next;
+    next.then(function() {
+        if (workoutSaveChains[chainKey] === next) delete workoutSaveChains[chainKey];
+        if (workoutSaveInFlight[chainKey] === next) delete workoutSaveInFlight[chainKey];
+    }, function() {
+        if (workoutSaveChains[chainKey] === next) delete workoutSaveChains[chainKey];
+        if (workoutSaveInFlight[chainKey] === next) delete workoutSaveInFlight[chainKey];
+    });
+    return next;
+}
+
+async function writeWorkoutExercise(entry) {
     const athleteId = entry.athleteId;
     const session = entry.session;
     const week = entry.week;
@@ -2330,7 +2353,27 @@ async function saveWorkoutExercise(entry) {
             { merge: true }
         );
 
-        setWorkoutStatus("Saved ✓ " + new Date().toLocaleTimeString("en-GB"), "success");
+        // Update the in-memory copy only after Firestore confirms persistence.
+        if (!athleteData[athleteId]) athleteData[athleteId] = {};
+        if (!athleteData[athleteId].workouts) athleteData[athleteId].workouts = {};
+        if (!athleteData[athleteId].workouts[session]) athleteData[athleteId].workouts[session] = {};
+        if (!athleteData[athleteId].workouts[session][week]) {
+            athleteData[athleteId].workouts[session][week] = { exercises: {} };
+        }
+        const savedBucket = athleteData[athleteId].workouts[session][week];
+        if (!savedBucket.exercises) savedBucket.exercises = {};
+        savedBucket.savedAt = now;
+        savedBucket.savedBy = currentUser?.email || athlete.name;
+        savedBucket.exercises[itemId] = {
+            exercise: item.exercise,
+            target: item.target,
+            sets: sets,
+            personalNote: personalNote,
+            coachingNote: item.coachingNote || "",
+            updatedAt: now
+        };
+
+        setWorkoutStatus("Saved to Firebase ✓ " + new Date().toLocaleTimeString("en-GB"), "success");
         scheduleWorkoutSheetBackup(athleteId, session, week);
 
     } catch (error) {
@@ -2342,6 +2385,7 @@ async function saveWorkoutExercise(entry) {
                 : "Could not save: " + (error?.message || "please try again."),
             "error"
         );
+        throw error;
     }
 }
 
@@ -2399,7 +2443,7 @@ async function saveWorkout() {
 
         await runWorkoutSheetBackup(athleteId, session, week);
 
-        setWorkoutStatus(`${session} — ${week} saved and backed up to Google Sheets ✓`, "success");
+        setWorkoutStatus(`${session} — ${week} saved to Firebase ✓. Google Sheets backup was sent; check Workout Logs if you need to verify it.`, "success");
 
     } catch (error) {
         console.error("Workout save failed:", error);
@@ -2759,22 +2803,24 @@ function ragBadge(value) {
 ====================================================== */
 
 async function sendToGoogleSheets(payload) {
+    if (!GOOGLE_SHEETS_SYNC_URL || GOOGLE_SHEETS_SYNC_URL.includes("PASTE_")) {
+        throw new Error("Google Sheets sync URL is not configured.");
+    }
 
-    if (!GOOGLE_SHEETS_SYNC_URL || GOOGLE_SHEETS_SYNC_URL.includes("PASTE_")) return;
-
+    // Apps Script web apps are cross-origin. no-cors allows the request to be
+    // sent but the browser cannot inspect the response, so Firebase remains
+    // the confirmed primary save and Sheets is explicitly treated as backup.
     try {
-
         await fetch(GOOGLE_SHEETS_SYNC_URL, {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
             body: JSON.stringify(payload)
         });
-
     } catch (error) {
         console.error("Google Sheets sync error:", error);
+        throw error;
     }
-
 }
 
 
