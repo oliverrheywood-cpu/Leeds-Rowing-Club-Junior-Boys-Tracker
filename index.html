@@ -1852,6 +1852,24 @@ async function refreshWorkoutPlan(group) {
         workoutPlans = result.plan;
         workoutPlanFallbackActive = false;
 
+        const sessionCount = Object.keys(result.plan).length;
+        const exerciseCount = Object.keys(result.plan).reduce(function(total, session) {
+            return total + (Array.isArray(result.plan[session]) ? result.plan[session].length : 0);
+        }, 0);
+        if (sessionCount > 0 && exerciseCount > 0) {
+            setWorkoutStatus(
+                requestedGroup + " workout plan loaded from Google Sheets (" +
+                sessionCount + " sessions, " + exerciseCount + " exercises).",
+                "success"
+            );
+        } else {
+            setWorkoutStatus(
+                "No " + requestedGroup.toLowerCase() +
+                " exercises were returned. Check the Group column on the Workouts tab.",
+                "error"
+            );
+        }
+
         const page = $("workoutsPage");
         if (page && page.classList.contains("active")) {
             renderWorkoutPage();
@@ -1906,27 +1924,6 @@ function renderWorkoutPage() {
     const athleteId = getWorkoutTargetAthleteId();
     const athlete = athletes.find(function(a) { return a.id === athleteId; });
     const group = athlete ? athlete.group : getWorkoutTargetGroup();
-
-    // Girls currently have no workouts. Once Girls Session A/B are filled in
-    // on the Workouts tab, they will automatically appear here.
-    if (String(group).toLowerCase() === "girls") {
-        $("workoutAthleteControl").style.display = isStaff() ? "flex" : "none";
-        $("workoutTabs").innerHTML = "";
-        $("workoutSaveHint").textContent = "Girls workouts will appear here when they are added to the Workouts tab.";
-        $("workoutStatus").textContent = "Girls workouts are not available yet.";
-        $("workoutStatus").className = "workout-status";
-        content.innerHTML = `
-            <div class="girls-workout-coming-soon">
-                <div class="girls-workout-coming-soon-title">Your workouts will be added soon</div>
-                <div class="girls-workout-coming-soon-text">
-                    The girls' workout plan is being prepared. Once Session A and Session B are added to the Workouts tab in Google Sheets, they will appear here automatically.
-                </div>
-            </div>
-        `;
-        const saveBar = document.querySelector(".workout-save-bar");
-        if (saveBar) saveBar.style.display = "none";
-        return;
-    }
 
     const saveBar = document.querySelector(".workout-save-bar");
     if (saveBar) saveBar.style.display = "flex";
@@ -1998,7 +1995,7 @@ function renderWorkoutExercises(athleteId, session, week) {
     const editable = canEditAthlete(athleteId);
 
     if (!plan.length) {
-        content.innerHTML = '<div class="empty">No workout has been configured for this session.</div>';
+        content.innerHTML = '<div class="empty">No exercises were returned for this session. Check the Session and Group columns on the Workouts tab in Google Sheets.</div>';
         content.dataset.key = "";
         return;
     }
