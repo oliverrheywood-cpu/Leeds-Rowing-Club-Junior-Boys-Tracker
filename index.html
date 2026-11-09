@@ -481,6 +481,36 @@ td { padding: 12px; border-bottom: 1px solid #e5e7eb; vertical-align: middle; }
 
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+<script>
+/* Early diagnostics: show errors if the Firebase module fails before login is connected. */
+window.__lrcLoginReady = false;
+window.addEventListener("error", function (event) {
+    const box = document.getElementById("loginError");
+    if (box && !window.__lrcLoginReady) {
+        box.textContent = "The login system did not load. Please refresh the page. If this continues, send the website error to the site administrator.";
+        box.style.display = "block";
+    }
+});
+window.addEventListener("unhandledrejection", function (event) {
+    console.error("Leeds Rowing Club app startup error:", event.reason);
+    const box = document.getElementById("loginError");
+    if (box && !window.__lrcLoginReady) {
+        box.textContent = "The login system failed to start. Please refresh the page and try again.";
+        box.style.display = "block";
+    }
+});
+window.addEventListener("DOMContentLoaded", function () {
+    const button = document.getElementById("loginButton");
+    if (button) button.addEventListener("click", function () {
+        if (!window.__lrcLoginReady) {
+            const box = document.getElementById("loginError");
+            box.textContent = "Login is not ready because the website's Firebase code has not loaded. Refresh the page; if it still happens, send a screenshot of the browser Console error.";
+            box.style.display = "block";
+        }
+    }, true);
+});
+</script>
+
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
@@ -845,6 +875,7 @@ async function login() {
 
 }
 
+window.__lrcLoginReady = true;
 $("loginButton").addEventListener("click", login);
 
 $("password").addEventListener("keydown", function(event) {
