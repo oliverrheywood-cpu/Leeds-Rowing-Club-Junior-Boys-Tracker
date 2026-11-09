@@ -799,6 +799,10 @@ function initialiseRatingWeek() {
         getRatedWeeks(athleteData[id]).forEach(function(week) {
             latest = Math.max(latest, weekNumber(week));
         });
+
+        Object.keys((athleteData[id] && athleteData[id].weeklyPowerCurves) || {}).forEach(function(week) {
+            latest = Math.max(latest, weekNumber(week));
+        });
     });
 
     if (latest >= 1 && latest <= ratingWeeks.length) currentRatingWeek = "Week " + latest;
@@ -2606,22 +2610,18 @@ function weeklySummaryHtml(athlete, data) {
 }
 
 
-function weeklyPowerCurveHtml(data, week) {
-    const curve = data && data.weeklyPowerCurves && data.weeklyPowerCurves[week];
-    if (!curve || !Array.isArray(curve.points) || curve.points.length < 2) {
-        return `<div class="card"><div class="card-title">Power Curve</div><div class="notes-readonly" style="color:#6b7280;">No power curve has been saved for ${escapeHtml(week)} yet.</div></div>`;
-    }
+function powerCurveCardHtml(curve, week, isSelected) {
     const pts = curve.points.map(p => [Number(p[0]), Number(p[1])])
         .filter(p => Number.isFinite(p[0]) && Number.isFinite(p[1]) && p[0] >= 0 && p[1] >= 0)
         .sort((a,b) => a[0]-b[0]);
-    if (pts.length < 2) return `<div class="card"><div class="card-title">Power Curve</div><div class="notes-readonly">Saved curve data is incomplete.</div></div>`;
+    if (pts.length < 2) return "";
     const maxX = Math.max(1, ...pts.map(p => p[0]));
     const maxY = Math.max(1, ...pts.map(p => p[1]));
     const peak = Math.max(...pts.map(p => p[1]));
     const w=640,h=230,l=46,r=16,t=16,b=32;
-    const poly=pts.map(p => `${(l+p[0]/maxX*(w-l-r)).toFixed(1)},${(h-b-p[1]/maxY*(h-t-b)).toFixed(1)}`).join(" ");
+    const poly = pts.map(p => `${(l+p[0]/maxX*(w-l-r)).toFixed(1)},${(h-b-p[1]/maxY*(h-t-b)).toFixed(1)}`).join(" ");
     const colour = /^#[0-9a-f]{6}$/i.test(curve.colour || "") ? curve.colour : "#2563eb";
-    return `<div class="card">
+    return `<div class="card" ${isSelected ? 'style="border-left:5px solid #2563eb;"' : ""}>
         <div class="card-title">Power Curve — ${escapeHtml(week)}</div>
         <div style="display:flex;gap:22px;flex-wrap:wrap;margin:4px 0 12px;">
             <div><strong>${Math.round(peak)} W</strong><div style="font-size:12px;color:#6b7280;">Peak power</div></div>
@@ -2629,7 +2629,7 @@ function weeklyPowerCurveHtml(data, week) {
             <div style="font-size:12px;color:#6b7280;align-self:center;">Saved ${escapeHtml(formatDate(curve.savedAt))}</div>
         </div>
         <div style="width:100%;overflow:hidden;">
-            <svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Power curve for ${escapeHtml(curve.name || "athlete")}" style="display:block;width:100%;height:auto;max-height:280px;">
+            <svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Power curve for ${escapeHtml(curve.name || "athlete")}, ${escapeHtml(week)}" style="display:block;width:100%;height:auto;max-height:280px;">
                 <line x1="${l}" y1="${h-b}" x2="${w-r}" y2="${h-b}" stroke="#9ca3af"/>
                 <line x1="${l}" y1="${t}" x2="${l}" y2="${h-b}" stroke="#9ca3af"/>
                 <polyline points="${poly}" fill="none" stroke="${colour}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2640,6 +2640,23 @@ function weeklyPowerCurveHtml(data, week) {
         </div>
     </div>`;
 }
+
+/* Shows EVERY week that has a saved SPEACH curve, newest first. */
+function weeklyPowerCurveHtml(data, selectedWeek) {
+    const curves = (data && data.weeklyPowerCurves) || {};
+    const weeks = Object.keys(curves).filter(function(w) {
+        return curves[w] && Array.isArray(curves[w].points) && curves[w].points.length >= 2;
+    }).sort(function(a, b) { return weekNumber(b) - weekNumber(a); });
+
+    if (!weeks.length) {
+        return '<div class="card"><div class="card-title">SPEACH Power Curves</div><div class="notes-readonly" style="color:#6b7280;">No power curves have been saved for you yet.</div></div>';
+    }
+
+    return weeks.map(function(week) {
+        return powerCurveCardHtml(curves[week], week, week === selectedWeek);
+    }).join("");
+}
+
 
 function renderProfile() {
 
