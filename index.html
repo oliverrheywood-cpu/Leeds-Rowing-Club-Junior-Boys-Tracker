@@ -287,6 +287,7 @@ td { padding: 12px; border-bottom: 1px solid #e5e7eb; vertical-align: middle; }
     <button class="nav-btn" data-page="profilePage" id="profileNav">Profile</button>
     <button class="nav-btn" data-page="scoresPage" id="scoresNav">Scores</button>
     <button class="nav-btn" data-page="workoutsPage" id="workoutsNav">Workouts</button>
+    <button class="nav-btn" data-page="speachPage" id="speachNav" style="display:none;">SPEACH</button>
     <button class="nav-btn" data-page="historyPage" id="historyNav">History</button>
 </nav>
 
@@ -439,6 +440,24 @@ td { padding: 12px; border-bottom: 1px solid #e5e7eb; vertical-align: middle; }
     <div class="workout-save-bar">
         <div id="workoutSaveHint" class="workout-readonly">Your weights save automatically as you type.</div>
         <button type="button" id="saveWorkoutButton" class="workout-save-btn">Save &amp; Backup Now</button>
+    </div>
+</section>
+
+
+<!-- SPEACH (STAFF ONLY) -->
+
+<section id="speachPage" class="page">
+    <div class="page-title">SPEACH</div>
+    <div class="page-subtitle">Rowing power-curve analysis and shot comparison.</div>
+    <div class="card" style="padding:0; overflow:hidden;">
+        <iframe
+            id="speachFrame"
+            title="SPEACH rowing power curve tool"
+            src="https://bfoh123.github.io/Speach/"
+            loading="lazy"
+            style="display:block; width:100%; height:calc(100vh - 220px); min-height:760px; border:0; background:#f6f7f9;"
+            allow="clipboard-read; clipboard-write"
+        ></iframe>
     </div>
 </section>
 
@@ -1090,6 +1109,9 @@ document.querySelectorAll(".nav-btn").forEach(function(button) {
 
 function showPage(pageId) {
 
+    /* SPEACH is restricted to Coach and Admin accounts. */
+    if (pageId === "speachPage" && !isStaff()) return;
+
     flushWorkoutSaves();
 
     document.querySelectorAll(".page").forEach(function(page) { page.classList.remove("active"); });
@@ -1227,6 +1249,7 @@ onAuthStateChanged(auth, async function(user) {
 
         $("app").style.display = "none";
         $("workoutsNav").style.display = "none";
+        $("speachNav").style.display = "none";
         $("loginScreen").style.display = "flex";
 
         return;
@@ -1266,6 +1289,7 @@ async function startStaffMode(username) {
     $("scoresNav").style.display = "block";
     $("profileNav").style.display = "block";
     $("workoutsNav").style.display = "block";
+    $("speachNav").style.display = "block";
 
     await ensureAthleteDocuments();
 
@@ -1330,6 +1354,7 @@ async function startAthleteMode(username) {
     $("scoresNav").style.display = "block";
     $("profileNav").style.display = "block";
     $("workoutsNav").style.display = "block";
+    $("speachNav").style.display = "none";
 
     showPage("profilePage");
 
