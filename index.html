@@ -462,12 +462,6 @@ td { padding: 12px; border-bottom: 1px solid #e5e7eb; vertical-align: middle; }
         <label for="speachWeekSelect">Save under week</label>
         <select id="speachWeekSelect" class="rating-week-select"></select>
     </div>
-    <div class="card" style="margin-bottom:14px;">
-        <div style="font-weight:700;margin-bottom:6px;">Copy previously saved curves</div>
-        <div class="page-subtitle" style="margin-bottom:10px;">Copy every athlete curve already saved in SPEACH into that athlete's account under Week 3. Other weeks will be left unchanged.</div>
-        <button type="button" id="copySavedCurvesWeek3" class="btn btn-primary">Copy all saved curves to Week 3</button>
-        <div id="copySavedCurvesStatus" class="page-subtitle" style="margin-top:8px;" aria-live="polite"></div>
-    </div>
     <div class="card" style="padding:0;overflow:hidden;">
         <iframe id="speachFrame" title="SPEACH rowing power curve tool"
             style="display:block;width:100%;height:calc(100vh - 230px);min-height:760px;border:0;background:#f6f7f9;"
@@ -3078,40 +3072,18 @@ function initialiseEmbeddedSPEACH() {
 function sendSPEACHAthleteRoster() {
     const frame = $("speachFrame");
     if (!frame || !frame.contentWindow || !Array.isArray(athletes)) return;
-    const roster = athletes.map(function(athlete) {
-        return { name: String(athlete.name || "").trim() };
-    }).filter(function(athlete) { return athlete.name; });
+    const roster = [];
+    athletes.forEach(function(athlete) {
+        const name = String(athlete.name || "").trim();
+        if (!name) return;
+        for (let imageNumber = 1; imageNumber <= 3; imageNumber++) {
+            roster.push({ name: name + " " + imageNumber });
+        }
+    });
     frame.contentWindow.postMessage({
         type: "lrc-athlete-roster",
         athletes: roster
     }, window.location.origin);
-}
-
-let savedCurveBulkCopyPending = false;
-
-const copySavedCurvesWeek3Button = $("copySavedCurvesWeek3");
-if (copySavedCurvesWeek3Button) {
-    copySavedCurvesWeek3Button.addEventListener("click", function() {
-        const frame = $("speachFrame");
-        const status = $("copySavedCurvesStatus");
-        const weekSelect = $("speachWeekSelect");
-        if (!isStaff()) {
-            if (status) status.textContent = "Only Coaches and Admins can copy saved curves.";
-            return;
-        }
-        if (!frame || !frame.contentWindow) {
-            if (status) status.textContent = "SPEACH is still loading. Please try again in a moment.";
-            return;
-        }
-        if (savedCurveBulkCopyPending) return;
-        if (!confirm("Copy all previously saved SPEACH athlete curves into Week 3? This will replace any existing Week 3 power curve for athletes included in the saved library, but will leave all other weeks unchanged.")) return;
-
-        savedCurveBulkCopyPending = true;
-        copySavedCurvesWeek3Button.disabled = true;
-        if (weekSelect) weekSelect.value = "Week 3";
-        if (status) status.textContent = "Loading saved curves from SPEACH...";
-        frame.contentWindow.postMessage({ type: "lrc-request-saved-curves" }, window.location.origin);
-    });
 }
 
 window.addEventListener("message", async function(event) {
@@ -3121,78 +3093,6 @@ window.addEventListener("message", async function(event) {
     if (!isStaff()) return;
 
     const message = event.data || {};
-
-    // Bulk-copy all previously saved SPEACH curves into Week 3.
-    if (message.type === "lrc-saved-curves-export") {
-        const status = $("copySavedCurvesStatus");
-        const button = $("copySavedCurvesWeek3");
-        const sourceCurves = Array.isArray(message.curves) ? message.curves : [];
-        if (!sourceCurves.length) {
-            savedCurveBulkCopyPending = false;
-            if (button) button.disabled = false;
-            if (status) status.textContent = "No previously saved athlete curves were found in SPEACH.";
-            return;
-        }
-
-        const normalise = value => String(value || "").trim().toLowerCase().replace(/\\s+/g, " ");
-        const matched = new Map();
-        const unmatched = [];
-
-        sourceCurves.forEach(function(item) {
-            const name = String(item && item.name || "").trim();
-            const athlete = athletes.find(a => normalise(a.name) === normalise(name));
-            const raw = Array.isArray(item && item.points) ? item.points : [];
-            const points = raw.map(p => [Number(p && p[0]), Number(p && p[1])])
-                .filter(p => Number.isFinite(p[0]) && Number.isFinite(p[1]) && p[0] >= 0 && p[1] >= 0)
-                .sort((a,b) => a[0]-b[0]);
-            if (!athlete || points.length < 2 || points.length > 2000) {
-                unmatched.push(name || "(unnamed curve)");
-                return;
-            }
-            matched.set(athlete.id, {
-                athlete: athlete,
-                curve: {
-                    name: athlete.name,
-                    colour: String(item.colour || "#2563eb"),
-                    group: athlete.group || String(item.group || ""),
-                    points: points,
-                    savedAt: String(item.savedAt || new Date().toISOString()),
-                    savedBy: (currentUser && currentUser.email) || "Coach"
-                }
-            });
-        });
-
-        try {
-            const entries = Array.from(matched.values());
-            await Promise.all(entries.map(async function(entry) {
-                const athlete = entry.athlete;
-                const existing = athleteData[athlete.id] || {};
-                const weeklyCurves = Object.assign({}, existing.weeklyPowerCurves || {});
-                weeklyCurves["Week 3"] = entry.curve;
-                await setDoc(doc(db, "athletes", athlete.id), {
-                    name: athlete.name,
-                    group: athlete.group,
-                    weeklyPowerCurves: weeklyCurves
-                }, { merge: true });
-                athleteData[athlete.id] = Object.assign({}, existing, { weeklyPowerCurves: weeklyCurves });
-                if (currentAthleteId === athlete.id) renderProfile();
-            }));
-
-            savedCurveBulkCopyPending = false;
-            if (button) button.disabled = false;
-            const summary = "Copied " + entries.length + " saved curve(s) to Week 3.";
-            const extra = unmatched.length ? " " + unmatched.length + " could not be matched to an athlete: " + unmatched.slice(0, 8).join(", ") + (unmatched.length > 8 ? "…" : "") + "." : "";
-            if (status) status.textContent = summary + extra;
-            alert(summary + (unmatched.length ? "\\n\\nNot matched: " + unmatched.join(", ") : ""));
-        } catch (error) {
-            console.error("Bulk copy of SPEACH curves to Week 3 failed:", error);
-            savedCurveBulkCopyPending = false;
-            if (button) button.disabled = false;
-            if (status) status.textContent = "Copy failed. Please check your connection and Firestore permissions, then try again.";
-            alert("The saved curves could not all be copied to Week 3. Please check the connection and try again.");
-        }
-        return;
-    }
 
     if (message.type !== "lrc-speach-power-curve" || !message.curve) return;
 
@@ -3206,9 +3106,11 @@ window.addEventListener("message", async function(event) {
         .sort((a,b) => a[0]-b[0]);
     if (points.length < 2) return;
 
-    const athlete = athletes.find(a => a.name.trim().toLowerCase().replace(/\\s+/g," ") === curveName.toLowerCase().replace(/\\s+/g," "));
+    const sampleMatch = curveName.match(/^(.*) ([123])$/);
+    const baseAthleteName = sampleMatch ? sampleMatch[1].trim() : curveName;
+    const athlete = athletes.find(a => a.name.trim().toLowerCase().replace(/\\s+/g," ") === baseAthleteName.toLowerCase().replace(/\\s+/g," "));
     if (!athlete) {
-        alert('The curve was saved in SPEACH, but no athlete account matched "' + curveName + '". Please check the spelling of the athlete name.');
+        alert('The curve was saved in SPEACH, but no athlete account matched "' + baseAthleteName + '". Please check the spelling of the athlete name.');
         return;
     }
 
@@ -3225,16 +3127,33 @@ window.addEventListener("message", async function(event) {
 
     try {
         const existing = athleteData[athlete.id] || {};
-        const weeklyCurves = Object.assign({}, existing.weeklyPowerCurves || {});
-        weeklyCurves[selectedWeek] = curve;
-        await setDoc(doc(db, "athletes", athlete.id), {
-            name: athlete.name,
-            group: athlete.group,
-            weeklyPowerCurves: weeklyCurves
-        }, { merge: true });
-        athleteData[athlete.id] = Object.assign({}, existing, { weeklyPowerCurves: weeklyCurves });
-        if (currentAthleteId === athlete.id) renderProfile();
-        alert("Power curve saved to " + athlete.name + "'s account under " + selectedWeek + ".");
+        if (sampleMatch) {
+            const weeklySamples = Object.assign({}, existing.weeklyPowerCurveSamples || {});
+            const weekSamples = Object.assign({}, weeklySamples[selectedWeek] || {});
+            weekSamples[sampleMatch[2]] = Object.assign({}, curve, {
+                name: athlete.name + " " + sampleMatch[2],
+                sampleNumber: Number(sampleMatch[2])
+            });
+            weeklySamples[selectedWeek] = weekSamples;
+            await setDoc(doc(db, "athletes", athlete.id), {
+                name: athlete.name,
+                group: athlete.group,
+                weeklyPowerCurveSamples: weeklySamples
+            }, { merge: true });
+            athleteData[athlete.id] = Object.assign({}, existing, { weeklyPowerCurveSamples: weeklySamples });
+            alert("Power curve image " + sampleMatch[2] + " saved for " + athlete.name + " under " + selectedWeek + ". It is also available in SPEACH for averaging.");
+        } else {
+            const weeklyCurves = Object.assign({}, existing.weeklyPowerCurves || {});
+            weeklyCurves[selectedWeek] = curve;
+            await setDoc(doc(db, "athletes", athlete.id), {
+                name: athlete.name,
+                group: athlete.group,
+                weeklyPowerCurves: weeklyCurves
+            }, { merge: true });
+            athleteData[athlete.id] = Object.assign({}, existing, { weeklyPowerCurves: weeklyCurves });
+            if (currentAthleteId === athlete.id) renderProfile();
+            alert("Power curve saved to " + athlete.name + "'s account under " + selectedWeek + ".");
+        }
     } catch (error) {
         console.error("Power curve could not be saved to the athlete account:", error);
         alert("The curve was created, but the athlete account could not be updated. Please check Firestore permissions.");
