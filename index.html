@@ -3251,9 +3251,37 @@ async function handleSpeachCurve(message, source) {
     const sampleMatch = curveName.match(/^(.*) ([123])$/);
     const baseAthleteName = sampleMatch ? sampleMatch[1].trim() : curveName;
     const normaliseName = function(value) { return String(value || "").trim().toLowerCase().replace(/\s+/g, " "); };
-    const athlete = athletes.find(function(a) { return normaliseName(a.name) === normaliseName(baseAthleteName); });
+    let athlete = athletes.find(function(a) { return normaliseName(a.name) === normaliseName(baseAthleteName); });
+
+    /* Accept "AG - Average", "AG Average", "Alex Green - Average" etc. */
+    if (!athlete && !sampleMatch) {
+        const avg = curveName.match(/^(.+?)\s*[-\u2013\u2014:]?\s*average$/i);
+        if (avg) {
+            const label = avg[1].trim();
+            const initialsOf = function(name, splitHyphens) {
+                return name.split(splitHyphens ? /[\s-]+/ : /\s+/)
+                    .filter(Boolean).map(function(w) { return w[0].toUpperCase(); }).join("");
+            };
+            const byName = athletes.filter(function(a) { return normaliseName(a.name) === normaliseName(label); });
+            const key = label.replace(/[\s.]/g, "").toUpperCase();
+            const byInitials = athletes.filter(function(a) {
+                return initialsOf(a.name, true) === key || initialsOf(a.name, false) === key;
+            });
+            const matches = byName.length ? byName : byInitials;
+
+            if (matches.length === 1) {
+                athlete = matches[0];
+            } else if (matches.length > 1) {
+                speachReply(source, false, 'Not saved: "' + label + '" matches ' +
+                    matches.map(function(a) { return a.name; }).join(" and ") +
+                    '. Use the full name instead, e.g. "' + matches[0].name + ' - Average".');
+                return;
+            }
+        }
+    }
+
     if (!athlete) {
-        speachReply(source, false, 'Not saved: "' + curveName + '" does not match an athlete account. Pick the athlete from the list so the name matches exactly.');
+        speachReply(source, false, 'Not saved: "' + curveName + '" does not match an athlete account. Use their initials or full name, e.g. "AG - Average".');
         return;
     }
 
